@@ -9,14 +9,21 @@
 import UIKit
 
 class SolveGamesViewController: UIViewController, UITextFieldDelegate {
-    @IBOutlet var cancelButton: UIButton!
-    @IBOutlet var startButton: UIButton!
-    @IBOutlet var numberOfGamesTextField: UITextField!
+    @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var numberOfGamesTextField: UITextField!
+    var soundModel: GGKSoundModel!
+    @IBOutlet weak var startButton: UIButton!
+    // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
-        
+        println("SGVC handleCancelButtonTapped")
     }
+    // Play/solve the requested number of games.
     @IBAction func handleStartButtonTapped() {
         println("SGVC handleStartButtonTapped")
+    }
+    // User interacts with UI. She hears a sound to (subconsciously) know she did something.
+    @IBAction func playButtonSound() {
+        soundModel.playButtonTapSound()
     }
     func textFieldDidEndEditing(theTextField: UITextField!) {
         // Ensure we have a valid value. Update model. Update view.
@@ -28,10 +35,14 @@ class SolveGamesViewController: UIViewController, UITextFieldDelegate {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.cancelButton)
-        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.startButton)
+        self.soundModel = (UIApplication.sharedApplication().delegate as AppDelegate).soundModel
+        
         // this might be under updateUI and depend on mode
         self.cancelButton.enabled = false
+        
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.cancelButton)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.startButton)
+        
     }
     
 //    - (void)textFieldDidEndEditing:(UITextField *)theTextField {

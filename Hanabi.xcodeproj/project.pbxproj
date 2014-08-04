@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		93D42FD5198F7A59006A28D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FD4198F7A59006A28D9 /* AppDelegate.swift */; };
 		93D42FD8198F7A59006A28D9 /* Hanabi.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FD6198F7A59006A28D9 /* Hanabi.xcdatamodeld */; };
-		93D42FDA198F7A59006A28D9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FD9198F7A59006A28D9 /* ViewController.swift */; };
 		93D42FDD198F7A59006A28D9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93D42FDB198F7A59006A28D9 /* Main.storyboard */; };
 		93D42FDF198F7A59006A28D9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93D42FDE198F7A59006A28D9 /* Images.xcassets */; };
 		93D42FEB198F7A59006A28D9 /* HanabiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FEA198F7A59006A28D9 /* HanabiTests.swift */; };
@@ -19,6 +18,7 @@
 		93D42FFE198F997F006A28D9 /* GGKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FFD198F997F006A28D9 /* GGKViewController.m */; };
 		93D43001198F99AC006A28D9 /* GGKSoundModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D43000198F99AC006A28D9 /* GGKSoundModel.m */; };
 		93D43004198F9E82006A28D9 /* tap.aif in Resources */ = {isa = PBXBuildFile; fileRef = 93D43002198F9D8A006A28D9 /* tap.aif */; };
+		93F653BB1990272A00198AB6 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F653BA1990272A00198AB6 /* MainMenuViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +36,6 @@
 		93D42FD3198F7A59006A28D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93D42FD4198F7A59006A28D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93D42FD7198F7A59006A28D9 /* Hanabi.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Hanabi.xcdatamodel; sourceTree = "<group>"; };
-		93D42FD9198F7A59006A28D9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		93D42FDC198F7A59006A28D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		93D42FDE198F7A59006A28D9 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		93D42FE4198F7A59006A28D9 /* HanabiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HanabiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +51,7 @@
 		93D42FFF198F99AC006A28D9 /* GGKSoundModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GGKSoundModel.h; sourceTree = "<group>"; };
 		93D43000198F99AC006A28D9 /* GGKSoundModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GGKSoundModel.m; sourceTree = "<group>"; };
 		93D43002198F9D8A006A28D9 /* tap.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = tap.aif; sourceTree = "<group>"; };
+		93F653BA1990272A00198AB6 /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,8 +100,8 @@
 				93D42FFA198F8E5A006A28D9 /* GGKUtilities.m */,
 				93D42FFC198F997F006A28D9 /* GGKViewController.h */,
 				93D42FFD198F997F006A28D9 /* GGKViewController.m */,
+				93F653BA1990272A00198AB6 /* MainMenuViewController.swift */,
 				93D42FF6198F8A6D006A28D9 /* SolveGamesViewController.swift */,
-				93D42FD9198F7A59006A28D9 /* ViewController.swift */,
 				93D42FDB198F7A59006A28D9 /* Main.storyboard */,
 				93D42FDE198F7A59006A28D9 /* Images.xcassets */,
 				93D42FD6198F7A59006A28D9 /* Hanabi.xcdatamodeld */,
@@ -247,8 +247,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93F653BB1990272A00198AB6 /* MainMenuViewController.swift in Sources */,
 				93D42FFB198F8E5A006A28D9 /* GGKUtilities.m in Sources */,
-				93D42FDA198F7A59006A28D9 /* ViewController.swift in Sources */,
 				93D42FFE198F997F006A28D9 /* GGKViewController.m in Sources */,
 				93D42FD8198F7A59006A28D9 /* Hanabi.xcdatamodeld in Sources */,
 				93D43001198F99AC006A28D9 /* GGKSoundModel.m in Sources */,
@@ -449,6 +449,7 @@
 				93D42FF0198F7A59006A28D9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		93D42FF1198F7A59006A28D9 /* Build configuration list for PBXNativeTarget "HanabiTests" */ = {
 			isa = XCConfigurationList;
@@ -457,6 +458,7 @@
 				93D42FF3198F7A59006A28D9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

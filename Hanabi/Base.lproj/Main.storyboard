@@ -5,10 +5,28 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6190.4"/>
     </dependencies>
     <scenes>
+        <!--View Controller-->
+        <scene sceneID="Mnz-nb-24s">
+            <objects>
+                <viewController id="riQ-Gg-tMq" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="FhF-wu-5hc"/>
+                        <viewControllerLayoutGuide type="bottom" id="g6C-Ew-KIB"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="30n-cn-mVA">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f6Y-BZ-li4" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="845" y="1050"/>
+        </scene>
         <!--Hanabi-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Hanabi" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MainMenuViewController" customModule="Hanabi" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -23,7 +41,17 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
+                                    <action selector="playButtonSound" destination="BYZ-38-t0r" eventType="touchDown" id="Ggq-Hi-HDe"/>
                                     <segue destination="ibi-Ri-ADg" kind="show" id="hGP-5b-LEc"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kR3-iR-Mhm">
+                                <rect key="frame" x="249" y="135" width="103" height="30"/>
+                                <state key="normal" title="Dummy Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="riQ-Gg-tMq" kind="show" id="tBp-bd-NnB"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -51,11 +79,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="1" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7W9-h8-lvt">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="1" borderStyle="roundedRect" placeholder="1" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7W9-h8-lvt">
                                 <rect key="frame" x="83" y="88" width="80" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
+                                    <action selector="playButtonSound" destination="ibi-Ri-ADg" eventType="touchDown" id="tiR-3L-weh"/>
                                     <outlet property="delegate" destination="ibi-Ri-ADg" id="s19-oO-Rb0"/>
                                 </connections>
                             </textField>
@@ -66,6 +95,7 @@
                                 </state>
                                 <connections>
                                     <action selector="handleStartButtonTapped" destination="ibi-Ri-ADg" eventType="touchUpInside" id="yrt-6b-R8M"/>
+                                    <action selector="playButtonSound" destination="ibi-Ri-ADg" eventType="touchDown" id="okm-Hz-hMo"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Games" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wXa-zC-cRy">
@@ -82,6 +112,7 @@
                                 </state>
                                 <connections>
                                     <action selector="handleCancelButtonTapped" destination="ibi-Ri-ADg" eventType="touchUpInside" id="evu-Pc-TI9"/>
+                                    <action selector="playButtonSound" destination="ibi-Ri-ADg" eventType="touchDown" id="BC6-BG-Ky6"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -96,7 +127,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cro-Cf-xt9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="381" y="1050"/>
+            <point key="canvasLocation" x="169" y="1050"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="EAr-my-p9C">
