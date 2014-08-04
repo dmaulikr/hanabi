@@ -13,6 +13,7 @@
 		93D42FDD198F7A59006A28D9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93D42FDB198F7A59006A28D9 /* Main.storyboard */; };
 		93D42FDF198F7A59006A28D9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93D42FDE198F7A59006A28D9 /* Images.xcassets */; };
 		93D42FEB198F7A59006A28D9 /* HanabiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FEA198F7A59006A28D9 /* HanabiTests.swift */; };
+		93D42FF5198F7E7E006A28D9 /* AppStoreInfo.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 93D42FF4198F7E7E006A28D9 /* AppStoreInfo.rtf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		93D42FE4198F7A59006A28D9 /* HanabiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HanabiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		93D42FE9198F7A59006A28D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93D42FEA198F7A59006A28D9 /* HanabiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HanabiTests.swift; sourceTree = "<group>"; };
+		93D42FF4198F7E7E006A28D9 /* AppStoreInfo.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = AppStoreInfo.rtf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +92,7 @@
 		93D42FD2198F7A59006A28D9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				93D42FF4198F7E7E006A28D9 /* AppStoreInfo.rtf */,
 				93D42FD3198F7A59006A28D9 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -192,6 +195,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93D42FF5198F7E7E006A28D9 /* AppStoreInfo.rtf in Resources */,
 				93D42FDD198F7A59006A28D9 /* Main.storyboard in Resources */,
 				93D42FDF198F7A59006A28D9 /* Images.xcassets in Resources */,
 			);
@@ -264,7 +268,6 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -307,7 +310,6 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -331,6 +333,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Hanabi/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -343,10 +346,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				INFOPLIST_FILE = Hanabi/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "77136E03-23BE-4A0D-8F96-679E008BF18F";
 			};
 			name = Release;
 		};
