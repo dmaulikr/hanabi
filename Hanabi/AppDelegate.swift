@@ -11,7 +11,7 @@ import CoreData
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-                            
+    var soundModel = GGKSoundModel()
     var window: UIWindow?
 
 

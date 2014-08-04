@@ -14,6 +14,11 @@
 		93D42FDF198F7A59006A28D9 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93D42FDE198F7A59006A28D9 /* Images.xcassets */; };
 		93D42FEB198F7A59006A28D9 /* HanabiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FEA198F7A59006A28D9 /* HanabiTests.swift */; };
 		93D42FF5198F7E7E006A28D9 /* AppStoreInfo.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 93D42FF4198F7E7E006A28D9 /* AppStoreInfo.rtf */; };
+		93D42FF7198F8A6D006A28D9 /* SolveGamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FF6198F8A6D006A28D9 /* SolveGamesViewController.swift */; };
+		93D42FFB198F8E5A006A28D9 /* GGKUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FFA198F8E5A006A28D9 /* GGKUtilities.m */; };
+		93D42FFE198F997F006A28D9 /* GGKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FFD198F997F006A28D9 /* GGKViewController.m */; };
+		93D43001198F99AC006A28D9 /* GGKSoundModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D43000198F99AC006A28D9 /* GGKSoundModel.m */; };
+		93D43004198F9E82006A28D9 /* tap.aif in Resources */ = {isa = PBXBuildFile; fileRef = 93D43002198F9D8A006A28D9 /* tap.aif */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +43,15 @@
 		93D42FE9198F7A59006A28D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93D42FEA198F7A59006A28D9 /* HanabiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HanabiTests.swift; sourceTree = "<group>"; };
 		93D42FF4198F7E7E006A28D9 /* AppStoreInfo.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = AppStoreInfo.rtf; sourceTree = "<group>"; };
+		93D42FF6198F8A6D006A28D9 /* SolveGamesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SolveGamesViewController.swift; sourceTree = "<group>"; };
+		93D42FF8198F8E59006A28D9 /* Hanabi-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Hanabi-Bridging-Header.h"; sourceTree = "<group>"; };
+		93D42FF9198F8E5A006A28D9 /* GGKUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GGKUtilities.h; sourceTree = "<group>"; };
+		93D42FFA198F8E5A006A28D9 /* GGKUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GGKUtilities.m; sourceTree = "<group>"; };
+		93D42FFC198F997F006A28D9 /* GGKViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GGKViewController.h; sourceTree = "<group>"; };
+		93D42FFD198F997F006A28D9 /* GGKViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GGKViewController.m; sourceTree = "<group>"; };
+		93D42FFF198F99AC006A28D9 /* GGKSoundModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GGKSoundModel.h; sourceTree = "<group>"; };
+		93D43000198F99AC006A28D9 /* GGKSoundModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GGKSoundModel.m; sourceTree = "<group>"; };
+		93D43002198F9D8A006A28D9 /* tap.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = tap.aif; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,11 +94,19 @@
 			isa = PBXGroup;
 			children = (
 				93D42FD4198F7A59006A28D9 /* AppDelegate.swift */,
+				93D42FFF198F99AC006A28D9 /* GGKSoundModel.h */,
+				93D43000198F99AC006A28D9 /* GGKSoundModel.m */,
+				93D42FF9198F8E5A006A28D9 /* GGKUtilities.h */,
+				93D42FFA198F8E5A006A28D9 /* GGKUtilities.m */,
+				93D42FFC198F997F006A28D9 /* GGKViewController.h */,
+				93D42FFD198F997F006A28D9 /* GGKViewController.m */,
+				93D42FF6198F8A6D006A28D9 /* SolveGamesViewController.swift */,
 				93D42FD9198F7A59006A28D9 /* ViewController.swift */,
 				93D42FDB198F7A59006A28D9 /* Main.storyboard */,
 				93D42FDE198F7A59006A28D9 /* Images.xcassets */,
 				93D42FD6198F7A59006A28D9 /* Hanabi.xcdatamodeld */,
 				93D42FD2198F7A59006A28D9 /* Supporting Files */,
+				93D42FF8198F8E59006A28D9 /* Hanabi-Bridging-Header.h */,
 			);
 			path = Hanabi;
 			sourceTree = "<group>";
@@ -94,6 +116,7 @@
 			children = (
 				93D42FF4198F7E7E006A28D9 /* AppStoreInfo.rtf */,
 				93D42FD3198F7A59006A28D9 /* Info.plist */,
+				93D43003198F9D91006A28D9 /* sounds */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -113,6 +136,14 @@
 				93D42FE9198F7A59006A28D9 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		93D43003198F9D91006A28D9 /* sounds */ = {
+			isa = PBXGroup;
+			children = (
+				93D43002198F9D8A006A28D9 /* tap.aif */,
+			);
+			name = sounds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -198,6 +229,7 @@
 				93D42FF5198F7E7E006A28D9 /* AppStoreInfo.rtf in Resources */,
 				93D42FDD198F7A59006A28D9 /* Main.storyboard in Resources */,
 				93D42FDF198F7A59006A28D9 /* Images.xcassets in Resources */,
+				93D43004198F9E82006A28D9 /* tap.aif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,8 +247,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93D42FFB198F8E5A006A28D9 /* GGKUtilities.m in Sources */,
 				93D42FDA198F7A59006A28D9 /* ViewController.swift in Sources */,
+				93D42FFE198F997F006A28D9 /* GGKViewController.m in Sources */,
 				93D42FD8198F7A59006A28D9 /* Hanabi.xcdatamodeld in Sources */,
+				93D43001198F99AC006A28D9 /* GGKSoundModel.m in Sources */,
+				93D42FF7198F8A6D006A28D9 /* SolveGamesViewController.swift in Sources */,
 				93D42FD5198F7A59006A28D9 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -333,11 +369,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Hanabi/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Hanabi/Hanabi-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -346,12 +385,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				INFOPLIST_FILE = Hanabi/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "77136E03-23BE-4A0D-8F96-679E008BF18F";
+				SWIFT_OBJC_BRIDGING_HEADER = "Hanabi/Hanabi-Bridging-Header.h";
 			};
 			name = Release;
 		};
