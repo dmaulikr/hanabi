@@ -26,12 +26,39 @@ class SolverElf: NSObject {
         }
     }
     }
+    var numberOfGamesPlayedInt = 0
     var numberOfGamesToPlayInt = 1
+    var numberOfGamesWonInt = 0
+    var numberOfSecondsSpentFloat = 0.0
     init() {
         super.init()
     }
+    // User sees results of solving.
+    func showResults() {
+        println("Games: \(self.numberOfGamesPlayedInt)")
+        println("Games won: \(self.numberOfGamesWonInt)")
+        println("Time spent: \(self.numberOfSecondsSpentFloat) seconds")
+    }
     func solveGames() {
         self.mode = Mode.Solving
+        self.numberOfSecondsSpentFloat = 0.0
+        // start timer
+        self.numberOfGamesPlayedInt = 0
+        self.numberOfGamesWonInt = 0
+        // Solve one at a time.
+        for var gameNumber = 1; gameNumber <= self.numberOfGamesToPlayInt; ++gameNumber {
+//            println("Playing game \(gameNumber)")
+//            self.shuffleDeck()
+//            self.dealHands()
+//            self.playToEnd()
+//            self.scoreGame()
+            self.numberOfGamesPlayedInt++
+//            self.saveResults()
+        }
+        // end timer
+//        self.numberOfSecondsSpentFloat = ??
+        self.showResults()
+        self.mode = Mode.Planning
     }
     func stopSolving() {
         self.mode = Mode.Planning
