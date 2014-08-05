@@ -11,8 +11,9 @@ import UIKit
 class SolveGamesViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var numberOfGamesTextField: UITextField!
-    var soundModel: GGKSoundModel!
+    var solverElf: SolverElf!
     @IBOutlet weak var startButton: UIButton!
+    var viewControllerElf: ViewControllerElf!
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
         println("SGVC handleCancelButtonTapped")
@@ -22,40 +23,42 @@ class SolveGamesViewController: UIViewController, UITextFieldDelegate {
         println("SGVC handleStartButtonTapped")
     }
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
-    @IBAction func playButtonSound() {
-        soundModel.playButtonTapSound()
+    @IBAction func playButtonDownSound() {
+        self.viewControllerElf.playButtonDownSound()
     }
+    // Text field is for number of games to play/solve.
+    // If a valid value, then update model. Show current value in text field.
     func textFieldDidEndEditing(theTextField: UITextField!) {
-        // Ensure we have a valid value. Update model. Update view.
-        println("SGVC textFieldDidEndEditing")
+        // Valid: Int >= 1.
+        if let theInt = theTextField.text.toInt() {
+            if theInt >= 1 {
+                self.solverElf.numberOfGamesToPlayInt = theInt
+            }
+        }
+        theTextField.text = String(self.solverElf.numberOfGamesToPlayInt)
     }
+    // Dismiss keyboard.
     func textFieldShouldReturn(theTextField: UITextField!) -> Bool {
         theTextField.resignFirstResponder()
         return true
     }
+    // Update UI from model, based on current mode.
+    // wait until I really need this (e.g., mode changes -> several things change)
+//    func updateUI() {
+//        // update textfield from model
+//        
+//        // if mode is planning do this
+//        self.cancelButton.enabled = false
+//        // if mode is calculating, do this
+////        self.cancelButton.enabled = true
+//    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.soundModel = (UIApplication.sharedApplication().delegate as AppDelegate).soundModel
-        
-        // this might be under updateUI and depend on mode
-        self.cancelButton.enabled = false
-        
+        self.solverElf = SolverElf()
+        self.viewControllerElf = ViewControllerElf()
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.cancelButton)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.startButton)
-        
+        // this might be under updateUI and depend on mode
+        self.cancelButton.enabled = false
     }
-    
-//    - (void)textFieldDidEndEditing:(UITextField *)theTextField {
-//    // Ensure we have a valid value. Update model. Update view.
-//    NSInteger anOkayInteger;
-//    NSInteger theCurrentInteger = [theTextField.text integerValue];
-//    if (theTextField == self.numberOfSecondsToWaitTextField) {
-//    anOkayInteger = [NSNumber ggk_integerBoundedByRange:theCurrentInteger minimum:0 maximum:99];
-//    self.delayedPhotosModel.numberOfSecondsToWaitInteger = anOkayInteger;
-//    } else if (theTextField == self.numberOfPhotosToTakeTextField) {
-//    anOkayInteger = [NSNumber ggk_integerBoundedByRange:theCurrentInteger minimum:1 maximum:99];
-//    self.delayedPhotosModel.numberOfPhotosToTakeInteger = anOkayInteger;
-//    }
-//    [self updateUI];
-//    }
 }

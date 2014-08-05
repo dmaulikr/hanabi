@@ -7,16 +7,6 @@
 
 #import <AVFoundation/AVFoundation.h>
 
-@interface GGKSoundModel ()
-
-// For playing a UI sound when the player presses a button.
-@property (nonatomic, strong) AVAudioPlayer *buttonTapAudioPlayer;
-
-// For playing a UI sound to get the user's attention, in a positive way.
-@property (nonatomic, strong) AVAudioPlayer *dingAudioPlayer;
-
-@end
-
 @implementation GGKSoundModel
 - (id)init {
     self = [super init];
@@ -30,19 +20,19 @@
 //        soundFileURL = [NSURL fileURLWithPath:soundFilePath];
 //        anAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundFileURL error:nil];
 //        self.dingAudioPlayer = anAudioPlayer;
-        // Button-tap sound.
+        // Button-down sound.
         soundFilePath = [ [NSBundle mainBundle] pathForResource:@"tap" ofType:@"aif" ];
         soundFileURL = [NSURL fileURLWithPath:soundFilePath];
         anAudioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:soundFileURL error:nil];
-        self.buttonTapAudioPlayer = anAudioPlayer;
-        // The button-tap sound will be needed first.
-        [self prepareButtonTapSound];
+        self.buttonDownAudioPlayer = anAudioPlayer;
+        // The button-down sound will be needed first.
+        [self prepareButtonDownSound];
     }
     return self;
 }
-- (void)playButtonTapSound {
+- (void)playButtonDownSound {
     if (self.soundIsOn) {
-        [self.buttonTapAudioPlayer play];
+        [self.buttonDownAudioPlayer play];
     }
 }
 - (void)playDingSound {
@@ -50,7 +40,7 @@
         [self.dingAudioPlayer play];
     }
 }
-- (void)prepareButtonTapSound {
-    [self.buttonTapAudioPlayer prepareToPlay];
+- (void)prepareButtonDownSound {
+    [self.buttonDownAudioPlayer prepareToPlay];
 }
 @end

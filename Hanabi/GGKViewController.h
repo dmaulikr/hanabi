@@ -12,9 +12,12 @@
 //@property (strong, nonatomic) GGKModel *model;
 // Constraints needed only when device in portrait. Stub.
 @property (nonatomic, strong) NSArray *portraitOnlyLayoutConstraintArray;
+
 // Override.
 // Assume Nib is for portrait orientation.
+//deprecated?
 - (void)awakeFromNib;
+
 // Override.
 - (void)dealloc;
 // The view disappeared from the user, so stop any repeating updates.

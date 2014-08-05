@@ -5,21 +5,21 @@
 
 #import <Foundation/Foundation.h>
 
-@interface GGKSoundModel : NSObject
+@class AVAudioPlayer;
 
+@interface GGKSoundModel : NSObject
+// For playing a UI sound when the player presses a button.
+@property (nonatomic, strong) AVAudioPlayer *buttonDownAudioPlayer;
+// For playing a UI sound to get the user's attention, in a positive way.
+@property (nonatomic, strong) AVAudioPlayer *dingAudioPlayer;
 // Whether this app's sound should play or not.
 @property (assign, nonatomic) BOOL soundIsOn;
-
 // Create the audio player for each sound.
 - (id)init;
-
 // Play sound appropriate for a button press.
-- (void)playButtonTapSound;
-
+- (void)playButtonDownSound;
 // Play sound appropriate for positive attention.
 - (void)playDingSound;
-
 // Prepare the appropriate audio player to play.
-- (void)prepareButtonTapSound;
-
+- (void)prepareButtonDownSound;
 @end

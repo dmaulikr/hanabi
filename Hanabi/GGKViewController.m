@@ -39,7 +39,7 @@
 }
 - (IBAction)playButtonSound {
     AppDelegate *anAppDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [anAppDelegate.soundModel playButtonTapSound];
+//    [anAppDelegate.soundModel playButtonTapSound];
 }
 - (void)updateLayoutForLandscape {
     if (self.portraitOnlyLayoutConstraintArray != nil) {

@@ -41,7 +41,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="playButtonSound" destination="BYZ-38-t0r" eventType="touchDown" id="Ggq-Hi-HDe"/>
+                                    <action selector="playButtonDownSound" destination="BYZ-38-t0r" eventType="touchDown" id="iwQ-WO-pFt"/>
                                     <segue destination="ibi-Ri-ADg" kind="show" id="hGP-5b-LEc"/>
                                 </connections>
                             </button>
@@ -51,6 +51,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
+                                    <action selector="playButtonDownSound" destination="BYZ-38-t0r" eventType="touchDown" id="ke6-tT-hcE"/>
                                     <segue destination="riQ-Gg-tMq" kind="show" id="tBp-bd-NnB"/>
                                 </connections>
                             </button>
@@ -84,7 +85,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
-                                    <action selector="playButtonSound" destination="ibi-Ri-ADg" eventType="touchDown" id="tiR-3L-weh"/>
+                                    <action selector="playButtonDownSound" destination="ibi-Ri-ADg" eventType="touchDown" id="Myx-mQ-mvb"/>
                                     <outlet property="delegate" destination="ibi-Ri-ADg" id="s19-oO-Rb0"/>
                                 </connections>
                             </textField>
@@ -95,7 +96,7 @@
                                 </state>
                                 <connections>
                                     <action selector="handleStartButtonTapped" destination="ibi-Ri-ADg" eventType="touchUpInside" id="yrt-6b-R8M"/>
-                                    <action selector="playButtonSound" destination="ibi-Ri-ADg" eventType="touchDown" id="okm-Hz-hMo"/>
+                                    <action selector="playButtonDownSound" destination="ibi-Ri-ADg" eventType="touchDown" id="fgD-2M-QU5"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Games" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wXa-zC-cRy">
@@ -112,7 +113,7 @@
                                 </state>
                                 <connections>
                                     <action selector="handleCancelButtonTapped" destination="ibi-Ri-ADg" eventType="touchUpInside" id="evu-Pc-TI9"/>
-                                    <action selector="playButtonSound" destination="ibi-Ri-ADg" eventType="touchDown" id="BC6-BG-Ky6"/>
+                                    <action selector="playButtonDownSound" destination="ibi-Ri-ADg" eventType="touchDown" id="mdY-wi-l1i"/>
                                 </connections>
                             </button>
                         </subviews>

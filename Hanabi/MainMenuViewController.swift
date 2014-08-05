@@ -9,13 +9,13 @@
 import UIKit
 
 class MainMenuViewController: UIViewController {
-    var soundModel: GGKSoundModel!
+    var viewControllerElf: ViewControllerElf!
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
-    @IBAction func playButtonSound() {
-        soundModel.playButtonTapSound()
+    @IBAction func playButtonDownSound() {
+        self.viewControllerElf.playButtonDownSound()
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.soundModel = (UIApplication.sharedApplication().delegate as AppDelegate).soundModel
+        self.viewControllerElf = ViewControllerElf()
     }
 }
