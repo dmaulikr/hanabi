@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SolveGamesViewController: UIViewController, UITextFieldDelegate {
+class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextFieldDelegate {
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var numberOfGamesTextField: UITextField!
     var solverElf: SolverElf!
@@ -16,11 +16,14 @@ class SolveGamesViewController: UIViewController, UITextFieldDelegate {
     var viewControllerElf: ViewControllerElf!
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
-        println("SGVC handleCancelButtonTapped")
+        self.solverElf.stopSolving()
+    }
+    func solverElfDidChangeMode() {
+        self.updateUIBasedOnMode()
     }
     // Play/solve the requested number of games.
     @IBAction func handleStartButtonTapped() {
-        println("SGVC handleStartButtonTapped")
+        self.solverElf.solveGames()
     }
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
     @IBAction func playButtonDownSound() {
@@ -42,23 +45,26 @@ class SolveGamesViewController: UIViewController, UITextFieldDelegate {
         theTextField.resignFirstResponder()
         return true
     }
-    // Update UI from model, based on current mode.
-    // wait until I really need this (e.g., mode changes -> several things change)
-//    func updateUI() {
-//        // update textfield from model
-//        
-//        // if mode is planning do this
-//        self.cancelButton.enabled = false
-//        // if mode is calculating, do this
-////        self.cancelButton.enabled = true
-//    }
+    func updateUIBasedOnMode() {
+        switch self.solverElf.mode {
+        case SolverElf.Mode.Planning:
+            self.cancelButton.enabled = false
+            self.numberOfGamesTextField.enabled = true
+            self.startButton.enabled = true
+        case SolverElf.Mode.Solving:
+            self.cancelButton.enabled = true
+            self.numberOfGamesTextField.enabled = false
+            self.startButton.enabled = false
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.solverElf = SolverElf()
+        let aSolverElf = SolverElf()
+        aSolverElf.delegate = self;
+        self.solverElf = aSolverElf
         self.viewControllerElf = ViewControllerElf()
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.cancelButton)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.startButton)
-        // this might be under updateUI and depend on mode
-        self.cancelButton.enabled = false
+        self.updateUIBasedOnMode()
     }
 }
