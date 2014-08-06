@@ -5,10 +5,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6198"/>
     </dependencies>
     <scenes>
-        <!--Walk Through 1 Game-->
+        <!--Walk Through a Game-->
         <scene sceneID="Mnz-nb-24s">
             <objects>
-                <viewController id="riQ-Gg-tMq" sceneMemberID="viewController">
+                <viewController id="riQ-Gg-tMq" customClass="WalkThroughGameViewController" customModule="Hanabi" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="FhF-wu-5hc"/>
                         <viewControllerLayoutGuide type="bottom" id="g6C-Ew-KIB"/>
@@ -22,8 +22,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
-                                    <action selector="playButtonDownSound" destination="ibi-Ri-ADg" eventType="touchDown" id="Iwr-xd-dq3"/>
-                                    <outlet property="delegate" destination="ibi-Ri-ADg" id="3fq-5A-E6O"/>
+                                    <action selector="playButtonDownSound" destination="riQ-Gg-tMq" eventType="touchDown" id="39I-nX-h7f"/>
+                                    <outlet property="delegate" destination="riQ-Gg-tMq" id="UKo-mA-VND"/>
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gOb-Nk-Zr8">
@@ -32,8 +32,8 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="handleStartButtonTapped" destination="ibi-Ri-ADg" eventType="touchUpInside" id="7iw-Nc-CQn"/>
-                                    <action selector="playButtonDownSound" destination="ibi-Ri-ADg" eventType="touchDown" id="1Uc-lN-gkn"/>
+                                    <action selector="handleStartButtonTapped" destination="riQ-Gg-tMq" eventType="touchUpInside" id="SWB-L7-geL"/>
+                                    <action selector="playButtonDownSound" destination="riQ-Gg-tMq" eventType="touchDown" id="gzB-pd-ZMT"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Seed number:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ckP-Kt-VYa">
@@ -49,8 +49,8 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="handleCancelButtonTapped" destination="ibi-Ri-ADg" eventType="touchUpInside" id="oTK-IU-siu"/>
-                                    <action selector="playButtonDownSound" destination="ibi-Ri-ADg" eventType="touchDown" id="rD5-QH-Ngu"/>
+                                    <action selector="handleCancelButtonTapped" destination="riQ-Gg-tMq" eventType="touchUpInside" id="N4K-aL-z6z"/>
+                                    <action selector="playButtonDownSound" destination="riQ-Gg-tMq" eventType="touchDown" id="dyf-Iv-D4y"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Cards left: 40" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pkM-sC-oeX">
@@ -501,7 +501,12 @@ P3: R4 R1 G2 R1 B3</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Walk Through 1 Game" id="OUQ-fN-iJ4"/>
+                    <navigationItem key="navigationItem" title="Walk Through a Game" id="OUQ-fN-iJ4"/>
+                    <connections>
+                        <outlet property="cancelButton" destination="bQ0-jQ-lGn" id="azV-uN-fPh"/>
+                        <outlet property="seedNumberTextField" destination="5rX-jA-KNd" id="F62-Eo-EtC"/>
+                        <outlet property="startButton" destination="gOb-Nk-Zr8" id="XHK-gZ-oHL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f6Y-BZ-li4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -530,8 +535,8 @@ P3: R4 R1 G2 R1 B3</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kR3-iR-Mhm">
-                                <rect key="frame" x="436" y="135" width="153" height="30"/>
-                                <state key="normal" title="Walk Through 1 Game">
+                                <rect key="frame" x="437" y="135" width="152" height="30"/>
+                                <state key="normal" title="Walk Through a Game">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>

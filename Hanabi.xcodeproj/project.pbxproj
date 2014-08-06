@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9348E04D1992236700C19BB0 /* WalkThroughGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */; };
 		93D42FD5198F7A59006A28D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FD4198F7A59006A28D9 /* AppDelegate.swift */; };
 		93D42FD8198F7A59006A28D9 /* Hanabi.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FD6198F7A59006A28D9 /* Hanabi.xcdatamodeld */; };
 		93D42FDD198F7A59006A28D9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93D42FDB198F7A59006A28D9 /* Main.storyboard */; };
@@ -34,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkThroughGameViewController.swift; sourceTree = "<group>"; };
 		93D42FCF198F7A59006A28D9 /* Hanabi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hanabi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93D42FD3198F7A59006A28D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93D42FD4198F7A59006A28D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				93D42FF6198F8A6D006A28D9 /* SolveGamesViewController.swift */,
 				93F653BE1990CAE800198AB6 /* SolverElf.swift */,
 				93F653BC1990447300198AB6 /* ViewControllerElf.swift */,
+				9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */,
 				93D42FDB198F7A59006A28D9 /* Main.storyboard */,
 				93D42FDE198F7A59006A28D9 /* Images.xcassets */,
 				93D42FD6198F7A59006A28D9 /* Hanabi.xcdatamodeld */,
@@ -260,6 +263,7 @@
 				93F653BD1990447400198AB6 /* ViewControllerElf.swift in Sources */,
 				93D43001198F99AC006A28D9 /* GGKSoundModel.m in Sources */,
 				93D42FF7198F8A6D006A28D9 /* SolveGamesViewController.swift in Sources */,
+				9348E04D1992236700C19BB0 /* WalkThroughGameViewController.swift in Sources */,
 				93D42FD5198F7A59006A28D9 /* AppDelegate.swift in Sources */,
 				93F653BF1990CAE800198AB6 /* SolverElf.swift in Sources */,
 			);
