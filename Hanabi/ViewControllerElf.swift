@@ -13,7 +13,7 @@ import UIKit
 class ViewControllerElf: NSObject {
 //    var delegate: ViewControllerHelperDelegate? = nil
     var soundModel: GGKSoundModel!
-    init() {
+    override init() {
         super.init()
         self.soundModel = (UIApplication.sharedApplication().delegate as AppDelegate).soundModel
         // still figuring out how to add notification properly; may need [weak self]

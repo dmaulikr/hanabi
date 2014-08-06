@@ -30,7 +30,7 @@ class SolverElf: NSObject {
     var numberOfGamesToPlayInt = 1
     var numberOfGamesWonInt = 0
     var numberOfSecondsSpentFloat = 0.0
-    init() {
+    override init() {
         super.init()
     }
     // User sees results of solving.
