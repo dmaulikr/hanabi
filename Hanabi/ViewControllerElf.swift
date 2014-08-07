@@ -15,7 +15,7 @@ class ViewControllerElf: NSObject {
     var soundModel: GGKSoundModel!
     override init() {
         super.init()
-        self.soundModel = (UIApplication.sharedApplication().delegate as AppDelegate).soundModel
+        soundModel = (UIApplication.sharedApplication().delegate as AppDelegate).soundModel
         // still figuring out how to add notification properly; may need [weak self]
 //        NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationWillEnterForegroundNotification, object: nil, queue: nil, usingBlock: { [unowned self] (note: NSNotification!) in
 //            self.handleAppWillEnterForeground()
@@ -37,6 +37,6 @@ class ViewControllerElf: NSObject {
     
     
     func playButtonDownSound() {
-        self.soundModel.playButtonDownSound()
+        soundModel.playButtonDownSound()
     }
 }

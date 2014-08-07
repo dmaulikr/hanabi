@@ -10,24 +10,26 @@ import UIKit
 
 class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITextFieldDelegate {
     @IBOutlet weak var cancelButton: UIButton!
+    var numberOfPlayersInt = 3
     @IBOutlet weak var seedNumberTextField: UITextField!
+    var seedOptionalInt: Int?
     var solverElf: SolverElf!
     @IBOutlet weak var startButton: UIButton!
     var viewControllerElf: ViewControllerElf!
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
-        self.solverElf.stopSolving()
+        solverElf.stopSolving()
     }
     func solverElfDidChangeMode() {
-        self.updateUIBasedOnMode()
+        updateUIBasedOnMode()
     }
-    // Play/solve the requested number of games.
+    // Play/solve the requested game.
     @IBAction func handleStartButtonTapped() {
-        self.solverElf.solveAGame()
+        solverElf.solveGameWithSeed(seedOptionalInt, numberOfPlayersInt: numberOfPlayersInt)
     }
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
     @IBAction func playButtonDownSound() {
-        self.viewControllerElf.playButtonDownSound()
+        viewControllerElf.playButtonDownSound()
     }
     // Text fields: random-number seed.
     // multiple text fields?
@@ -36,50 +38,51 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
         // Valid seed: User should enter either an Int >= 0, or nothing ("") to let computer choose a random seed. If neither, do nothing.
         if let theInt = theTextField.text.toInt() {
             if theInt >= 0 {
-                self.solverElf.seedNumberOptionalInt = theInt
+                seedOptionalInt = theInt
             }
         }
         if theTextField.text == "" {
-            self.solverElf.seedNumberOptionalInt = nil
+            seedOptionalInt = nil
         }
-        // Show seed or placeholder.
-        var aString: String
-        if let theInt = self.solverElf.seedNumberOptionalInt {
-            aString = String(theInt)
-        } else {
-            aString = ""
-        }
-        theTextField.text = aString
+        theTextField.text = seedString()
     }
     // Dismiss keyboard.
     func textFieldShouldReturn(theTextField: UITextField!) -> Bool {
         theTextField.resignFirstResponder()
         return true
     }
+    // Return a string for the current seed, which is an optional int. If nil, return "" to show text field's placeholder.
+    func seedString() -> String {
+        if let theInt = seedOptionalInt {
+            return String(theInt)
+        } else {
+            return ""
+        }
+    }
     func updateUIBasedOnMode() {
-        switch self.solverElf.mode {
+        switch solverElf.mode {
         case SolverElf.Mode.Planning:
-            self.cancelButton.enabled = false
-            self.seedNumberTextField.enabled = true
-            self.startButton.enabled = true
+            cancelButton.enabled = false
+            seedNumberTextField.enabled = true
+            seedNumberTextField.text = seedString()
+            startButton.enabled = true
         case SolverElf.Mode.Solving:
-            self.cancelButton.enabled = true
-            self.seedNumberTextField.enabled = false
-            self.startButton.enabled = false
+            cancelButton.enabled = true
+            seedNumberTextField.enabled = false
+            startButton.enabled = false
         case SolverElf.Mode.Solved:
-            self.cancelButton.enabled = false
-            self.seedNumberTextField.enabled = false
-            self.startButton.enabled = true
+            cancelButton.enabled = false
+            seedNumberTextField.enabled = false
+            startButton.enabled = true
         }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        let aSolverElf = SolverElf()
-        aSolverElf.delegate = self;
-        self.solverElf = aSolverElf
-        self.viewControllerElf = ViewControllerElf()
-        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.cancelButton)
-        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.startButton)
-        self.updateUIBasedOnMode()
+        solverElf = SolverElf()
+        solverElf.delegate = self;
+        viewControllerElf = ViewControllerElf()
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cancelButton)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: startButton)
+        updateUIBasedOnMode()
     }
 }

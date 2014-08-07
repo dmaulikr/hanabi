@@ -12,10 +12,10 @@ class MainMenuViewController: UIViewController {
     var viewControllerElf: ViewControllerElf!
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
     @IBAction func playButtonDownSound() {
-        self.viewControllerElf.playButtonDownSound()
+        viewControllerElf.playButtonDownSound()
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.viewControllerElf = ViewControllerElf()
+        viewControllerElf = ViewControllerElf()
     }
 }

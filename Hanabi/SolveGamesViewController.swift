@@ -10,24 +10,25 @@ import UIKit
 
 class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextFieldDelegate {
     @IBOutlet weak var cancelButton: UIButton!
+    var numberOfGames: Int = 1
     @IBOutlet weak var numberOfGamesTextField: UITextField!
     var solverElf: SolverElf!
     @IBOutlet weak var startButton: UIButton!
     var viewControllerElf: ViewControllerElf!
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
-        self.solverElf.stopSolving()
+        solverElf.stopSolving()
     }
     func solverElfDidChangeMode() {
-        self.updateUIBasedOnMode()
+        updateUIBasedOnMode()
     }
     // Play/solve the requested number of games.
     @IBAction func handleStartButtonTapped() {
-        self.solverElf.solveGames()
+        solverElf.solveGames(numberOfGames, numberOfPlayersInt: 3)
     }
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
     @IBAction func playButtonDownSound() {
-        self.viewControllerElf.playButtonDownSound()
+        viewControllerElf.playButtonDownSound()
     }
     // Text field is for number of games to play/solve.
     // If a valid value, then update model. Show current value in text field.
@@ -35,10 +36,10 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         // Valid: Int >= 1.
         if let theInt = theTextField.text.toInt() {
             if theInt >= 1 {
-                self.solverElf.numberOfGamesToPlayInt = theInt
+                numberOfGames = theInt
             }
         }
-        theTextField.text = String(self.solverElf.numberOfGamesToPlayInt)
+        theTextField.text = String(numberOfGames)
     }
     // Dismiss keyboard.
     func textFieldShouldReturn(theTextField: UITextField!) -> Bool {
@@ -46,29 +47,29 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         return true
     }
     func updateUIBasedOnMode() {
-        switch self.solverElf.mode {
+        switch solverElf.mode {
         case SolverElf.Mode.Planning:
-            self.cancelButton.enabled = false
-            self.numberOfGamesTextField.enabled = true
-            self.startButton.enabled = true
+            cancelButton.enabled = false
+            numberOfGamesTextField.enabled = true
+            numberOfGamesTextField.text = String(numberOfGames)
+            startButton.enabled = true
         case SolverElf.Mode.Solving:
-            self.cancelButton.enabled = true
-            self.numberOfGamesTextField.enabled = false
-            self.startButton.enabled = false
+            cancelButton.enabled = true
+            numberOfGamesTextField.enabled = false
+            startButton.enabled = false
         default:
-            self.cancelButton.enabled = false
-            self.numberOfGamesTextField.enabled = true
-            self.startButton.enabled = true
+            cancelButton.enabled = false
+            numberOfGamesTextField.enabled = true
+            startButton.enabled = true
         }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        let aSolverElf = SolverElf()
-        aSolverElf.delegate = self;
-        self.solverElf = aSolverElf
-        self.viewControllerElf = ViewControllerElf()
-        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.cancelButton)
-        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: self.startButton)
-        self.updateUIBasedOnMode()
+        solverElf = SolverElf()
+        solverElf.delegate = self;
+        viewControllerElf = ViewControllerElf()
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cancelButton)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: startButton)
+        updateUIBasedOnMode()
     }
 }
