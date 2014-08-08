@@ -9,27 +9,15 @@
 import UIKit
 
 protocol SolverElfDelegate {
-    func solverElfDidChangeMode()
+    // Sent when done solving.
+    func solverElfDidFinish()
 }
 
 private var myContext = 0
 
 class SolverElf: NSObject {
-    enum Mode: Int {
-        // Planning: user can set things.
-        // Solving: elf is calculating/playing.
-        // Solved: game done.
-        case Planning, Solving, Solved
-    }
-    var delegate: SolverElfDelegate? = nil
+    var delegate: SolverElfDelegate?
     var game: Game?
-    var mode: Mode = Mode.Planning {
-    didSet {
-        if mode != oldValue {
-            delegate?.solverElfDidChangeMode()
-        }
-    }
-    }
     var numberOfGamesPlayedInt = 0
 //    var numberOfGamesToPlayInt = 1
     var numberOfGamesWonInt = 0
@@ -47,16 +35,15 @@ class SolverElf: NSObject {
         println("Time spent: \(numberOfSecondsSpentFloat) seconds")
     }
     // Make and play the given game.
-    func solveGameWithSeed(seedOptionalInt: Int?, numberOfPlayersInt: Int) {
-        mode = Mode.Solving
-        game = Game(seedOptionalInt: seedOptionalInt, numberOfPlayersInt: numberOfPlayersInt)
+    func solveGameWithSeed(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
+        game = Game(seedOptionalUInt32: seedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
         // play/solve game
 //        playToEnd()
 //        scoreGame()
         // scoreGame -> Mode.Solved
+        delegate?.solverElfDidFinish()
     }
     func solveGames(numberOfGames: Int, numberOfPlayersInt: Int) {
-        mode = Mode.Solving
         numberOfSecondsSpentFloat = 0.0
         // start timer
         numberOfGamesPlayedInt = 0
@@ -71,9 +58,7 @@ class SolverElf: NSObject {
         // end timer
 //        numberOfSecondsSpentFloat = ??
         showResults()
-        mode = Mode.Planning
     }
     func stopSolving() {
-        mode = Mode.Planning
     }
 }

@@ -9,7 +9,20 @@
 import UIKit
 
 class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextFieldDelegate {
+    enum Mode: Int {
+        // Planning: user can set things.
+        // Solving: elf is calculating/playing.
+        // Solved: game done.
+        case Planning, Solving, Solved
+    }
     @IBOutlet weak var cancelButton: UIButton!
+    var mode: Mode = .Planning {
+        didSet {
+            if mode != oldValue {
+                updateUIBasedOnMode()
+            }
+        }
+    }
     var numberOfGames: Int = 1
     @IBOutlet weak var numberOfGamesTextField: UITextField!
     var solverElf: SolverElf!
@@ -17,18 +30,21 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
     var viewControllerElf: ViewControllerElf!
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
+        mode = .Planning
         solverElf.stopSolving()
-    }
-    func solverElfDidChangeMode() {
-        updateUIBasedOnMode()
     }
     // Play/solve the requested number of games.
     @IBAction func handleStartButtonTapped() {
+        mode = .Solving
         solverElf.solveGames(numberOfGames, numberOfPlayersInt: 3)
     }
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
     @IBAction func playButtonDownSound() {
         viewControllerElf.playButtonDownSound()
+    }
+    func solverElfDidFinish() {
+        mode = .Planning
+        updateUIBasedOnMode()
     }
     // Text field is for number of games to play/solve.
     // If a valid value, then update model. Show current value in text field.
@@ -47,13 +63,13 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         return true
     }
     func updateUIBasedOnMode() {
-        switch solverElf.mode {
-        case SolverElf.Mode.Planning:
+        switch mode {
+        case .Planning:
             cancelButton.enabled = false
             numberOfGamesTextField.enabled = true
             numberOfGamesTextField.text = String(numberOfGames)
             startButton.enabled = true
-        case SolverElf.Mode.Solving:
+        case .Solving:
             cancelButton.enabled = true
             numberOfGamesTextField.enabled = false
             startButton.enabled = false

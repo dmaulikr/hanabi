@@ -38,6 +38,7 @@
 /* Begin PBXFileReference section */
 		9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkThroughGameViewController.swift; sourceTree = "<group>"; };
 		93C2EE381992DCDD00A29B15 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		93C2EE3A199424F900A29B15 /* Playground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Playground.playground; sourceTree = "<group>"; };
 		93D42FCF198F7A59006A28D9 /* Hanabi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hanabi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93D42FD3198F7A59006A28D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93D42FD4198F7A59006A28D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -109,16 +110,17 @@
 				93D42FFA198F8E5A006A28D9 /* GGKUtilities.m */,
 				93D42FFC198F997F006A28D9 /* GGKViewController.h */,
 				93D42FFD198F997F006A28D9 /* GGKViewController.m */,
+				93D42FD6198F7A59006A28D9 /* Hanabi.xcdatamodeld */,
+				93D42FF8198F8E59006A28D9 /* Hanabi-Bridging-Header.h */,
+				93D42FDE198F7A59006A28D9 /* Images.xcassets */,
+				93D42FDB198F7A59006A28D9 /* Main.storyboard */,
 				93F653BA1990272A00198AB6 /* MainMenuViewController.swift */,
+				93C2EE3A199424F900A29B15 /* Playground.playground */,
 				93D42FF6198F8A6D006A28D9 /* SolveGamesViewController.swift */,
 				93F653BE1990CAE800198AB6 /* SolverElf.swift */,
 				93F653BC1990447300198AB6 /* ViewControllerElf.swift */,
 				9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */,
-				93D42FDB198F7A59006A28D9 /* Main.storyboard */,
-				93D42FDE198F7A59006A28D9 /* Images.xcassets */,
-				93D42FD6198F7A59006A28D9 /* Hanabi.xcdatamodeld */,
 				93D42FD2198F7A59006A28D9 /* Supporting Files */,
-				93D42FF8198F8E59006A28D9 /* Hanabi-Bridging-Header.h */,
 			);
 			path = Hanabi;
 			sourceTree = "<group>";
