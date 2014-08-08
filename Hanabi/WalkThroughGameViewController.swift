@@ -16,6 +16,9 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
         case Planning, Solving, Solved
     }
     @IBOutlet weak var cancelButton: UIButton!
+    // The turn currently being viewed. Start/setup is 1, last turn is N and end of game is N + 1.
+    var currentTurnInt = 1
+    @IBOutlet weak var discardsLabel: UILabel!
     var mode: Mode = .Planning {
         didSet {
             if mode != oldValue {
@@ -24,11 +27,14 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
         }
     }
     var numberOfPlayersInt = 3
+    @IBOutlet weak var scoreLabel: UILabel!
     @IBOutlet weak var seedNumberTextField: UITextField!
     var seedOptionalUInt32: UInt32?
     var solverElf: SolverElf!
     @IBOutlet weak var startButton: UIButton!
+    @IBOutlet weak var gameSettingsView: UIView!
     var viewControllerElf: ViewControllerElf!
+    @IBOutlet weak var visibleHandsLabel: UILabel!
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
         mode = .Planning
@@ -54,8 +60,35 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
             return ""
         }
     }
+    // Show data for given turn.
+    // ok we can show the turn, but it has a starting and ending game state
+    // how will the user see the action and ending state? in the same table picker, or separately? (separately seems interesting)
+    func showTurn(turnInt: Int) {
+        if let game = solverElf.currentOptionalGame {
+            let turnArray = game.turnArray
+            if turnArray.count >= turnInt {
+                let turn = turnArray[turnInt - 1]
+                let gameState = turn.startingGameState
+                var scoreString = ""
+                for (color, score) in gameState.scoreDictionary {
+                    scoreString += String(score)
+                }
+                scoreLabel.text = "Score: BGRWY"
+                "\n       \(scoreString)"
+                "\nClues left: \(gameState.numberOfCluesLeftInt)"
+                "\nStrikes left: \(gameState.numberOfStrikesLeftInt)"
+                "\nCards left: \(gameState.deckCardArray.count)"
+                discardsLabel.text = "Discards:"
+                "\n"
+            }
+        }
+        
+        // a turn has turn-specific info
+        // discard pile,  visible hands, deck?
+        
+    }
     func solverElfDidFinish() {
-        mode = .Planning
+        mode = .Solved
         updateUIBasedOnMode()
     }
     func textFieldDidEndEditing(theTextField: UITextField!) {
@@ -92,6 +125,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
             cancelButton.enabled = false
             seedNumberTextField.enabled = true
             startButton.enabled = true
+            showTurn(currentTurnInt)
         }
     }
     override func viewDidLoad() {
@@ -100,7 +134,11 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
         solverElf.delegate = self;
         viewControllerElf = ViewControllerElf()
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cancelButton)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: discardsLabel)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: gameSettingsView)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: scoreLabel)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: startButton)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: visibleHandsLabel)
         updateUIBasedOnMode()
     }
 }

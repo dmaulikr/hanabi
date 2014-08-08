@@ -6,41 +6,47 @@
 import UIKit
 
 class Game: NSObject {
-    // Each card has a color and a number.
-    struct Card {
-        enum Color: Int {
-            case Blue = 1, Green, Red, White, Yellow
-            func letterString() -> String {
-                var aLetterString: String
-                switch self {
-                case Blue:
-                    aLetterString = "B"
-                case Green:
-                    aLetterString = "G"
-                case Red:
-                    aLetterString = "R"
-                case White:
-                    aLetterString = "W"
-                case Yellow:
-                    aLetterString = "Y"
-                default:
-                    aLetterString = "M"
-                }
-                return aLetterString
-            }
-        }
-        var color: Color
-        var numberInt: Int!
-        // Each card can be represented by two letters (e.g., "B4," "Y1").
-        func string() -> String {
-            return "\(color.letterString())\(numberInt)"
-        }
-    }
+    
+    // Start of game is turn 1. At end of game, there's no current turn.
+    var currentOptionalTurn: Turn?
     // The draw pile.
     var deckCardArray: [Card] = []
     var numberOfPlayersInt: Int = 2
     // Number for srandom(). Determines card order.
 //    var seedInt: Int
+    var turnArray: [Turn] = []
+    // Return the number of the current turn.
+    func currentTurnNumberOptionalInt() -> Int? {
+        if let turn = currentOptionalTurn {
+            let optionalIndex = find(turnArray, turn)
+            if let index = optionalIndex {
+                return index + 1
+            }
+        }
+        return nil
+    }
+    // Deal starting hands to the given players.
+    func dealHandsFromDeck(inout deckCardArray: [Card], inout playerArray: [Player]) {
+        
+    }
+    // Do the current action. Make next turn or end game.
+    func finishCurrentTurn() {
+        if let turn = currentOptionalTurn {
+            // this should populate the endingState
+            turn.performAction()
+            if isDone() {
+                currentOptionalTurn = nil
+            } else {
+                // turn 2 starting state = turn 1 ending state with a different current player
+                // turn 1 starting state = ??
+                let nextOptionalTurn = Turn.fromTurn(turn)
+                if let nextTurn = nextOptionalTurn {
+                    turnArray.append(nextTurn)
+                    currentOptionalTurn = nextTurn
+                }
+            }
+        }
+    }
     // Make deck. Shuffle. Deal hands.
     init(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
         super.init()
@@ -51,9 +57,23 @@ class Game: NSObject {
         shuffleDeck(&deckCardArray, seedOptionalUInt32: seedOptionalUInt32)
         // debugging
         printDeck(deckCardArray)
-        //
-        // deal starting hands
-        
+        var playerArray: [Player]
+        for _ in 1...numberOfPlayersInt {
+            playerArray.append(Player())
+        }
+        dealHandsFromDeck(&deckCardArray, playerArray: &playerArray)
+        let gameState = GameState()
+        gameState.playerArray = playerArray
+        gameState.deckCardArray = deckCardArray
+        let turn = Turn(gameState: gameState)
+        turnArray.append(turn)
+        currentOptionalTurn = turn
+    }
+    // Return whether the game has ended (not necessarily won).
+    func isDone() -> Bool {
+        // check some game parameters
+        // temp so we don't get infinite loop
+        return true
     }
     // Return an unshuffled deck.
     func makeADeck() -> [Card] {
