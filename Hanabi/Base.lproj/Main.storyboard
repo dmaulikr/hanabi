@@ -77,9 +77,9 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="Log here. E.g., calc results. Inferences. (add border)" translatesAutoresizingMaskIntoConstraints="NO" id="64G-dN-d3B">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="(Notes)" translatesAutoresizingMaskIntoConstraints="NO" id="64G-dN-d3B">
                                 <rect key="frame" x="646" y="76" width="240" height="277"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -423,6 +423,7 @@ P5: x</string>
                         <outlet property="discardsLabel" destination="JJ6-4F-7wY" id="BUC-dP-Dvw"/>
                         <outlet property="discardsView" destination="fdO-UC-mDz" id="NZ1-dp-cF6"/>
                         <outlet property="gameSettingsView" destination="Q3t-a7-Xcr" id="BAh-Wj-COe"/>
+                        <outlet property="logTextView" destination="64G-dN-d3B" id="ifG-gh-skI"/>
                         <outlet property="scoreLabel" destination="mXO-oN-Iq1" id="bJo-4U-FFu"/>
                         <outlet property="scoreView" destination="bsf-GH-zAa" id="7hB-qa-qi6"/>
                         <outlet property="seedNumberTextField" destination="5rX-jA-KNd" id="F62-Eo-EtC"/>

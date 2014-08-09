@@ -21,6 +21,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
     @IBOutlet weak var discardsLabel: UILabel!
     // View enclosing discards label. To make bigger border.
     @IBOutlet weak var discardsView: UIView!
+    @IBOutlet weak var logTextView: UITextView!
     var mode: Mode = .Planning {
         didSet {
             if mode != oldValue {
@@ -71,6 +72,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
     // how will the user see the action and ending state? in the same table picker, or separately? (separately seems interesting)
     func showTurn(turnInt: Int) {
         if let game = solverElf.currentOptionalGame {
+            logTextView.text = "Seed: \(game.seedUInt32)"
             let turnArray = game.turnArray
             if turnArray.count >= turnInt {
                 let turn = turnArray[turnInt - 1]
@@ -129,17 +131,25 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
         switch mode {
         case .Planning:
             cancelButton.enabled = false
+            discardsView.hidden = true
+//            gameSettingsView.hidden = true
+            scoreView.hidden = true
             seedNumberTextField.enabled = true
             seedNumberTextField.text = seedString()
             startButton.enabled = true
+            visibleHandsView.hidden = true
         case .Solving:
             cancelButton.enabled = true
             seedNumberTextField.enabled = false
             startButton.enabled = false
         case .Solved:
             cancelButton.enabled = false
+            discardsView.hidden = false
+//            gameSettingsView.hidden = false
+            scoreView.hidden = false
             seedNumberTextField.enabled = true
             startButton.enabled = true
+            visibleHandsView.hidden = false
             showTurn(currentTurnInt)
         }
     }
@@ -151,11 +161,13 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cancelButton)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: discardsView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: gameSettingsView)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: logTextView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: scoreView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: startButton)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: visibleHandsView)
         discardsView.backgroundColor = UIColor.clearColor()
         gameSettingsView.backgroundColor = UIColor.clearColor()
+        logTextView.backgroundColor = UIColor.clearColor()
         scoreView.backgroundColor = UIColor.clearColor()
         visibleHandsView.backgroundColor = UIColor.clearColor()
         updateUIBasedOnMode()

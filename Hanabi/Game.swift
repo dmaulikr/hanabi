@@ -12,7 +12,7 @@ class Game: NSObject {
 //    var deckCardArray: [Card] = []
     var numberOfPlayersInt: Int = 2
     // Number for srandom(). Determines card order.
-//    var seedInt: Int
+    var seedUInt32: UInt32
     var turnArray: [Turn] = []
     // Return the number of the current turn.
     func currentTurnNumberOptionalInt() -> Int? {
@@ -66,12 +66,16 @@ class Game: NSObject {
     }
     // Make deck. Shuffle. Deal hands.
     init(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
+        // If no seed, use random.
+        if seedOptionalUInt32 == nil {
+            seedUInt32 = arc4random()
+        } else {
+            seedUInt32 = seedOptionalUInt32!
+        }
         super.init()
         self.numberOfPlayersInt = numberOfPlayersInt
         var deckCardArray = makeADeck()
-        // don't need to store seed yet
-        // could make the seed an inout var; wait until I figure out where/how to user wants to know seed
-        shuffleDeck(&deckCardArray, seedOptionalUInt32: seedOptionalUInt32)
+        shuffleDeck(&deckCardArray, seedUInt32: seedUInt32)
         // debugging
         printDeck(deckCardArray)
         var playerArray: [Player] = []
@@ -126,16 +130,9 @@ class Game: NSObject {
         print("\n")
     }
     // Deck is randomized in a reproducible order.
-    func shuffleDeck(inout deckCardArray: [Card], seedOptionalUInt32: UInt32?) {
+    func shuffleDeck(inout deckCardArray: [Card], seedUInt32: UInt32) {
         // Shuffle deck: Pull a random card and put in new deck. Repeat.
-        // If no seed, choose a random one.
-        var seedUInt32: UInt32
-        if seedOptionalUInt32 == nil {
-            seedUInt32 = arc4random()
-        } else {
-            seedUInt32 = seedOptionalUInt32!
-        }
-        println("Seed: \(seedUInt32)")
+//        println("Seed: \(seedUInt32)")
         srandom(seedUInt32)
         var tempCardArray: [Card] = []
         // Number of cards in deck will decrease each time.
