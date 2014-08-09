@@ -19,6 +19,8 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
     // The turn currently being viewed. Start/setup is 1, last turn is N and end of game is N + 1.
     var currentTurnInt = 1
     @IBOutlet weak var discardsLabel: UILabel!
+    // View enclosing discards label. To make bigger border.
+    @IBOutlet weak var discardsView: UIView!
     var mode: Mode = .Planning {
         didSet {
             if mode != oldValue {
@@ -28,6 +30,8 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
     }
     var numberOfPlayersInt = 3
     @IBOutlet weak var scoreLabel: UILabel!
+    // View enclosing score label. To make bigger border.
+    @IBOutlet weak var scoreView: UIView!
     @IBOutlet weak var seedNumberTextField: UITextField!
     var seedOptionalUInt32: UInt32?
     var solverElf: SolverElf!
@@ -35,6 +39,8 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
     @IBOutlet weak var gameSettingsView: UIView!
     var viewControllerElf: ViewControllerElf!
     @IBOutlet weak var visibleHandsLabel: UILabel!
+    // View enclosing visible-hands label. To make bigger border.
+    @IBOutlet weak var visibleHandsView: UIView!
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
         mode = .Planning
@@ -73,19 +79,28 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
                 for (color, score) in gameState.scoreDictionary {
                     scoreString += String(score)
                 }
-                scoreLabel.text = "Score: BGRWY"
-                "\n       \(scoreString)"
-                "\nClues left: \(gameState.numberOfCluesLeftInt)"
-                "\nStrikes left: \(gameState.numberOfStrikesLeftInt)"
+                scoreLabel.text = "Score: BGRWY" +
+                "\n       \(scoreString)" +
+                "\nClues left: \(gameState.numberOfCluesLeftInt)" +
+                "\nStrikes left: \(gameState.numberOfStrikesLeftInt)" +
                 "\nCards left: \(gameState.deckCardArray.count)"
+                var discardsString = ""
                 discardsLabel.text = "Discards:"
-                "\n"
+                "\n\(discardsString)"
+                var visibleHandsString = ""
+                for index in 1...gameState.playerArray.count {
+                    visibleHandsString += "\nP\(index):"
+                    if index != gameState.currentPlayerNumberInt {
+                        let player = gameState.playerArray[index - 1]
+                        for card in player.handCardArray {
+                            visibleHandsString += " \(card.string())"
+                        }
+                    }
+                }
+                visibleHandsLabel.text = "Visible hands:" +
+                "\(visibleHandsString)"
             }
         }
-        
-        // a turn has turn-specific info
-        // discard pile,  visible hands, deck?
-        
     }
     func solverElfDidFinish() {
         mode = .Solved
@@ -134,11 +149,15 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
         solverElf.delegate = self;
         viewControllerElf = ViewControllerElf()
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cancelButton)
-        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: discardsLabel)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: discardsView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: gameSettingsView)
-        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: scoreLabel)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: scoreView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: startButton)
-        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: visibleHandsLabel)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: visibleHandsView)
+        discardsView.backgroundColor = UIColor.clearColor()
+        gameSettingsView.backgroundColor = UIColor.clearColor()
+        scoreView.backgroundColor = UIColor.clearColor()
+        visibleHandsView.backgroundColor = UIColor.clearColor()
         updateUIBasedOnMode()
     }
 }

@@ -6,11 +6,10 @@
 import UIKit
 
 class Game: NSObject {
-    
     // Start of game is turn 1. At end of game, there's no current turn.
     var currentOptionalTurn: Turn?
     // The draw pile.
-    var deckCardArray: [Card] = []
+//    var deckCardArray: [Card] = []
     var numberOfPlayersInt: Int = 2
     // Number for srandom(). Determines card order.
 //    var seedInt: Int
@@ -27,7 +26,25 @@ class Game: NSObject {
     }
     // Deal starting hands to the given players.
     func dealHandsFromDeck(inout deckCardArray: [Card], inout playerArray: [Player]) {
-        
+        // In reality, we'd deal a card to a player at a time, because the cards may not be well-shuffled. Here, we'll deal each player completely. This makes games with the same deck but different numbers of players more comparable.
+        let numberOfPlayersInt = playerArray.count
+        var numberOfCardsPerPlayerInt: Int
+        switch numberOfPlayersInt {
+        case 2, 3:
+            numberOfCardsPerPlayerInt = 5
+        case 4, 5:
+            numberOfCardsPerPlayerInt = 4
+        default:
+            numberOfCardsPerPlayerInt = 5
+        }
+        for playerNumberInt in 1...numberOfPlayersInt {
+            let player = playerArray[playerNumberInt - 1]
+            for int2 in 1...numberOfCardsPerPlayerInt {
+                // Pulling last card of deck because it should be easier/faster.
+                let card = deckCardArray.removeLast()
+                player.handCardArray.append(card)
+            }
+        }
     }
     // Do the current action. Make next turn or end game.
     func finishCurrentTurn() {
@@ -39,8 +56,8 @@ class Game: NSObject {
             } else {
                 // turn 2 starting state = turn 1 ending state with a different current player
                 // turn 1 starting state = ??
-                let nextOptionalTurn = Turn.fromTurn(turn)
-                if let nextTurn = nextOptionalTurn {
+                if let gameState = turn.endingOptionalGameState {
+                    let nextTurn = Turn(gameState: gameState)
                     turnArray.append(nextTurn)
                     currentOptionalTurn = nextTurn
                 }
@@ -51,13 +68,13 @@ class Game: NSObject {
     init(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
         super.init()
         self.numberOfPlayersInt = numberOfPlayersInt
-        deckCardArray = makeADeck()
+        var deckCardArray = makeADeck()
         // don't need to store seed yet
         // could make the seed an inout var; wait until I figure out where/how to user wants to know seed
         shuffleDeck(&deckCardArray, seedOptionalUInt32: seedOptionalUInt32)
         // debugging
         printDeck(deckCardArray)
-        var playerArray: [Player]
+        var playerArray: [Player] = []
         for _ in 1...numberOfPlayersInt {
             playerArray.append(Player())
         }

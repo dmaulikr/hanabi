@@ -19,7 +19,14 @@ class Turn: NSObject {
     // this should populate the endingState
     func performAction() {
         if let action = optionalAction {
-            
+            switch action.type {
+            case .Clue:
+                println("give a clue")
+            case .Play:
+                println("play a card")
+            case .Discard:
+                println("discard a card")
+            }
         }
     }
 }

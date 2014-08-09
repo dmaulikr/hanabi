@@ -9,5 +9,10 @@
 import UIKit
 
 class Action: NSObject {
-   
+    enum Type: Int {
+        case Clue, Play, Discard
+    }
+
+    // action can be either discard card, play card, or give clue
+    var type: Type = .Clue
 }

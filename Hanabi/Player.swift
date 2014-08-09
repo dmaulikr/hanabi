@@ -9,5 +9,5 @@
 import UIKit
 
 class Player: NSObject {
-   
+    var handCardArray: [Card] = []
 }
