@@ -16,6 +16,7 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         case Planning, Solving, Solved
     }
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var logTextView: UITextView!
     var mode: Mode = .Planning {
         didSet {
             if mode != oldValue {
@@ -42,8 +43,19 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
     @IBAction func playButtonDownSound() {
         viewControllerElf.playButtonDownSound()
     }
-    func solverElfDidFinish() {
-        mode = .Planning
+    func showResults() {
+        let numberOfGamesPlayedInt = solverElf.numberOfGamesPlayed()
+        println("Games: \(numberOfGamesPlayedInt)")
+        println("Average score: \(solverElf.averageScore())")
+        println("Average # of turns: \(solverElf.averageNumberOfTurns())")
+        let numberOfGamesLostInt = solverElf.numberOfGamesLost()
+        let percentOfGamesLostFloat = Float(numberOfGamesLostInt) * 100 / Float(numberOfGamesPlayedInt)
+        println("Games lost: \(numberOfGamesLostInt) (\(percentOfGamesLostFloat)%)")
+        println("Seeds for games lost:")
+        println("Time spent: \(solverElf.numberOfSecondsSpentFloat) seconds")
+    }
+    func solverElfDidFinishAllGames() {
+        mode = .Solved
         updateUIBasedOnMode()
     }
     // Text field is for number of games to play/solve.
@@ -73,10 +85,11 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
             cancelButton.enabled = true
             numberOfGamesTextField.enabled = false
             startButton.enabled = false
-        default:
+        case .Solved:
             cancelButton.enabled = false
             numberOfGamesTextField.enabled = true
             startButton.enabled = true
+            showResults()
         }
     }
     override func viewDidLoad() {

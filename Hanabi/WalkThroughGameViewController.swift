@@ -104,7 +104,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UIText
             }
         }
     }
-    func solverElfDidFinish() {
+    func solverElfDidFinishAGame() {
         mode = .Solved
         updateUIBasedOnMode()
     }

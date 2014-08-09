@@ -8,9 +8,10 @@
 
 import UIKit
 
-protocol SolverElfDelegate {
+@objc protocol SolverElfDelegate {
     // Sent when done solving.
-    func solverElfDidFinish()
+    optional func solverElfDidFinishAGame()
+    optional func solverElfDidFinishAllGames()
 }
 
 private var myContext = 0
@@ -18,13 +19,25 @@ private var myContext = 0
 class SolverElf: NSObject {
     var delegate: SolverElfDelegate?
     var currentOptionalGame: Game?
-    var numberOfGamesPlayedInt = 0
-//    var numberOfGamesToPlayInt = 1
-    var numberOfGamesWonInt = 0
-//    var numberOfPlayersInt = 3
+    // Games solved.
+    var gameArray: [Game] = []
     var numberOfSecondsSpentFloat = 0.0
-    // Number for srandom().
-//    var seedOptionalInt: Int?
+    // Average number of turns to finish currently solved games. (To be meaningful, presumes most/all games were won.)
+    func averageNumberOfTurns() -> Float {
+        var totalTurnsInt = 0
+        for game in gameArray {
+            totalTurnsInt += game.turnArray.count
+        }
+        return Float(totalTurnsInt) / Float(gameArray.count)
+    }
+    // Average for currently solved games.
+    func averageScore() -> Float {
+        var totalScoresInt = 0
+        for game in gameArray {
+            totalScoresInt += game.finalScore()
+        }
+        return Float(totalScoresInt) / Float(gameArray.count)
+    }
     // Return the best action for the given turn.
     // here's where elf can try different stratgies.
     func bestActionForTurn(turn: Turn) -> Action {
@@ -33,47 +46,43 @@ class SolverElf: NSObject {
     override init() {
         super.init()
     }
-    // User sees results of solving.
-    func showResults() {
-        println("Games: \(numberOfGamesPlayedInt)")
-        println("Games won: \(numberOfGamesWonInt)")
-        println("Time spent: \(numberOfSecondsSpentFloat) seconds")
+    func numberOfGamesLost() -> Int {
+        var numberOfGamesLost = 0
+        for game in gameArray {
+            if !game.wasWon() {
+                numberOfGamesLost++
+            }
+        }
+        return numberOfGamesLost
     }
-    // Make and play the given game.
-    func solveGameWithSeed(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
+    func numberOfGamesPlayed() -> Int {
+        return gameArray.count
+    }
+    // Make, play and return a game.
+    func solveGameWithSeed(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) -> Game {
         let game = Game(seedOptionalUInt32: seedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
-        // until we win/end...
         do {
             solveCurrentTurnForGame(game)
             game.finishCurrentTurn()
         } while !game.isDone()
-          // that results in turn x
-        // repeat
-          // turn 1 is start, with an action described but the effects not shown yet
-        // turn 2 shows the effects and new player turn, with the next action described
-       
-        // play/solve game
-//        playToEnd()
-//        scoreGame()
-        // scoreGame -> Mode.Solved
         currentOptionalGame = game
-        delegate?.solverElfDidFinish()
+        delegate?.solverElfDidFinishAGame?()
+        return game
     }
     func solveGames(numberOfGames: Int, numberOfPlayersInt: Int) {
         numberOfSecondsSpentFloat = 0.0
-        // start timer
-        numberOfGamesPlayedInt = 0
-        numberOfGamesWonInt = 0
+        gameArray = []
+        // Track time spent.
+        let startDate = NSDate()
         // Solve one at a time.
         for gameNumber in 1...numberOfGames {
             //            println("Playing game \(gameNumber)")
-            solveGameWithSeed(nil, numberOfPlayersInt: numberOfPlayersInt)
-            numberOfGamesPlayedInt++
-//            saveResults()
+            let game = solveGameWithSeed(nil, numberOfPlayersInt: numberOfPlayersInt)
+            gameArray.append(game)
         }
-        // end timer
-//        numberOfSecondsSpentFloat = ??
-        showResults()
+        let endDate = NSDate()
+        numberOfSecondsSpentFloat = endDate.timeIntervalSinceDate(startDate)
+        delegate?.solverElfDidFinishAllGames?()
     }
     // Determine best action for given turn. Do it.
     func solveTurn(turn: Turn) {

@@ -16,16 +16,25 @@ class Turn: NSObject {
         startingGameState = gameState
         super.init()
     }
-    // this should populate the endingState
+    // this should populate/create the endingState, which should start as a copy of the startingState
     func performAction() {
         if let action = optionalAction {
             switch action.type {
             case .Clue:
                 println("give a clue")
+                // at least remove a clue token for now
             case .Play:
                 println("play a card")
+                // remove card from hand
+                // if valid, increase score
+                // else, remove strike and put in discard
+                // player draws new card
             case .Discard:
                 println("discard a card")
+                // remove card from hand
+                // put card in discard pile
+                // add a clue token (if not max; put a note here for later, too)
+                // player draws new card
             }
         }
     }

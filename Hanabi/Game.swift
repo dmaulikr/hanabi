@@ -46,6 +46,17 @@ class Game: NSObject {
             }
         }
     }
+    // Sum of score for each color.
+    func finalScore() -> Int {
+        var scoreInt = 0
+        if let scoreDictionary = turnArray.last?.endingOptionalGameState?.scoreDictionary {
+            // go through each color/item, sum stuff
+            for (color, score) in scoreDictionary {
+                scoreInt += score
+            }
+        }
+        return scoreInt
+    }
     // Do the current action. Make next turn or end game.
     func finishCurrentTurn() {
         if let turn = currentOptionalTurn {
@@ -55,8 +66,10 @@ class Game: NSObject {
                 currentOptionalTurn = nil
             } else {
                 // turn 2 starting state = turn 1 ending state with a different current player
-                // turn 1 starting state = ??
                 if let gameState = turn.endingOptionalGameState {
+                    // change current player
+                    //increase/loop
+//                    gameState.currentPlayerNumberInt
                     let nextTurn = Turn(gameState: gameState)
                     turnArray.append(nextTurn)
                     currentOptionalTurn = nextTurn
@@ -142,5 +155,13 @@ class Game: NSObject {
             tempCardArray.append(card)
         }
         deckCardArray = tempCardArray
+    }
+    // Return whether the game had a winning score.
+    func wasWon() -> Bool {
+        if finalScore() == 25 {
+            return true
+        } else {
+            return false
+        }
     }
 }
