@@ -16,25 +16,37 @@ class Turn: NSObject {
         startingGameState = gameState
         super.init()
     }
-    // this should populate/create the endingState, which should start as a copy of the startingState
+    // From the starting state, perform the action to make the ending state.
     func performAction() {
         if let action = optionalAction {
-            switch action.type {
-            case .Clue:
-                println("give a clue")
-                // at least remove a clue token for now
-            case .Play:
-                println("play a card")
-                // remove card from hand
-                // if valid, increase score
-                // else, remove strike and put in discard
-                // player draws new card
-            case .Discard:
-                println("discard a card")
-                // remove card from hand
-                // put card in discard pile
-                // add a clue token (if not max; put a note here for later, too)
-                // player draws new card
+            if let endingGameState = startingGameState.copy() as? GameState {
+                endingGameState.performAction(action)
+                
+//                switch action.type {
+//                case .Clue:
+//                    println("give a clue")
+//                    //endingGameState.removeClue()
+//                    endingGameState.numberOfCluesLeftInt--
+//                case .Play:
+//                    println("play a card")
+//                    // remove card from hand
+//                    // if valid, increase score
+//                    // else, remove strike and put in discard
+//                    // player draws new card
+//                case .Discard:
+//                    println("discard a card")
+//                    // remove card from hand
+//                    //endingGameState.discardCard()
+//                    endingGameState.currentPlayerNumberInt
+//                    endingGameState.playerArray[]
+//                    // put card in discard pile
+//                    // add a clue token (if not max; put a note here for later, too)
+//                    //endingGameState.addClue()
+//                    endingGameState.numberOfCluesLeftInt++
+//                    // player draws new card
+//                }
+                
+                endingOptionalGameState = endingGameState
             }
         }
     }

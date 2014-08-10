@@ -14,9 +14,26 @@ class GameState: NSObject {
     var discardsCardArray: [Card] = []
     var numberOfCluesLeftInt = 8
     var numberOfStrikesLeftInt = 3
+    // Number of turns played after the deck became empty. To determine game end.
+    var numberOfTurnsPlayedWithEmptyDeckInt = 0
     var playerArray: [Player] = []
     // The score is a number associated with each color. Total score is the sum.
     var scoreDictionary: [Card.Color: Int] = [:]
+    override func copy() -> AnyObject! {
+        var gameState = GameState()
+        gameState.currentPlayerNumberInt = currentPlayerNumberInt
+        // hopefully this is deep
+        gameState.deckCardArray = deckCardArray
+        // hopefully this is deep
+        gameState.discardsCardArray = discardsCardArray
+        gameState.numberOfCluesLeftInt = numberOfCluesLeftInt
+        gameState.numberOfStrikesLeftInt = numberOfStrikesLeftInt
+        gameState.numberOfTurnsPlayedWithEmptyDeckInt = numberOfTurnsPlayedWithEmptyDeckInt
+        // hopefully this is deep
+        gameState.playerArray = playerArray
+        gameState.scoreDictionary = scoreDictionary
+        return gameState
+    }
     override init() {
         // Initialize score.
         for int in 1...5 {
@@ -25,5 +42,59 @@ class GameState: NSObject {
             }
         }
         super.init()
+    }
+    // Return whether the game has ended (not necessarily won).
+    func isDone() -> Bool {
+        // Game ends if score maxed, if out of strikes or if out of turns. The last case: when the deck is empty, each player gets one more turn.
+        if totalScore() == 25 || numberOfStrikesLeftInt == 0 {
+            return true
+        }
+        if deckCardArray.isEmpty && numberOfTurnsPlayedWithEmptyDeckInt == playerArray.count {
+            return true
+        }
+        return false
+    }
+    // Change current player to next player. Rotates in a clockwise circle.
+    func moveToNextPlayer() {
+        currentPlayerNumberInt++
+        if currentPlayerNumberInt > playerArray.count {
+            currentPlayerNumberInt = 1
+        }
+    }
+    func performAction(action: Action) {
+        // If deck already empty, then note turn.
+        if deckCardArray.isEmpty {
+            numberOfTurnsPlayedWithEmptyDeckInt++
+        }
+        switch action.type {
+        case .Clue:
+            println("give a clue")
+            numberOfCluesLeftInt--
+        case .Play:
+            println("play a card")
+            // remove card from hand
+            // if valid, increase score
+            // else, remove strike and put in discard
+            // player draws new card
+        case .Discard:
+            println("discard a card")
+            // Remove card from hand. Put in discard pile. Gain clue token. If deck not empty, draw new card.
+            let currentPlayer = playerArray[currentPlayerNumberInt - 1]
+            let discardCard = currentPlayer.handCardArray.removeAtIndex(action.targetCardIndexInt)
+            discardsCardArray.append(discardCard)
+            numberOfCluesLeftInt++
+            if !deckCardArray.isEmpty {
+                let newCard = deckCardArray.removeLast()
+                currentPlayer.handCardArray.append(newCard)
+            }
+        }
+    }
+    // Sum of score for each color.
+    func totalScore() -> Int {
+        var scoreInt = 0
+        for (color, score) in scoreDictionary {
+            scoreInt += score
+        }
+        return scoreInt
     }
 }

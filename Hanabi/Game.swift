@@ -10,7 +10,7 @@ class Game: NSObject {
     var currentOptionalTurn: Turn?
     // The draw pile.
 //    var deckCardArray: [Card] = []
-    var numberOfPlayersInt: Int = 2
+//    var numberOfPlayersInt: Int = 2
     // Number for srandom(). Determines card order.
     var seedUInt32: UInt32
     var turnArray: [Turn] = []
@@ -48,6 +48,9 @@ class Game: NSObject {
     }
     // Sum of score for each color.
     func finalScore() -> Int {
+        if let scoreInt = turnArray.last?.endingOptionalGameState?.totalScore() {
+            scoreInt
+        }
         var scoreInt = 0
         if let scoreDictionary = turnArray.last?.endingOptionalGameState?.scoreDictionary {
             // go through each color/item, sum stuff
@@ -60,16 +63,13 @@ class Game: NSObject {
     // Do the current action. Make next turn or end game.
     func finishCurrentTurn() {
         if let turn = currentOptionalTurn {
-            // this should populate the endingState
             turn.performAction()
             if isDone() {
                 currentOptionalTurn = nil
             } else {
-                // turn 2 starting state = turn 1 ending state with a different current player
-                if let gameState = turn.endingOptionalGameState {
-                    // change current player
-                    //increase/loop
-//                    gameState.currentPlayerNumberInt
+                // Make next turn. Use previous turn, then change current player.
+                if let gameState = turn.endingOptionalGameState?.copy() as? GameState {
+                    gameState.moveToNextPlayer()
                     let nextTurn = Turn(gameState: gameState)
                     turnArray.append(nextTurn)
                     currentOptionalTurn = nextTurn
@@ -86,7 +86,7 @@ class Game: NSObject {
             seedUInt32 = seedOptionalUInt32!
         }
         super.init()
-        self.numberOfPlayersInt = numberOfPlayersInt
+//        self.numberOfPlayersInt = numberOfPlayersInt
         var deckCardArray = makeADeck()
         shuffleDeck(&deckCardArray, seedUInt32: seedUInt32)
         // debugging
@@ -105,9 +105,17 @@ class Game: NSObject {
     }
     // Return whether the game has ended (not necessarily won).
     func isDone() -> Bool {
-        // check some game parameters
-        // temp so we don't get infinite loop
-        return true
+        if let endingGameState = turnArray.last?.endingOptionalGameState {
+            if endingGameState.isDone() {
+                return true
+            }
+        }
+        // Safety check to prevent infinite loop.
+        if turnArray.count > 99 {
+            println("Warning: > 99 turns.")
+            return true
+        }
+        return false
     }
     // Return an unshuffled deck.
     func makeADeck() -> [Card] {

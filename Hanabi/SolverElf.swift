@@ -21,7 +21,7 @@ class SolverElf: NSObject {
     var currentOptionalGame: Game?
     // Games solved.
     var gameArray: [Game] = []
-    var numberOfSecondsSpentFloat = 0.0
+    var numberOfSecondsSpentDouble = 0.0
     // Average number of turns to finish currently solved games. (To be meaningful, presumes most/all games were won.)
     func averageNumberOfTurns() -> Float {
         var totalTurnsInt = 0
@@ -39,9 +39,23 @@ class SolverElf: NSObject {
         return Float(totalScoresInt) / Float(gameArray.count)
     }
     // Return the best action for the given turn.
-    // here's where elf can try different stratgies.
     func bestActionForTurn(turn: Turn) -> Action {
-        return Action()
+        // here's where elf can try different stratgies.
+        // call different strategies/behaviors
+        
+        // if no clues, cannot give one
+        // if max clues, cannot discard
+        
+        // testing: discard first card
+        let action = Action()
+        action.type = .Discard
+//        if turn.startingGameState.numberOfCluesLeftInt > 0 {
+//            action.type = .Clue
+//        } else {
+//            action.type = .Discard
+            // need to define what to discard
+//        }
+        return action
     }
     override init() {
         super.init()
@@ -70,7 +84,7 @@ class SolverElf: NSObject {
         return game
     }
     func solveGames(numberOfGames: Int, numberOfPlayersInt: Int) {
-        numberOfSecondsSpentFloat = 0.0
+        numberOfSecondsSpentDouble = 0.0
         gameArray = []
         // Track time spent.
         let startDate = NSDate()
@@ -81,7 +95,7 @@ class SolverElf: NSObject {
             gameArray.append(game)
         }
         let endDate = NSDate()
-        numberOfSecondsSpentFloat = endDate.timeIntervalSinceDate(startDate)
+        numberOfSecondsSpentDouble = endDate.timeIntervalSinceDate(startDate)
         delegate?.solverElfDidFinishAllGames?()
     }
     // Determine best action for given turn. Do it.

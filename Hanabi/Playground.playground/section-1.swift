@@ -2,19 +2,8 @@
 
 import UIKit
 
-var str = "Hello, playground"
-
-random()
-srandom(0)
-srandom(1)
-var testArray: [String] = []
-testArray = ["bob", "sue"]
-testArray.removeAtIndex(0)
-struct Card {
-    
-}
-var testArray2: [Card] = []
-testArray2 = [Card(), Card()]
-testArray2.removeAtIndex(0)
+round(3.5)
+round(3.125)
+round(3.125 * 100) / 100
 
 

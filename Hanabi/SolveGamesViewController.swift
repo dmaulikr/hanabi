@@ -44,15 +44,21 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         viewControllerElf.playButtonDownSound()
     }
     func showResults() {
+        var resultsString = ""
         let numberOfGamesPlayedInt = solverElf.numberOfGamesPlayed()
-        println("Games: \(numberOfGamesPlayedInt)")
-        println("Average score: \(solverElf.averageScore())")
-        println("Average # of turns: \(solverElf.averageNumberOfTurns())")
+        resultsString += "Games: \(numberOfGamesPlayedInt)"
+        resultsString += "\nAverage score: \(solverElf.averageScore())"
+        resultsString += "\nAverage # of turns: \(solverElf.averageNumberOfTurns())"
         let numberOfGamesLostInt = solverElf.numberOfGamesLost()
         let percentOfGamesLostFloat = Float(numberOfGamesLostInt) * 100 / Float(numberOfGamesPlayedInt)
-        println("Games lost: \(numberOfGamesLostInt) (\(percentOfGamesLostFloat)%)")
-        println("Seeds for games lost:")
-        println("Time spent: \(solverElf.numberOfSecondsSpentFloat) seconds")
+        resultsString += "\nGames lost: \(numberOfGamesLostInt) (\(percentOfGamesLostFloat)%)"
+        resultsString += "\nSeeds for games lost:"
+        resultsString += "\n"
+        // Round to 3 digits.
+        let numberOfSecondsSpentDouble = round(solverElf.numberOfSecondsSpentDouble * 1000) / 1000
+        let averageSecondsSpentDouble = round(solverElf.numberOfSecondsSpentDouble * 1000 / Double(numberOfGamesPlayedInt)) / 1000
+        resultsString += "\nTime spent: \(numberOfSecondsSpentDouble) seconds (average: \(averageSecondsSpentDouble))"
+        logTextView.text = resultsString
     }
     func solverElfDidFinishAllGames() {
         mode = .Solved
