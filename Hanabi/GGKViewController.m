@@ -38,7 +38,7 @@
     [self updateUI];
 }
 - (IBAction)playButtonSound {
-    AppDelegate *anAppDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    AppDelegate *anAppDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
 //    [anAppDelegate.soundModel playButtonTapSound];
 }
 - (void)updateLayoutForLandscape {

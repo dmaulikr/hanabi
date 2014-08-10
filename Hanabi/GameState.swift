@@ -22,15 +22,15 @@ class GameState: NSObject {
     override func copy() -> AnyObject! {
         var gameState = GameState()
         gameState.currentPlayerNumberInt = currentPlayerNumberInt
-        // hopefully this is deep
         gameState.deckCardArray = deckCardArray
-        // hopefully this is deep
         gameState.discardsCardArray = discardsCardArray
         gameState.numberOfCluesLeftInt = numberOfCluesLeftInt
         gameState.numberOfStrikesLeftInt = numberOfStrikesLeftInt
         gameState.numberOfTurnsPlayedWithEmptyDeckInt = numberOfTurnsPlayedWithEmptyDeckInt
-        // hopefully this is deep
-        gameState.playerArray = playerArray
+        // Deep copy.
+        for player in playerArray {
+            gameState.playerArray.append(player.copy() as Player)
+        }
         gameState.scoreDictionary = scoreDictionary
         return gameState
     }
@@ -79,10 +79,8 @@ class GameState: NSObject {
             // else, remove strike and put in discard
             // player draws new card
         case .Discard:
-            println("discard a card")
             // If clues not less than max, trigger an assertion. (AI shouldn't have chosen this, and player shouldn't have been able to.)
             assert(numberOfCluesLeftInt < 8, "Error: tried to discard with max clue tokens.")
-            
             // Remove card from hand. Put in discard pile. Gain clue token. If deck not empty, draw new card.
             let currentPlayer = playerArray[currentPlayerNumberInt - 1]
             let discardCard = currentPlayer.handCardArray.removeAtIndex(action.targetCardIndexInt)

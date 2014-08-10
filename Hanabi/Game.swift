@@ -142,6 +142,13 @@ class Game: NSObject {
         }
         return cardArray
     }
+    // Return the number of players in the game.
+    func numberOfPlayersInt() -> Int {
+        if let gameState = turnArray.first?.startingGameState {
+            return gameState.playerArray.count
+        }
+        return 0
+    }
     // User/coder can see cards in deck.
     func printDeck(deckCardArray: [Card]) {
         print("Deck:")
