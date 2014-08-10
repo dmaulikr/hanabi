@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		932D2DF61997EC2F00CA1306 /* AlwaysDiscardElf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932D2DF51997EC2F00CA1306 /* AlwaysDiscardElf.swift */; };
 		9348E04D1992236700C19BB0 /* WalkThroughGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */; };
 		9362C79A19948F6D0030E820 /* Turn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C79919948F6D0030E820 /* Turn.swift */; };
 		9362C79C19949FDB0030E820 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C79B19949FDB0030E820 /* Action.swift */; };
@@ -42,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		932D2DF51997EC2F00CA1306 /* AlwaysDiscardElf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlwaysDiscardElf.swift; sourceTree = "<group>"; };
 		9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkThroughGameViewController.swift; sourceTree = "<group>"; };
 		9362C79919948F6D0030E820 /* Turn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Turn.swift; sourceTree = "<group>"; };
 		9362C79B19949FDB0030E820 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				9362C79B19949FDB0030E820 /* Action.swift */,
+				932D2DF51997EC2F00CA1306 /* AlwaysDiscardElf.swift */,
 				93D42FD4198F7A59006A28D9 /* AppDelegate.swift */,
 				9362C7A3199579600030E820 /* Card.swift */,
 				9362C79D19949FE60030E820 /* Clue.swift */,
@@ -296,6 +299,7 @@
 				9362C7A0199576CE0030E820 /* GameState.swift in Sources */,
 				9362C79A19948F6D0030E820 /* Turn.swift in Sources */,
 				93F653BF1990CAE800198AB6 /* SolverElf.swift in Sources */,
+				932D2DF61997EC2F00CA1306 /* AlwaysDiscardElf.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

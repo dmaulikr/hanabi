@@ -69,6 +69,8 @@ class GameState: NSObject {
         switch action.type {
         case .Clue:
             println("give a clue")
+            // If clues not left, trigger an assertion. (AI shouldn't have chosen this, and player shouldn't have been able to.)
+            assert(numberOfCluesLeftInt > 0, "Error: tried to give clue with 0 clue tokens.")
             numberOfCluesLeftInt--
         case .Play:
             println("play a card")
@@ -78,6 +80,9 @@ class GameState: NSObject {
             // player draws new card
         case .Discard:
             println("discard a card")
+            // If clues not less than max, trigger an assertion. (AI shouldn't have chosen this, and player shouldn't have been able to.)
+            assert(numberOfCluesLeftInt < 8, "Error: tried to discard with max clue tokens.")
+            
             // Remove card from hand. Put in discard pile. Gain clue token. If deck not empty, draw new card.
             let currentPlayer = playerArray[currentPlayerNumberInt - 1]
             let discardCard = currentPlayer.handCardArray.removeAtIndex(action.targetCardIndexInt)
