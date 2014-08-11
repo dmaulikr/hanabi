@@ -40,15 +40,11 @@ class SolverElf: NSObject {
     }
     // Return the best action for the given turn.
     func bestActionForTurn(turn: Turn) -> Action {
-        // here's where elf can try different stratgies.
-        // call different strategies/behaviors
+//        let alwaysDiscardElf = AlwaysDiscardElf()
+//        let action = alwaysDiscardElf.bestActionForTurn(turn)
         
-        // if no clues, cannot give one
-        // if max clues, cannot discard
-        
-        // testing: discard first card
-        let alwaysDiscardElf = AlwaysDiscardElf()
-        let action = alwaysDiscardElf.bestActionForTurn(turn)
+        let openHandElf = OpenHandElf()
+        let action = openHandElf.bestActionForTurn(turn)
         return action
     }
     override init() {

@@ -52,8 +52,14 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         let numberOfGamesLostInt = solverElf.numberOfGamesLost()
         let percentOfGamesLostFloat = Float(numberOfGamesLostInt) * 100 / Float(numberOfGamesPlayedInt)
         resultsString += "\nGames lost: \(numberOfGamesLostInt) (\(percentOfGamesLostFloat)%)"
-        resultsString += "\nSeeds for games lost:"
-        resultsString += "\n"
+        resultsString += "\nSeeds for games lost (max 10):"
+        var seedsShownInt = 0
+        for game in solverElf.gameArray {
+            if !game.wasWon() && seedsShownInt < 10 {
+                resultsString += "\n\(game.seedUInt32)"
+                seedsShownInt++
+            }
+        }
         // Round to 3 digits.
         let numberOfSecondsSpentDouble = round(solverElf.numberOfSecondsSpentDouble * 1000) / 1000
         let averageSecondsSpentDouble = round(solverElf.numberOfSecondsSpentDouble * 1000 / Double(numberOfGamesPlayedInt)) / 1000
