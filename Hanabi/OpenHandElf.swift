@@ -14,6 +14,7 @@ class OpenHandElf: NSObject {
     func bestActionForTurn(turn: Turn) -> Action {
         let action = Action()
         let gameState = turn.startingGameState
+        let currentPlayerHandCardArray = gameState.playerArray[gameState.currentPlayerNumberInt - 1].handCardArray
         // If can play, do. Play cards whose sequence will take the longest. (E.g., 132 before 123.)
         let mostTurnsForChainCardArray = gameState.mostTurnsForChainCardArray()
         if !mostTurnsForChainCardArray.isEmpty {
@@ -27,17 +28,31 @@ class OpenHandElf: NSObject {
                     thePlayCard = card
                 }
             }
-            println("thePlayCard: \(thePlayCard.string())")
-            let currentPlayerHandCardArray = gameState.playerArray[gameState.currentPlayerNumberInt - 1].handCardArray
+            println("OHE thePlayCard: \(thePlayCard.string())")
             action.targetCardIndexInt = find(currentPlayerHandCardArray, thePlayCard)!
         } else {
-            // If an easy discard (already played, dup in hand), do.
-            
-            // for now, let's just discard so we can test the plays
-            // If can discard, do it. Else, give clue.
             let numberOfCluesLeftInt = turn.startingGameState.numberOfCluesLeftInt
             if numberOfCluesLeftInt < 8 {
-                action.type = .Discard
+                // If a safe discard, do. Else, if no one can play or do a safe discard, then discard. Else, give clue. If no clues, discard.
+                let cheatingSafeDiscardsCardArray = gameState.cheatingSafeDiscardsCardArray()
+                if !cheatingSafeDiscardsCardArray.isEmpty {
+                    action.type = .Discard
+                    let theDiscardCard = cheatingSafeDiscardsCardArray.first!
+                    action.targetCardIndexInt = find(currentPlayerHandCardArray, theDiscardCard)!
+                } else if !gameState.cheatingAnyPlaysOrSafeDiscards() {
+                    println("Rare: no one has a play or safe discard?")
+                    action.type = .Discard
+                    // choose suitable discard
+                    // for now, just discard 1st card; refine later
+                    action.targetCardIndexInt = 0
+                } else if numberOfCluesLeftInt > 0 {
+                    action.type = .Clue
+                } else {
+                    println("Rare for OpenHandElf? No safe discards and no clues.")
+                    action.type = .Discard
+                    // discard 1st card; refine later
+                    action.targetCardIndexInt = 0
+                }
             } else if numberOfCluesLeftInt > 0 {
                 action.type = .Clue
             }

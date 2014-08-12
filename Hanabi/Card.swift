@@ -10,7 +10,6 @@ import Foundation
 
 // For Hashable protocol.
 func ==(card1: Card, card2: Card) -> Bool {
-    println("card == card1: \(card1.string()) card2: \(card2.string())")
     if (card1.color == card2.color) && (card1.numberInt == card2.numberInt) {
         return true
     } else {

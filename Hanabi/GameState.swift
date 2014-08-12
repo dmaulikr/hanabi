@@ -19,6 +19,20 @@ class GameState: NSObject {
     var playerArray: [Player] = []
     // The score is a number associated with each color. Total score is the sum.
     var scoreDictionary: [Card.Color: Int] = [:]
+    // Return whether the given card appears at least twice in the given hand.
+    func cardIsDuplicate(card:Card, handCardArray: [Card]) -> Bool {
+        var numberOfTimesSeenInt = 0
+        for card2 in handCardArray {
+            if card2 == card {
+                numberOfTimesSeenInt++
+            }
+        }
+        if numberOfTimesSeenInt >= 2 {
+            return true
+        } else {
+            return false
+        }
+    }
     // Return whether the given card can be played on the score pile.
     func cardIsPlayable(card: Card) -> Bool {
         // It's playable if the card's number is 1 more than its color's current score.
@@ -28,6 +42,38 @@ class GameState: NSObject {
         } else {
             return false
         }
+    }
+    // Return whether given card has already been scored.
+    func cardWasAlreadyPlayed(card: Card) -> Bool {
+        let scoreForColorInt = scoreDictionary[card.color]!
+        if card.numberInt <= scoreForColorInt {
+            return true
+        } else {
+            return false
+        }
+    }
+    // Return whether any player, including self, has a play or safe discard.
+    func cheatingAnyPlaysOrSafeDiscards() -> Bool {
+        for player in playerArray {
+            let handCardArray = player.handCardArray
+            for card in handCardArray {
+                if cardIsPlayable(card) || cardWasAlreadyPlayed(card) || cardIsDuplicate(card, handCardArray:handCardArray) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    // Return cards the current player can safely discard: 1) already played, 2) duplicates in hand. Keep card order, because that can provide info.
+    func cheatingSafeDiscardsCardArray() -> [Card] {
+        var cheatingSafeDiscardsCardArray: [Card] = []
+        let handCardArray = playerArray[currentPlayerNumberInt - 1].handCardArray
+        for card in handCardArray {
+            if cardWasAlreadyPlayed(card) || cardIsDuplicate(card, handCardArray:handCardArray) {
+                cheatingSafeDiscardsCardArray.append(card)
+            }
+        }
+        return cheatingSafeDiscardsCardArray
     }
     override func copy() -> AnyObject! {
         var gameState = GameState()
@@ -78,9 +124,7 @@ class GameState: NSObject {
                 var cardToFind = card
                 var cardWasFound = true
                 var playerWithCard = playerArray[currentPlayerNumberInt - 1]
-                println("GS test1")
                 while cardWasFound {
-                    println("GS test2")
                     cardWasFound = false
                     let cardToFindOptional = cardToFind.nextValueCard()
                     if cardToFindOptional != nil {
@@ -88,12 +132,9 @@ class GameState: NSObject {
                         var playerToSearch = playerAfter(playerWithCard)
                         var numberOfTurnsForCardInt = 0
                         // Search each player once, including player with the previous card.
-                        println("GS test2.5 cardToFind: \(cardToFind.string())")
                         while numberOfTurnsForCardInt < playerArray.count {
-                            println("GS test2.8")
                             numberOfTurnsForCardInt++
                             if contains(playerToSearch.handCardArray, cardToFind) {
-                                println("GS test2.9 numberOfTurnsForCardInt: \(numberOfTurnsForCardInt)")
                                 cardWasFound = true
                                 numberOfTurnsForChainInt += numberOfTurnsForCardInt
                                 break
@@ -102,7 +143,6 @@ class GameState: NSObject {
                         }
                     }
                 }
-                println("GS test3")
                 // Keep if longest so far.
                 if numberOfTurnsForChainInt > maxNumberOfTurnsForChainInt {
                     maxNumberOfTurnsForChainInt = numberOfTurnsForChainInt
