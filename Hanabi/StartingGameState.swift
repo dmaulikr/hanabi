@@ -1,57 +1,14 @@
 //
-//  GameState.swift
+//  StartingGameState.swift
 //  Hanabi
 //
-//  Created by Geoff Hom on 8/8/14.
+//  Created by Geoff Hom on 8/12/14.
 //  Copyright (c) 2014 Geoff Hom. All rights reserved.
 //
 
 import UIKit
 
-class GameState: NSObject {
-    var currentPlayerNumberInt = 1
-    var deckCardArray: [Card] = []
-    var discardsCardArray: [Card] = []
-    var numberOfCluesLeftInt = 8
-    var numberOfStrikesLeftInt = 3
-    // Number of turns played after the deck became empty. To determine game end.
-    var numberOfTurnsPlayedWithEmptyDeckInt = 0
-    var playerArray: [Player] = []
-    // The score is a number associated with each color. Total score is the sum.
-    var scoreDictionary: [Card.Color: Int] = [:]
-    // Return whether the given card appears at least twice in the given hand.
-    func cardIsDuplicate(card:Card, handCardArray: [Card]) -> Bool {
-        var numberOfTimesSeenInt = 0
-        for card2 in handCardArray {
-            if card2 == card {
-                numberOfTimesSeenInt++
-            }
-        }
-        if numberOfTimesSeenInt >= 2 {
-            return true
-        } else {
-            return false
-        }
-    }
-    // Return whether the given card can be played on the score pile.
-    func cardIsPlayable(card: Card) -> Bool {
-        // It's playable if the card's number is 1 more than its color's current score.
-        let currentValueOptionalInt = scoreDictionary[card.color]
-        if card.numberInt == currentValueOptionalInt! + 1 {
-            return true
-        } else {
-            return false
-        }
-    }
-    // Return whether given card has already been scored.
-    func cardWasAlreadyPlayed(card: Card) -> Bool {
-        let scoreForColorInt = scoreDictionary[card.color]!
-        if card.numberInt <= scoreForColorInt {
-            return true
-        } else {
-            return false
-        }
-    }
+class StartingGameState: AbstractGameState {
     // Return whether any player, including self, has a play or safe discard.
     func cheatingAnyPlaysOrSafeDiscards() -> Bool {
         for player in playerArray {
@@ -75,40 +32,8 @@ class GameState: NSObject {
         }
         return cheatingSafeDiscardsCardArray
     }
-    override func copy() -> AnyObject! {
-        var gameState = GameState()
-        gameState.currentPlayerNumberInt = currentPlayerNumberInt
-        gameState.deckCardArray = deckCardArray
-        gameState.discardsCardArray = discardsCardArray
-        gameState.numberOfCluesLeftInt = numberOfCluesLeftInt
-        gameState.numberOfStrikesLeftInt = numberOfStrikesLeftInt
-        gameState.numberOfTurnsPlayedWithEmptyDeckInt = numberOfTurnsPlayedWithEmptyDeckInt
-        // Deep copy.
-        for player in playerArray {
-            gameState.playerArray.append(player.copy() as Player)
-        }
-        gameState.scoreDictionary = scoreDictionary
-        return gameState
-    }
-    override init() {
-        // Initialize score.
-        for int in 1...5 {
-            if let color = Card.Color.fromRaw(int) {
-                scoreDictionary[color] = 0
-            }
-        }
-        super.init()
-    }
-    // Return whether the game has ended (not necessarily won).
-    func isDone() -> Bool {
-        // Game ends if score maxed, if out of strikes or if out of turns. The last case: when the deck is empty, each player gets one more turn.
-        if totalScore() == 25 || numberOfStrikesLeftInt == 0 {
-            return true
-        }
-        if deckCardArray.isEmpty && numberOfTurnsPlayedWithEmptyDeckInt == playerArray.count {
-            return true
-        }
-        return false
+    init(endingGameState: EndingGameState) {
+        // what about first init? should be just ()
     }
     // Return card(s) whose visible chain will take the longest to play. For example, 123 takes 3 turns, 132 takes 5.
     func mostTurnsForChainCardArray() -> [Card] {
@@ -154,13 +79,6 @@ class GameState: NSObject {
         }
         return mostTurnsForChainCardArray
     }
-    // Change current player to next player. Rotates in a clockwise circle.
-    func moveToNextPlayer() {
-        currentPlayerNumberInt++
-        if currentPlayerNumberInt > playerArray.count {
-            currentPlayerNumberInt = 1
-        }
-    }
     func performAction(action: Action) {
         // If deck already empty, then note turn.
         if deckCardArray.isEmpty {
@@ -204,21 +122,31 @@ class GameState: NSObject {
             }
         }
     }
-    // Return the player who goes after the given player
-    func playerAfter(player: Player) -> Player {
-        var indexInt = find(playerArray, player)!
-        indexInt += 1
-        if indexInt == playerArray.count {
-            indexInt = 0
+    // String describing the given action and its result.
+    func resultStringForAction(action: Action) -> String {
+        var resultString = "\n\(currentPlayer.nameString)"
+        let index = action.targetCardIndexInt
+        let card = currentPlayer.handCardArray[index]
+        // Card position and abbreviation.
+        let cardPositionString = "card \(index + 1): \(card.string())"
+        switch action.type {
+        case .Clue:
+            resultString += " gave a clue: X."
+        case .Discard:
+            resultString += " discarded \(cardPositionString)."
+            if numberOfCardsLeftInt >= 1 {
+                resultString += " Drew a card."
+            }
+        case .Play:
+            resultString += " played \(cardPositionString)."
+            // If invalid play, mention that.
+            if !cardIsPlayable(card) {
+                resultString += " Invalid play. Strike."
+            }
+            if numberOfCardsLeftInt >= 1 {
+                resultString += " Drew a card."
+            }
         }
-        return playerArray[indexInt]
-    }
-    // Sum of score for each color.
-    func totalScore() -> Int {
-        var scoreInt = 0
-        for (color, score) in scoreDictionary {
-            scoreInt += score
-        }
-        return scoreInt
+        return resultString
     }
 }

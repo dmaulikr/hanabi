@@ -10,6 +10,11 @@ class Game: NSObject {
     var currentOptionalTurn: Turn?
     // The draw pile.
 //    var deckCardArray: [Card] = []
+    var numberOfTurnsInt: Int {
+        get {
+            return turnArray.count
+        }
+    }
 //    var numberOfPlayersInt: Int = 2
     // Number for srandom(). Determines card order.
     var seedUInt32: UInt32
@@ -92,8 +97,10 @@ class Game: NSObject {
         // debugging
         printDeck(deckCardArray)
         var playerArray: [Player] = []
-        for _ in 1...numberOfPlayersInt {
-            playerArray.append(Player())
+        for playerNumberInt in 1...numberOfPlayersInt {
+            let player = Player()
+            player.nameString = "P\(playerNumberInt)"
+            playerArray.append(player)
         }
         dealHandsFromDeck(&deckCardArray, playerArray: &playerArray)
         let gameState = GameState()

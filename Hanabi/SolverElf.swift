@@ -17,11 +17,42 @@ import UIKit
 private var myContext = 0
 
 class SolverElf: NSObject {
+    // Info for a game's turn.
+    struct TurnDataForGame {
+        var discardsString: String
+        // Could add this if needed.
+        // var gameNumberInt: Int
+        var maxNumberOfPlaysLeftInt: Int
+        var numberOfCardsLeftInt: Int
+        var numberOfCluesLeftInt: Int
+        var numberOfPointsNeededInt: Int
+        var numberOfStrikesLeftInt: Int
+        var scoreString: String
+        var visibleHandsString: String
+    }
+    // Average for currently solved games.
+    var averageScoreFloat: Float {
+        get {
+            var totalScoresInt = 0
+            for game in gameArray {
+                totalScoresInt += game.finalScore()
+            }
+            return Float(totalScoresInt) / Float(gameArray.count)
+        }
+    }
     var delegate: SolverElfDelegate?
-    var currentOptionalGame: Game?
+//    var currentOptionalGame: Game?
     // Games solved.
     var gameArray: [Game] = []
     var numberOfSecondsSpentDouble = 0.0
+    // String describing action for given turn for given game.
+    func actionStringForTurnForGame(gameNumberInt: Int, turnNumberInt: Int) -> String {
+        // Could put game number here.
+        var actionStringForTurnForGame: String = ""
+        let game = gameArray[gameNumberInt]
+        actionStringForTurnForGame += game.actionStringForTurn(turnNumberInt: Int)
+        return actionStringForTurnForGame
+    }
     // Average number of turns to finish currently solved games. (To be meaningful, presumes most/all games were won.)
     func averageNumberOfTurns() -> Float {
         var totalTurnsInt = 0
@@ -30,14 +61,7 @@ class SolverElf: NSObject {
         }
         return Float(totalTurnsInt) / Float(gameArray.count)
     }
-    // Average for currently solved games.
-    func averageScore() -> Float {
-        var totalScoresInt = 0
-        for game in gameArray {
-            totalScoresInt += game.finalScore()
-        }
-        return Float(totalScoresInt) / Float(gameArray.count)
-    }
+    
     // Return the best action for the given turn.
     func bestActionForTurn(turn: Turn) -> Action {
 //        let alwaysDiscardElf = AlwaysDiscardElf()
@@ -62,9 +86,36 @@ class SolverElf: NSObject {
     func numberOfGamesPlayed() -> Int {
         return gameArray.count
     }
+    // Number of turns the given game took.
+    func numberOfTurnsForGame(gameNumberInt: Int) -> Int {
+        
+        //        if let game = solverElf.currentOptionalGame {
+        //            return game.numberOfTurnsInt
+        //        } else {
+        //            return 0
+        //        }
+    }
+    // String for the round and subround for the given turn. (E.g., in a 3-player game, turn 4 = round 2.1.)
+    func roundSubroundString(turnNumberInt: Int) -> String {
+        //        if let game = solverElf.currentOptionalGame {
+        //            let rowIndexInt = indexPath.row
+        //            let numberOfPlayersInt = game.numberOfPlayersInt()
+        //            // 3 players: 0 = 1, 1 = 1, 2 = 1, 3 = 2, 4 = 2, 5 = 2
+        //            let turnNumberInt = (rowIndexInt / numberOfPlayersInt) + 1
+        //            // 3 players: 0 = 1, 1 = 2, 2 = 3, 3 = 1, 4 = 2, 5 = 3
+        //            let playerNumberInt = (rowIndexInt % numberOfPlayersInt) + 1
+        //            tableViewCell.textLabel.text = "Turn \(turnNumberInt).\(playerNumberInt)"
+        //        }
+
+    }
+    // Seed used to make given game.
+    func seedUInt32ForGame(gameNumberInt: Int) -> UInt32 {
+        return gameArray[gameNumberInt].seedUInt32
+    }
     // Make, play and return a game.
     func solveGameWithSeed(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) -> Game {
         let game = Game(seedOptionalUInt32: seedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
+        gameArray = [game]
         do {
             solveCurrentTurnForGame(game)
             game.finishCurrentTurn()
@@ -105,5 +156,16 @@ class SolverElf: NSObject {
         }
     }
     func stopSolving() {
+    }
+    
+//    let turnDataForGame = solverElf.turnDataForGame(1, turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
+
+    // Data for given turn for given game. If turn end, the data is for the end of the turn (vs start).
+    func turnDataForGame(gameNumberInt: Int, turnNumberInt: Int, turnEndBool: Bool) -> TurnDataForGame {
+        var turnDataForGame: TurnDataForGame = TurnDataForGame()
+        let game = gameArray[gameNumberInt]
+        let turnData = game.turnData(turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
+        turnDataForGame.discardsString = turnData.discardsString
+        return turnDataForGame
     }
 }

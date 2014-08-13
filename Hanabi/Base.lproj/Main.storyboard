@@ -83,42 +83,6 @@
                                     <outlet property="delegate" destination="riQ-Gg-tMq" id="LoE-gg-Pcm"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Y     Y" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pbF-Cu-t21">
-                                <rect key="frame" x="448" y="342" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="      N  N" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oo4-Ud-QE0">
-                                <rect key="frame" x="462" y="358" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="      NnyNn" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UOn-ng-18d">
-                                <rect key="frame" x="400" y="313" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Y      Y" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rkn-h0-Csa">
-                                <rect key="frame" x="372" y="387" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="    Y     Y" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lo0-jO-34n">
-                                <rect key="frame" x="341" y="358" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="      N  N" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y4h-lv-tb1">
-                                <rect key="frame" x="311" y="328" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Q3t-a7-Xcr">
                                 <rect key="frame" x="8" y="71" width="436" height="56"/>
                                 <subviews>
@@ -375,6 +339,66 @@ B12345G12345R12345W12345Y12345  B G R W Y  1 2 3 45</string>
                                     <action selector="handleShowOrHideActionButtonTapped:" destination="riQ-Gg-tMq" eventType="touchUpInside" id="6ql-Hy-9f2"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Y     Y" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pbF-Cu-t21">
+                                <rect key="frame" x="404" y="444" width="145" height="15"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="      N  N" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oo4-Ud-QE0">
+                                <rect key="frame" x="418" y="460" width="145" height="15"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="      NnyNn" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UOn-ng-18d">
+                                <rect key="frame" x="396" y="415" width="145" height="15"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Y      Y" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rkn-h0-Csa">
+                                <rect key="frame" x="413" y="491" width="145" height="15"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="    Y     Y" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lo0-jO-34n">
+                                <rect key="frame" x="396" y="478" width="145" height="15"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="      N  N" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y4h-lv-tb1">
+                                <rect key="frame" x="389" y="428" width="145" height="15"/>
+                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r4D-s0-0iE">
+                                <rect key="frame" x="346" y="249" width="188" height="46"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="172" translatesAutoresizingMaskIntoConstraints="NO" id="Tut-2N-kkV">
+                                        <rect key="frame" x="8" y="8" width="172" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="172" id="JIz-7d-a8N"/>
+                                            <constraint firstAttribute="height" constant="30" id="ZCP-i7-rdN"/>
+                                        </constraints>
+                                        <string key="text">Points needed: 25
+Plays left, max: 38</string>
+                                        <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Tut-2N-kkV" secondAttribute="bottom" constant="8" id="BFe-xA-u24"/>
+                                    <constraint firstAttribute="trailing" secondItem="Tut-2N-kkV" secondAttribute="trailing" constant="8" id="R8g-l8-BfL"/>
+                                    <constraint firstItem="Tut-2N-kkV" firstAttribute="top" secondItem="r4D-s0-0iE" secondAttribute="top" constant="8" id="SoM-Ad-wjJ"/>
+                                    <constraint firstItem="Tut-2N-kkV" firstAttribute="leading" secondItem="r4D-s0-0iE" secondAttribute="leading" constant="8" id="vvV-1g-Te6"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -385,22 +409,26 @@ B12345G12345R12345W12345Y12345  B G R W Y  1 2 3 45</string>
                             <constraint firstItem="GUp-rM-lLi" firstAttribute="leading" secondItem="fdO-UC-mDz" secondAttribute="trailing" constant="8" id="TF9-iQ-Leb"/>
                             <constraint firstItem="bsf-GH-zAa" firstAttribute="leading" secondItem="30n-cn-mVA" secondAttribute="leading" constant="8" id="X5h-bt-bkd"/>
                             <constraint firstItem="Q3t-a7-Xcr" firstAttribute="top" secondItem="FhF-wu-5hc" secondAttribute="bottom" constant="7" id="fis-0u-l7B"/>
+                            <constraint firstItem="r4D-s0-0iE" firstAttribute="trailing" secondItem="Ahb-fF-gh5" secondAttribute="trailing" constant="8" id="nCr-Ix-S6C"/>
+                            <constraint firstItem="r4D-s0-0iE" firstAttribute="top" secondItem="GUp-rM-lLi" secondAttribute="bottom" constant="8" id="sMA-HR-Y7W"/>
                             <constraint firstItem="GUp-rM-lLi" firstAttribute="top" secondItem="Q3t-a7-Xcr" secondAttribute="bottom" constant="8" id="vd3-to-ffV"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Walk Through a Game" id="OUQ-fN-iJ4"/>
                     <connections>
                         <outlet property="cancelButton" destination="bQ0-jQ-lGn" id="azV-uN-fPh"/>
+                        <outlet property="cushionLabel" destination="Tut-2N-kkV" id="xHQ-xq-Efd"/>
+                        <outlet property="cushionView" destination="r4D-s0-0iE" id="tAP-Xr-pgI"/>
                         <outlet property="discardsLabel" destination="JJ6-4F-7wY" id="BUC-dP-Dvw"/>
                         <outlet property="discardsView" destination="fdO-UC-mDz" id="NZ1-dp-cF6"/>
                         <outlet property="gameSettingsView" destination="Q3t-a7-Xcr" id="BAh-Wj-COe"/>
                         <outlet property="logTextView" destination="64G-dN-d3B" id="ifG-gh-skI"/>
                         <outlet property="scoreLabel" destination="mXO-oN-Iq1" id="bJo-4U-FFu"/>
                         <outlet property="scoreView" destination="bsf-GH-zAa" id="7hB-qa-qi6"/>
-                        <outlet property="seedNumberTextField" destination="5rX-jA-KNd" id="F62-Eo-EtC"/>
                         <outlet property="showOrHideActionButton" destination="LjZ-20-QVP" id="IWB-LW-Npj"/>
                         <outlet property="startButton" destination="gOb-Nk-Zr8" id="XHK-gZ-oHL"/>
                         <outlet property="turnTableView" destination="ET2-nK-nqg" id="yvn-jU-A7t"/>
+                        <outlet property="userSeedNumberTextField" destination="5rX-jA-KNd" id="XyJ-3f-uvg"/>
                         <outlet property="visibleHandsLabel" destination="Ahb-fF-gh5" id="Oql-dB-Vju"/>
                         <outlet property="visibleHandsView" destination="GUp-rM-lLi" id="jAJ-Vm-AWj"/>
                     </connections>

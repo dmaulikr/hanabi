@@ -18,8 +18,9 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     let HideActionTitleString = "Hide Action"
     let ShowActionTitleString = "Show Action"
     @IBOutlet weak var cancelButton: UIButton!
-    // The turn currently being viewed. Start/setup is 1, last turn is N and end of game is N + 1.
-//    var currentTurnInt = 1
+    // How many non-play actions players can make and still win.
+    @IBOutlet weak var cushionLabel: UILabel!
+    @IBOutlet weak var cushionView: UIView!
     @IBOutlet weak var discardsLabel: UILabel!
     // View enclosing discards label. To make bigger border.
     @IBOutlet weak var discardsView: UIView!
@@ -36,12 +37,22 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     @IBOutlet weak var scoreLabel: UILabel!
     // View enclosing score label. To make bigger border.
     @IBOutlet weak var scoreView: UIView!
-    @IBOutlet weak var seedNumberTextField: UITextField!
-    var seedOptionalUInt32: UInt32?
     @IBOutlet weak var showOrHideActionButton: UIButton!
     var solverElf: SolverElf!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var turnTableView: UITableView!
+    @IBOutlet weak var userSeedNumberTextField: UITextField!
+    var userSeedOptionalUInt32: UInt32?
+    // String showing user-requested seed, which may be nil. If nil, return "" to allow text field's placeholder. (Placeholder says "random," because game will choose a random seed.)
+    var userSeedString: String {
+        get {
+            if let uint32 = userSeedOptionalUInt32 {
+                return String(uint32)
+            } else {
+                return ""
+            }
+        }
+    }
     var viewControllerElf: ViewControllerElf!
     @IBOutlet weak var visibleHandsLabel: UILabel!
     // View enclosing visible-hands label. To make bigger border.
@@ -51,143 +62,94 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         mode = .Planning
         solverElf.stopSolving()
     }
-    // If show action, then show turn's ending state. Else, show turn's starting state.
+    // If show-action, then show selected turn's end. Else, show turn's start.
     @IBAction func handleShowOrHideActionButtonTapped(button: UIButton) {
+        let indexPath = turnTableView.indexPathForSelectedRow()
+        let turnNumberInt = indexPath.row + 1
+        var turnEndBool: Bool
         if button.titleForState(UIControlState.Normal) == ShowActionTitleString {
-            if let indexPath = turnTableView.indexPathForSelectedRow() {
-                showTurnEnd(indexPath.row)
-            }
+            turnEndBool = true
         } else {
-            if let indexPath = turnTableView.indexPathForSelectedRow() {
-                showTurnStart(indexPath.row)
-            }
+            turnEndBool = false
         }
+        showTurnForGame(1, turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
     }
     // Play/solve the requested game.
     @IBAction func handleStartButtonTapped() {
         mode = .Solving
-        solverElf.solveGameWithSeed(seedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
+        solverElf.solveGameWithSeed(userSeedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
     }
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
     @IBAction func playButtonDownSound() {
         viewControllerElf.playButtonDownSound()
     }
-    // Text fields: random-number seed.
-    // multiple text fields?
-    // If a valid value, then update model. Show current value in text field.
-    // Return a string for the current seed, which is an optional int. If nil, return "" to show text field's placeholder.
-    func seedString() -> String {
-        if let uint32 = seedOptionalUInt32 {
-            return String(uint32)
-        } else {
-            return ""
-        }
+    // Show seed used to create this game.
+    func showSeedUsed() {
+        var logString: String = logTextView.text
+        let seedUInt32 = solverElf.seedUInt32ForGame(1)
+        logString += "\nSeed: \(seedUInt32)"
+        logTextView.text = logString
     }
-    func showGameState(gameState: GameState) {
-        var scoreString = ""
-        for (color, score) in gameState.scoreDictionary {
-            scoreString += String(score)
-        }
-        scoreLabel.text = "Score: BGRWY" +
-            "\n       \(scoreString)" +
-            "\nClues left: \(gameState.numberOfCluesLeftInt)" +
-            "\nStrikes left: \(gameState.numberOfStrikesLeftInt)" +
-        "\nCards left: \(gameState.deckCardArray.count)"
-        var discardsString = "Discards:"
-        for card in gameState.discardsCardArray {
-            discardsString += " \(card.string())"
-        }
-        discardsLabel.text = discardsString
-        var visibleHandsString = "Visible hands:"
-        for index in 1...gameState.playerArray.count {
-            visibleHandsString += "\nP\(index):"
-            if index != gameState.currentPlayerNumberInt {
-                let player = gameState.playerArray[index - 1]
-                for card in player.handCardArray {
-                    visibleHandsString += " \(card.string())"
-                }
-            }
-        }
-        visibleHandsLabel.text = visibleHandsString
-    }
-    // Show ending state of given turn.
-    func showTurnEnd(turnIndexInt: Int) {
-        if let game = solverElf.currentOptionalGame {
-            var logString = "Seed: \(game.seedUInt32)"
-            let turn = game.turnArray[turnIndexInt]
-            logString += turn.actionResultString()
-            if let gameState = turn.endingOptionalGameState {
-                
-                                
-                // and show action in a label? or in log view?
-                showGameState(gameState)
-                
-                // Let user hide action.
-                showOrHideActionButton.enabled = true
-                showOrHideActionButton.setTitle(HideActionTitleString, forState: UIControlState.Normal)
-            }
+    // Show given turn for given game. If turn end, show action and end of turn. Else, show start of turn.
+    func showTurnForGame(gameNumberInt: Int, turnNumberInt: Int, turnEndBool: Bool) {
+        var buttonTitleString: String
+        if turnEndBool {
+            var logString: String = logTextView.text
+            logString += solverElf.actionStringForTurnForGame(1, turnNumberInt: turnNumberInt)
             logTextView.text = logString
+            buttonTitleString = HideActionTitleString
+        } else {
+            buttonTitleString = ShowActionTitleString
         }
-    }
-    // Show starting state of given turn.
-    func showTurnStart(turnIndexInt: Int) {
-        if let game = solverElf.currentOptionalGame {
-            logTextView.text = "Seed: \(game.seedUInt32)"
-            let turn = game.turnArray[turnIndexInt]
-            let gameState = turn.startingGameState
-            showGameState(gameState)
-            // Let user see action.
-            showOrHideActionButton.enabled = true
-            showOrHideActionButton.setTitle(ShowActionTitleString, forState: UIControlState.Normal)
-        }
+        let turnDataForGame = solverElf.turnDataForGame(1, turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
+        cushionLabel.text = "Points needed: \(turnDataForGame.numberOfPointsNeededInt)" +
+        "\nPlays left, max: (\(turnDataForGame.maxNumberOfPlaysLeftInt))"
+        discardsLabel.text = "Discards: \(turnDataForGame.discardsString)"
+        scoreLabel.text = "Score: BGRWY" +
+            "\n       \(turnDataForGame.scoreString)" +
+            "\nClues left: \(turnDataForGame.numberOfCluesLeftInt)" +
+            "\nStrikes left: \(turnDataForGame.numberOfStrikesLeftInt)" +
+        "\nCards left: \(turnDataForGame.numberOfCardsLeftInt)"
+        visibleHandsLabel.text = "Visible hands:\(turnDataForGame.visibleHandsString)"
+        // Let user hide (or see) turn's action and end.
+        showOrHideActionButton.enabled = true
+        showOrHideActionButton.setTitle(buttonTitleString, forState: UIControlState.Normal)
     }
     func solverElfDidFinishAGame() {
         mode = .Solved
         updateUIBasedOnMode()
     }
-    //    func tableView(tableView: UITableView!, didDeselectRowAtIndexPath indexPath: NSIndexPath!) {
-    //        <#code#>
-    //    }
-    
+    // Show selected turn.
     func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
-        // Show turn.
-        showTurnStart(indexPath.row)
+        let turnNumberInt = indexPath.row + 1
+        showTurnForGame(1, turnNumberInt: turnNumberInt, turnEndBool: false)
     }
-    // Each cell is "Turn A.B," where A is the round and B is the player. E.g., "Turn 1.1."
+    // Each cell is "Round A.B," where A is the round and B is the player number. E.g., "Round 1.1."
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         let tableViewCell = tableView.dequeueReusableCellWithIdentifier("TurnCell") as UITableViewCell
-        if let game = solverElf.currentOptionalGame {
-            let rowIndexInt = indexPath.row
-            let numberOfPlayersInt = game.numberOfPlayersInt()
-            // 3 players: 0 = 1, 1 = 1, 2 = 1, 3 = 2, 4 = 2, 5 = 2
-            let turnNumberInt = (rowIndexInt / numberOfPlayersInt) + 1
-            // 3 players: 0 = 1, 1 = 2, 2 = 3, 3 = 1, 4 = 2, 5 = 3
-            let playerNumberInt = (rowIndexInt % numberOfPlayersInt) + 1
-            tableViewCell.textLabel.text = "Turn \(turnNumberInt).\(playerNumberInt)"
-        }
+        let turnNumberInt = indexPath.row + 1
+        let roundSubroundString = solverElf.roundSubroundString(turnNumberInt)
+        tableViewCell.textLabel.text = "Round \(roundSubroundString)"
         return tableViewCell;
     }
     // Return the number of turns.
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
-        if let game = solverElf.currentOptionalGame {
-            return game.turnArray.count
-        } else {
-            return 0
-        }
+        return solverElf.numberOfTurnsForGame(1)
     }
+    // Text fields: user seed.
+    // Check if valid value. Show current value in text field.
     func textFieldDidEndEditing(theTextField: UITextField!) {
-        // Valid seed: User should enter either an Int >= 0, or nothing ("") to let computer choose a random seed. If neither, do nothing.
-        // this line is crashing on device for some reason
+        // Valid seed: User should enter either an Int >= 0 or nothing (""). Latter lets computer choose a random seed. If neither, do nothing.
         if let int = theTextField.text.toInt() {
             if int >= 0 {
                 // Convert Int to UInt32. srandom() requires UInt32.
-                seedOptionalUInt32 = UInt32(int)
+                userSeedOptionalUInt32 = UInt32(int)
             }
         }
         if theTextField.text == "" {
-            seedOptionalUInt32 = nil
+            userSeedOptionalUInt32 = nil
         }
-        theTextField.text = seedString()
+        theTextField.text = userSeedString
     }
     // Dismiss keyboard.
     func textFieldShouldReturn(theTextField: UITextField!) -> Bool {
@@ -200,30 +162,31 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
             cancelButton.enabled = false
             discardsView.hidden = true
             scoreView.hidden = true
-            seedNumberTextField.enabled = true
-            seedNumberTextField.text = seedString()
             showOrHideActionButton.hidden = true
             startButton.enabled = true
             turnTableView.hidden = true
+            userSeedNumberTextField.enabled = true
+            userSeedNumberTextField.text = userSeedString
             visibleHandsView.hidden = true
         case .Solving:
             cancelButton.enabled = true
-            seedNumberTextField.enabled = false
             showOrHideActionButton.hidden = true
             startButton.enabled = false
             turnTableView.hidden = true
+            userSeedNumberTextField.enabled = false
         case .Solved:
             cancelButton.enabled = false
             discardsView.hidden = false
             scoreView.hidden = false
-            seedNumberTextField.enabled = true
             showOrHideActionButton.hidden = false
             showOrHideActionButton.enabled = false
             startButton.enabled = true
             turnTableView.hidden = false
+            userSeedNumberTextField.enabled = true
             visibleHandsView.hidden = false
             turnTableView.reloadData()
-            // Show first turn.
+            // Show seed, then first turn.
+            showSeedUsed()
             let indexPath = NSIndexPath(forRow: 0, inSection: 0)
             turnTableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: UITableViewScrollPosition.None)
             turnTableView.delegate?.tableView!(turnTableView, didSelectRowAtIndexPath: indexPath)
@@ -248,6 +211,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         logTextView.backgroundColor = UIColor.clearColor()
         scoreView.backgroundColor = UIColor.clearColor()
         visibleHandsView.backgroundColor = UIColor.clearColor()
+        logTextView.text = ""
         updateUIBasedOnMode()
     }
 }

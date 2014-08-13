@@ -24,7 +24,7 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
             }
         }
     }
-    var numberOfGames: Int = 1
+    var numberOfGamesInt = 1
     @IBOutlet weak var numberOfGamesTextField: UITextField!
     var solverElf: SolverElf!
     @IBOutlet weak var startButton: UIButton!
@@ -37,7 +37,7 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
     // Play/solve the requested number of games.
     @IBAction func handleStartButtonTapped() {
         mode = .Solving
-        solverElf.solveGames(numberOfGames, numberOfPlayersInt: 3)
+        solverElf.solveGames(numberOfGamesInt, numberOfPlayersInt: 3)
     }
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
     @IBAction func playButtonDownSound() {
@@ -45,13 +45,20 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
     }
     func showResults() {
         var resultsString = ""
-        let numberOfGamesPlayedInt = solverElf.numberOfGamesPlayed()
-        resultsString += "Games: \(numberOfGamesPlayedInt)"
-        resultsString += "\nAverage score: \(solverElf.averageScore())"
-        resultsString += "\nAverage # of turns: \(solverElf.averageNumberOfTurns())"
-        let numberOfGamesLostInt = solverElf.numberOfGamesLost()
-        let percentOfGamesLostFloat = Float(numberOfGamesLostInt) * 100 / Float(numberOfGamesPlayedInt)
-        resultsString += "\nGames lost: \(numberOfGamesLostInt) (\(percentOfGamesLostFloat)%)"
+//        let numberOfGamesPlayedInt = solverElf.numberOfGamesPlayedInt
+        resultsString += "Games: \(solverElf.numberOfGamesPlayedInt)"
+        // Round to 1 digit.
+        let averageScoreFloat = round(solverElf.averageScoreFloat, numberOfDecimalsInt: 1)
+        resultsString += "\nAverage score: \(averageScoreFloat)"
+        // Round to 1 digit.
+        let averageNumberOfTurnsFloat = round(solverElf.averageNumberOfTurnsFloat, numberOfDecimalsInt: 1)
+        resultsString += "\nAverage # of turns: \(solverElf.averageNumberOfTurnsFloat)"
+//        let numberOfGamesLostInt = solverElf.numberOfGamesLostInt
+        // let gamesLost = solverElf.numberAndPercentOfGamesLost()
+        // gamesLost.numberInt, gamesLost.percentFloat
+        solverElf.percentOfGamesLostFloat
+//        let percentOfGamesLostFloat = Float(numberOfGamesLostInt) * 100 / Float(numberOfGamesPlayedInt)
+        resultsString += "\nGames lost: \(solverElf.numberOfGamesLostInt) (\(solverElf.percentOfGamesLostFloat)%)"
         resultsString += "\nSeeds for games lost (max 10):"
         var seedsShownInt = 0
         for game in solverElf.gameArray {

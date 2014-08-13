@@ -13,10 +13,11 @@
 		9362C79A19948F6D0030E820 /* Turn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C79919948F6D0030E820 /* Turn.swift */; };
 		9362C79C19949FDB0030E820 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C79B19949FDB0030E820 /* Action.swift */; };
 		9362C79E19949FE60030E820 /* Clue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C79D19949FE60030E820 /* Clue.swift */; };
-		9362C7A0199576CE0030E820 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C79F199576CE0030E820 /* GameState.swift */; };
+		9362C7A0199576CE0030E820 /* AbstractGameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C79F199576CE0030E820 /* AbstractGameState.swift */; };
 		9362C7A2199577110030E820 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C7A1199577110030E820 /* Player.swift */; };
 		9362C7A4199579600030E820 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C7A3199579600030E820 /* Card.swift */; };
 		93C2EE391992DCDD00A29B15 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C2EE381992DCDD00A29B15 /* Game.swift */; };
+		93C748CB199BAD3D00247E08 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C748CA199BAD3D00247E08 /* Utilities.swift */; };
 		93D42FD5198F7A59006A28D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FD4198F7A59006A28D9 /* AppDelegate.swift */; };
 		93D42FD8198F7A59006A28D9 /* Hanabi.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FD6198F7A59006A28D9 /* Hanabi.xcdatamodeld */; };
 		93D42FDD198F7A59006A28D9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93D42FDB198F7A59006A28D9 /* Main.storyboard */; };
@@ -28,6 +29,8 @@
 		93D42FFE198F997F006A28D9 /* GGKViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D42FFD198F997F006A28D9 /* GGKViewController.m */; };
 		93D43001198F99AC006A28D9 /* GGKSoundModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D43000198F99AC006A28D9 /* GGKSoundModel.m */; };
 		93D43004198F9E82006A28D9 /* tap.aif in Resources */ = {isa = PBXBuildFile; fileRef = 93D43002198F9D8A006A28D9 /* tap.aif */; };
+		93D91E53199ABF6E00685BF1 /* StartingGameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D91E52199ABF6E00685BF1 /* StartingGameState.swift */; };
+		93D91E55199ABFA800685BF1 /* EndingGameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D91E54199ABFA800685BF1 /* EndingGameState.swift */; };
 		93F653BB1990272A00198AB6 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F653BA1990272A00198AB6 /* MainMenuViewController.swift */; };
 		93F653BD1990447400198AB6 /* ViewControllerElf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F653BC1990447300198AB6 /* ViewControllerElf.swift */; };
 		93F653BF1990CAE800198AB6 /* SolverElf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F653BE1990CAE800198AB6 /* SolverElf.swift */; };
@@ -50,11 +53,12 @@
 		9362C79919948F6D0030E820 /* Turn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Turn.swift; sourceTree = "<group>"; };
 		9362C79B19949FDB0030E820 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		9362C79D19949FE60030E820 /* Clue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Clue.swift; sourceTree = "<group>"; };
-		9362C79F199576CE0030E820 /* GameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		9362C79F199576CE0030E820 /* AbstractGameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbstractGameState.swift; sourceTree = "<group>"; };
 		9362C7A1199577110030E820 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		9362C7A3199579600030E820 /* Card.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		93C2EE381992DCDD00A29B15 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		93C2EE3A199424F900A29B15 /* Playground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Playground.playground; sourceTree = "<group>"; };
+		93C748CA199BAD3D00247E08 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		93D42FCF198F7A59006A28D9 /* Hanabi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hanabi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93D42FD3198F7A59006A28D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93D42FD4198F7A59006A28D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -74,6 +78,8 @@
 		93D42FFF198F99AC006A28D9 /* GGKSoundModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GGKSoundModel.h; sourceTree = "<group>"; };
 		93D43000198F99AC006A28D9 /* GGKSoundModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GGKSoundModel.m; sourceTree = "<group>"; };
 		93D43002198F9D8A006A28D9 /* tap.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = tap.aif; sourceTree = "<group>"; };
+		93D91E52199ABF6E00685BF1 /* StartingGameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartingGameState.swift; sourceTree = "<group>"; };
+		93D91E54199ABFA800685BF1 /* EndingGameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndingGameState.swift; sourceTree = "<group>"; };
 		93F653BA1990272A00198AB6 /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		93F653BC1990447300198AB6 /* ViewControllerElf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerElf.swift; sourceTree = "<group>"; };
 		93F653BE1990CAE800198AB6 /* SolverElf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SolverElf.swift; sourceTree = "<group>"; };
@@ -118,13 +124,14 @@
 		93D42FD1198F7A59006A28D9 /* Hanabi */ = {
 			isa = PBXGroup;
 			children = (
+				9362C79F199576CE0030E820 /* AbstractGameState.swift */,
 				9362C79B19949FDB0030E820 /* Action.swift */,
 				932D2DF51997EC2F00CA1306 /* AlwaysDiscardElf.swift */,
 				93D42FD4198F7A59006A28D9 /* AppDelegate.swift */,
 				9362C7A3199579600030E820 /* Card.swift */,
 				9362C79D19949FE60030E820 /* Clue.swift */,
+				93D91E54199ABFA800685BF1 /* EndingGameState.swift */,
 				93C2EE381992DCDD00A29B15 /* Game.swift */,
-				9362C79F199576CE0030E820 /* GameState.swift */,
 				93D42FFF198F99AC006A28D9 /* GGKSoundModel.h */,
 				93D43000198F99AC006A28D9 /* GGKSoundModel.m */,
 				93D42FF9198F8E5A006A28D9 /* GGKUtilities.h */,
@@ -141,7 +148,9 @@
 				93C2EE3A199424F900A29B15 /* Playground.playground */,
 				93D42FF6198F8A6D006A28D9 /* SolveGamesViewController.swift */,
 				93F653BE1990CAE800198AB6 /* SolverElf.swift */,
+				93D91E52199ABF6E00685BF1 /* StartingGameState.swift */,
 				9362C79919948F6D0030E820 /* Turn.swift */,
+				93C748CA199BAD3D00247E08 /* Utilities.swift */,
 				93F653BC1990447300198AB6 /* ViewControllerElf.swift */,
 				9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */,
 				93D42FD2198F7A59006A28D9 /* Supporting Files */,
@@ -286,6 +295,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				93F653BB1990272A00198AB6 /* MainMenuViewController.swift in Sources */,
+				93D91E53199ABF6E00685BF1 /* StartingGameState.swift in Sources */,
+				93C748CB199BAD3D00247E08 /* Utilities.swift in Sources */,
 				9362C79C19949FDB0030E820 /* Action.swift in Sources */,
 				93D42FFB198F8E5A006A28D9 /* GGKUtilities.m in Sources */,
 				93D42FFE198F997F006A28D9 /* GGKViewController.m in Sources */,
@@ -296,11 +307,12 @@
 				93D43001198F99AC006A28D9 /* GGKSoundModel.m in Sources */,
 				93C2EE391992DCDD00A29B15 /* Game.swift in Sources */,
 				9362C79E19949FE60030E820 /* Clue.swift in Sources */,
+				93D91E55199ABFA800685BF1 /* EndingGameState.swift in Sources */,
 				932D2DFA1998C8A300CA1306 /* OpenHandElf.swift in Sources */,
 				93D42FF7198F8A6D006A28D9 /* SolveGamesViewController.swift in Sources */,
 				9348E04D1992236700C19BB0 /* WalkThroughGameViewController.swift in Sources */,
 				93D42FD5198F7A59006A28D9 /* AppDelegate.swift in Sources */,
-				9362C7A0199576CE0030E820 /* GameState.swift in Sources */,
+				9362C7A0199576CE0030E820 /* AbstractGameState.swift in Sources */,
 				9362C79A19948F6D0030E820 /* Turn.swift in Sources */,
 				93F653BF1990CAE800198AB6 /* SolverElf.swift in Sources */,
 				932D2DF61997EC2F00CA1306 /* AlwaysDiscardElf.swift in Sources */,

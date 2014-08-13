@@ -9,31 +9,15 @@
 import UIKit
 
 class Turn: NSObject {
-    var endingOptionalGameState: GameState?
+    var endingOptionalGameState: EndingGameState?
     var optionalAction: Action?
-    var startingGameState: GameState
-    // Return a string describing the turn's action and result.
+    var startingGameState: StartingGameState
+    // String describing the turn's action and its result.
     func actionResultString() -> String {
-        var resultString = "\nP\(startingGameState.currentPlayerNumberInt)"
-        if let action = optionalAction {
-            switch action.type {
-            case .Clue:
-                resultString += " gave a clue: X."
-            case .Discard:
-                if let card = endingOptionalGameState?.discardsCardArray.last {
-                    resultString += " discarded card \(action.targetCardIndexInt + 1): \(card.string())."
-                    if !startingGameState.deckCardArray.isEmpty {
-                        resultString += " Drew a card."
-                    }
-                }
-            case .Play:
-                resultString += " played X."
-            }
-        }
-        return resultString
+        return startingGameState.resultStringForAction(optionalAction!)
     }
-    init(gameState: GameState) {
-        startingGameState = gameState
+    init(startingGameState: StartingGameState) {
+        self.startingGameState = startingGameState
         super.init()
     }
     // From the starting state, perform the action to make the ending state.
