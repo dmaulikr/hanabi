@@ -22,6 +22,12 @@ class Deck: NSObject {
     var string: String {
         return Card.stringForArray(cardArray)
     }
+    override func copy() -> AnyObject! {
+        var deck = Deck()
+        deck.cardArray = cardArray
+        deck.seedUInt32 = seedUInt32
+        return deck
+    }
     // Take top card from the deck and return it. Assumes not empty.
     func drawCard() -> Card {
         let card = cardArray.removeAtIndex(0)

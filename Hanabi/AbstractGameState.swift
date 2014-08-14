@@ -9,7 +9,10 @@
 import UIKit
 
 class AbstractGameState: NSObject {
-    var currentPlayer: Player!
+    var currentPlayer: Player {
+        return playerArray[currentPlayerIndex]
+    }
+    var currentPlayerIndex: Int!
     // Useful data describing game state.
     var data: (discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreInt: Int, scoreString: String, visibleHandsString: String) {
         return (discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreInt, scoreString, visibleHandsString)

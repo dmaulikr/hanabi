@@ -101,7 +101,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
             buttonTitleString = ShowActionTitleString
         }
         cushionLabel.text = "Points needed: \(dataForTurnForGame.numberOfPointsNeededInt)" +
-        "\nPlays left, max: (\(dataForTurnForGame.maxNumberOfPlaysLeftInt))"
+        "\nPlays left, max: \(dataForTurnForGame.maxNumberOfPlaysLeftInt)"
         discardsLabel.text = "Discards: \(dataForTurnForGame.discardsString)"
         scoreLabel.text = "Score: BGRWY" +
             "\n       \(dataForTurnForGame.scoreString)" +
@@ -115,7 +115,6 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     }
     func solverElfDidFinishAGame() {
         mode = .Solved
-        updateUIBasedOnMode()
     }
     // Show selected turn.
     func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
@@ -162,6 +161,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         switch mode {
         case .Planning:
             cancelButton.enabled = false
+            cushionView.hidden = true
             discardsView.hidden = true
             scoreView.hidden = true
             showOrHideActionButton.hidden = true
@@ -178,6 +178,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
             userSeedNumberTextField.enabled = false
         case .Solved:
             cancelButton.enabled = false
+            cushionView.hidden = false
             discardsView.hidden = false
             scoreView.hidden = false
             showOrHideActionButton.hidden = false
@@ -200,6 +201,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         solverElf.delegate = self;
         viewControllerElf = ViewControllerElf()
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cancelButton)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cushionView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: discardsView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: gameSettingsView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: logTextView)
@@ -208,6 +210,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: startButton)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: turnTableView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: visibleHandsView)
+        cushionView.backgroundColor = UIColor.clearColor()
         discardsView.backgroundColor = UIColor.clearColor()
         gameSettingsView.backgroundColor = UIColor.clearColor()
         logTextView.backgroundColor = UIColor.clearColor()

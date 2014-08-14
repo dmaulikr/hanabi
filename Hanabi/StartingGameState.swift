@@ -97,13 +97,13 @@ class StartingGameState: AbstractGameState {
         super.init()
         self.deck = deck
         self.playerArray = playerArray
-        currentPlayer = playerArray[0]
+        currentPlayerIndex = 0
         dealHands()
     }
     // Make from previous game state. Just change current player.
     init(endingGameState: EndingGameState) {
         super.init()
-        currentPlayer = endingGameState.currentPlayer.copy() as Player
+        currentPlayerIndex = endingGameState.currentPlayerIndex
         deck = endingGameState.deck.copy() as Deck
         discardsCardArray = endingGameState.discardsCardArray
         numberOfCluesLeftInt = endingGameState.numberOfCluesLeftInt
@@ -117,7 +117,10 @@ class StartingGameState: AbstractGameState {
     }
     // Change current player to next player.
     func moveToNextPlayer() {
-        currentPlayer = playerAfter(currentPlayer)
+        currentPlayerIndex = currentPlayerIndex + 1
+        if currentPlayerIndex == numberOfPlayersInt {
+            currentPlayerIndex = 0
+        }
     }
     // Player who goes after the given player. Rotates in a clockwise circle.
     func playerAfter(player: Player) -> Player {

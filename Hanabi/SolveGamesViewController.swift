@@ -45,14 +45,18 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
     }
     func showResults() {
         var resultsString = ""
-        resultsString += "Games: \(solverElf.numberOfGamesPlayedInt)"
+        resultsString += "\n\nGames: \(solverElf.numberOfGamesPlayedInt)"
+        // Rounding, then truncating to get desired correct decimal.
         let averageScoreFloat = round(solverElf.averageScoreFloat, numberOfDecimalsInt: 1)
-        resultsString += "\nAverage score: \(averageScoreFloat)"
+        resultsString += String(format: "\nAverage score: %.1f", averageScoreFloat)
+//        resultsString += "\nAverage score: \(averageScoreFloat)"
         let averageNumberOfTurnsForGamesWonFloat = round(solverElf.averageNumberOfTurnsForGamesWonFloat, numberOfDecimalsInt: 1)
-        resultsString += "\nAverage # of turns for games won: \(averageNumberOfTurnsForGamesWonFloat)"
+        resultsString += String(format: "\nAvg # of turns for games won: %.1f", averageNumberOfTurnsForGamesWonFloat)
+//        resultsString += "\nAvg # of turns for games won: \(averageNumberOfTurnsForGamesWonFloat)"
         let dataForGamesLost = solverElf.dataForGamesLost
         let percentOfGamesLostFloat = round(dataForGamesLost.percentFloat, numberOfDecimalsInt: 3)
-        resultsString += "\nGames lost: \(dataForGamesLost.numberInt) (\(percentOfGamesLostFloat)%)"
+        resultsString += String(format: "\nGames lost: %d (%.3f%%)", dataForGamesLost.numberInt, percentOfGamesLostFloat)
+//        resultsString += "\nGames lost: \(dataForGamesLost.numberInt) (\(percentOfGamesLostFloat)%)"
         // Show up to 10 seeds.
         let seedArray = dataForGamesLost.seedArray
         let numberOfSeedsToShowInt = min(10, seedArray.count)
@@ -66,12 +70,11 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         let dataForSecondsSpent = solverElf.dataForSecondsSpent
         let numberOfSecondsSpentDouble = round(dataForSecondsSpent.numberDouble, numberOfDecimalsInt: 3)
         let averageSecondsSpentDouble = round(dataForSecondsSpent.averageDouble, numberOfDecimalsInt: 3)
-        resultsString += "\nTime spent: \(numberOfSecondsSpentDouble) seconds (average: \(averageSecondsSpentDouble))"
+        resultsString += "\nTime spent: \(numberOfSecondsSpentDouble) sec (avg: \(averageSecondsSpentDouble))"
         logTextView.text = logTextView.text + resultsString
     }
     func solverElfDidFinishAllGames() {
         mode = .Solved
-        updateUIBasedOnMode()
     }
     // Text field is for number of games to play/solve.
     // Check if valid value. Show current value in text field.

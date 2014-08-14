@@ -30,7 +30,7 @@ class EndingGameState: AbstractGameState {
     // Ending state = starting state + results of action.
     init(startingGameState: StartingGameState, action: Action) {
         super.init()
-        currentPlayer = startingGameState.currentPlayer.copy() as Player
+        currentPlayerIndex = startingGameState.currentPlayerIndex
         deck = startingGameState.deck.copy() as Deck
         discardsCardArray = startingGameState.discardsCardArray
         numberOfCluesLeftInt = startingGameState.numberOfCluesLeftInt
@@ -50,12 +50,12 @@ class EndingGameState: AbstractGameState {
         }
         switch action.type {
         case .Clue:
-            println("give a clue")
+//            println("give a clue")
             // If clues not left, trigger an assertion. (AI shouldn't have chosen this, and player shouldn't have been able to.)
             assert(numberOfCluesLeftInt > 0, "Error: tried to give clue with 0 clue tokens.")
             numberOfCluesLeftInt--
         case .Play:
-            println("play a card")
+//            println("play a card")
             // Remove card from hand. Play it. If okay, increase score. Else, lose strike and put in discard pile. Draw card.
             let playCard = currentPlayer.handCardArray.removeAtIndex(action.targetCardIndexInt)
             if cardIsPlayable(playCard) {

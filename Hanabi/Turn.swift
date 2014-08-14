@@ -17,8 +17,11 @@ class Turn: NSObject {
     }
     // Whether the game has ended (not necessarily won).
     var gameIsDone: Bool {
-        let endingGameState = endingOptionalGameState!
-        return endingGameState.isDone
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.isDone
+        } else {
+            return false
+        }
     }
     var optionalAction: Action?
     var startingGameState: StartingGameState

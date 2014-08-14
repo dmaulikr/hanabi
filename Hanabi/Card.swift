@@ -61,12 +61,14 @@ struct Card: Hashable {
     // String showing cards in the given array.
     static func stringForArray(cardArray: [Card]) -> String {
         var string = ""
-        for index in 0...cardArray.count {
-            let cardString = cardArray[index].string
-            if index == 0 {
-                string += "\(cardString)"
-            } else {
-                string += " \(cardString)"
+        if !cardArray.isEmpty {
+            for index in 0...(cardArray.count - 1) {
+                let cardString = cardArray[index].string
+                if index == 0 {
+                    string += "\(cardString)"
+                } else {
+                    string += " \(cardString)"
+                }
             }
         }
         return string
