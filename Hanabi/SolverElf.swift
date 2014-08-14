@@ -22,7 +22,7 @@ class SolverElf: NSObject {
         var totalTurnsInt = 0
         var numberOfGamesWonInt = 0
         for game in gameArray {
-            if game.wasWon() {
+            if game.wasWon {
                 numberOfGamesWonInt++
                 totalTurnsInt += game.numberOfTurnsInt
             }
@@ -33,7 +33,7 @@ class SolverElf: NSObject {
     var averageScoreFloat: Float {
         var totalScoresInt = 0
         for game in gameArray {
-            totalScoresInt += game.finalScore()
+            totalScoresInt += game.finalScore
         }
         return Float(totalScoresInt) / Float(numberOfGamesPlayedInt)
     }
@@ -42,7 +42,7 @@ class SolverElf: NSObject {
         var numberInt = 0
         var seedArray: [UInt32] = []
         for game in gameArray {
-            if !game.wasWon() {
+            if !game.wasWon {
                 numberInt++
                 seedArray.append(game.seedUInt32)
             }
@@ -93,39 +93,33 @@ class SolverElf: NSObject {
         let action = openHandElf.bestActionForTurn(turn)
         return action
     }
-    // Data for given turn for given game. If turn end, the data is for the end of the turn (vs start).
+    // Data for given turn for given game. If turn end, the data is for the end of the turn (vs start). As we're bundling a lot of data here, this should be used only for reporting and not for solving many games at once.
     func dataForTurnForGame(gameNumberInt: Int, turnNumberInt: Int, turnEndBool: Bool) -> (discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsString: String) {
         let index = gameNumberInt - 1
         let game = gameArray[index]
         // Could add this if needed.
         // var gameNumberInt: Int
-        let dataForTurn = game.dataForTurn(turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
+        let dataForTurn = game.dataForTurn(turnNumberInt, turnEndBool: turnEndBool)
         let discardsString = dataForTurn.discardsString
         let maxNumberOfPlaysLeftInt = dataForTurn.maxNumberOfPlaysLeftInt
         let numberOfCardsLeftInt = dataForTurn.numberOfCardsLeftInt
         let numberOfCluesLeftInt = dataForTurn.numberOfCluesLeftInt
-        let numberOfPointsNeededInt = dataForTurn.discardsString
+        let numberOfPointsNeededInt = dataForTurn.numberOfPointsNeededInt
         let numberOfStrikesLeftInt = dataForTurn.numberOfStrikesLeftInt
         let scoreString = dataForTurn.scoreString
         let visibleHandsString = dataForTurn.visibleHandsString
         return (discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsString)
     }
-//    override init() {
-//        super.init()
-//    }
     // String for the round and subround for the given turn. (E.g., in a 3-player game, turn 4 = round 2.1.)
     func roundSubroundStringForTurnForFirstGame(turnNumberInt: Int) -> String {
         let game = gameArray.first!
-        return game.roundSubroundStringForTurn(turnNumberInt: Int)
-        //        if let game = solverElf.currentOptionalGame {
-        //            let rowIndexInt = indexPath.row
-        //            let numberOfPlayersInt = game.numberOfPlayersInt()
-        //            // 3 players: 0 = 1, 1 = 1, 2 = 1, 3 = 2, 4 = 2, 5 = 2
-        //            let turnNumberInt = (rowIndexInt / numberOfPlayersInt) + 1
-        //            // 3 players: 0 = 1, 1 = 2, 2 = 3, 3 = 1, 4 = 2, 5 = 3
-        //            let playerNumberInt = (rowIndexInt % numberOfPlayersInt) + 1
-        //            tableViewCell.textLabel.text = "Turn \(turnNumberInt).\(playerNumberInt)"
-        //        }
+        return game.roundSubroundStringForTurn(turnNumberInt)
+    }
+    // Determine best action for current turn. Do it.
+    func solveCurrentTurnForGame(game: Game) {
+        if let turn = game.currentOptionalTurn {
+            solveTurn(turn)
+        }
     }
     // Reset list of solved games. Make a game. Solve it.
     func solveGameWithSeed(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
@@ -138,7 +132,7 @@ class SolverElf: NSObject {
         do {
             solveCurrentTurnForGame(game)
             game.finishCurrentTurn()
-        } while !game.isDone()
+        } while !game.isDone
         gameArray.append(game)
         delegate?.solverElfDidFinishAGame?()
     }
@@ -166,12 +160,6 @@ class SolverElf: NSObject {
         // just make sure player doesn't retain the gamestate and create a retain cycle
         // turn.bestAction() -> sGS.bestAction() -> currentPlayer.bestActionForGameState(SGS: SGS) -> elf.bestActionForGameStateForPlayer(playerNumber, SGS: SGS)
         turn.optionalAction = bestActionForTurn(turn)
-    }
-    // Determine best action for current turn. Do it.
-    func solveCurrentTurnForGame(game: Game) {
-        if let turn = game.currentOptionalTurn {
-            solveTurn(turn)
-        }
     }
     func stopSolving() {
     }

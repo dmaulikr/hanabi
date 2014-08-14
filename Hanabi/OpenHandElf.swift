@@ -14,7 +14,7 @@ class OpenHandElf: NSObject {
     func bestActionForTurn(turn: Turn) -> Action {
         let action = Action()
         let gameState = turn.startingGameState
-        let currentPlayerHandCardArray = gameState.playerArray[gameState.currentPlayerNumberInt - 1].handCardArray
+        let currentPlayerHandCardArray = gameState.currentPlayer.handCardArray
         // If can play, do. Play cards whose sequence will take the longest. (E.g., 132 before 123.)
         let mostTurnsForChainCardArray = gameState.mostTurnsForChainCardArray()
         if !mostTurnsForChainCardArray.isEmpty {
@@ -28,7 +28,6 @@ class OpenHandElf: NSObject {
                     thePlayCard = card
                 }
             }
-            println("OHE thePlayCard: \(thePlayCard.string())")
             action.targetCardIndexInt = find(currentPlayerHandCardArray, thePlayCard)!
         } else {
             let numberOfCluesLeftInt = turn.startingGameState.numberOfCluesLeftInt

@@ -32,8 +32,23 @@ class StartingGameState: AbstractGameState {
         }
         return cheatingSafeDiscardsCardArray
     }
-    init(endingGameState: EndingGameState) {
-        // what about first init? should be just ()
+    // Starting game state is equal to previous game state, just moved to the next player. If no previous game state, start from scratch.
+    init(endingOptionalGameState: EndingGameState?) {
+        super.init()
+        if let endingGameState = endingOptionalGameState {
+            currentPlayer = endingGameState.currentPlayer.copy() as Player
+            deck = endingGameState.deck.copy() as Deck
+            discardsCardArray = endingGameState.discardsCardArray
+            numberOfCluesLeftInt = endingGameState.numberOfCluesLeftInt
+            numberOfStrikesLeftInt = endingGameState.numberOfStrikesLeftInt
+            numberOfTurnsPlayedWithEmptyDeckInt = endingGameState.numberOfTurnsPlayedWithEmptyDeckInt
+            for player in endingGameState.playerArray {
+                playerArray.append(player.copy() as Player)
+            }
+            scoreDictionary = endingGameState.scoreDictionary
+            moveToNextPlayer()
+        } else {
+        }
     }
     // Return card(s) whose visible chain will take the longest to play. For example, 123 takes 3 turns, 132 takes 5.
     func mostTurnsForChainCardArray() -> [Card] {
@@ -79,56 +94,23 @@ class StartingGameState: AbstractGameState {
         }
         return mostTurnsForChainCardArray
     }
-    func performAction(action: Action) {
-        // If deck already empty, then note turn.
-        if deckCardArray.isEmpty {
-            numberOfTurnsPlayedWithEmptyDeckInt++
-        }
-        switch action.type {
-        case .Clue:
-            println("give a clue")
-            // If clues not left, trigger an assertion. (AI shouldn't have chosen this, and player shouldn't have been able to.)
-            assert(numberOfCluesLeftInt > 0, "Error: tried to give clue with 0 clue tokens.")
-            numberOfCluesLeftInt--
-        case .Play:
-            println("play a card")
-            // Remove card from hand. Play it. If okay, increase score. Else, lose strike and put in discard pile. If deck not empty, draw new card.
-            let currentPlayer = playerArray[currentPlayerNumberInt - 1]
-            let playCard = currentPlayer.handCardArray.removeAtIndex(action.targetCardIndexInt)
-            if cardIsPlayable(playCard) {
-                var scoreInt = scoreDictionary[playCard.color]!
-                scoreInt++
-                scoreDictionary[playCard.color] = scoreInt
-            } else {
-                numberOfStrikesLeftInt--
-                discardsCardArray.append(playCard)
+    // Change current player to next player. Rotates in a clockwise circle.
+    func moveToNextPlayer() {
+        if var index = find(playerArray, currentPlayer) {
+            index++
+            if index > (numberOfPlayersInt - 1) {
+                index = 0
             }
-            if !deckCardArray.isEmpty {
-                let newCard = deckCardArray.removeLast()
-                currentPlayer.handCardArray.append(newCard)
-            }
-            // if valid, increase score
-        case .Discard:
-            // If clues not less than max, trigger an assertion. (AI shouldn't have chosen this, and player shouldn't have been able to.)
-            assert(numberOfCluesLeftInt < 8, "Error: tried to discard with max clue tokens.")
-            // Remove card from hand. Put in discard pile. Gain clue token. If deck not empty, draw new card.
-            let currentPlayer = playerArray[currentPlayerNumberInt - 1]
-            let discardCard = currentPlayer.handCardArray.removeAtIndex(action.targetCardIndexInt)
-            discardsCardArray.append(discardCard)
-            numberOfCluesLeftInt++
-            if !deckCardArray.isEmpty {
-                let newCard = deckCardArray.removeLast()
-                currentPlayer.handCardArray.append(newCard)
-            }
+            currentPlayer = playerArray[index]
         }
     }
     // String describing the given action and its result.
-    func resultStringForAction(action: Action) -> String {
+    func stringForAction(action: Action) -> String {
         var resultString = "\n\(currentPlayer.nameString)"
         let index = action.targetCardIndexInt
         let card = currentPlayer.handCardArray[index]
         // Card position and abbreviation.
-        let cardPositionString = "card \(index + 1): \(card.string())"
+        let cardPositionString = "card \(index + 1): \(card.string)"
         switch action.type {
         case .Clue:
             resultString += " gave a clue: X."

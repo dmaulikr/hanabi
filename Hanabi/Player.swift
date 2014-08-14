@@ -10,6 +10,10 @@ import UIKit
 
 class Player: NSObject {
     var handCardArray: [Card] = []
+    // String showing cards in hand.
+    var handString: String {
+        return Card.stringForArray(handCardArray)
+    }
     var nameString: String = ""
     override func copy() -> AnyObject! {
         var player = Player()

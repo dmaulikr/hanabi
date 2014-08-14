@@ -43,21 +43,32 @@ struct Card: Hashable {
     var color: Color
     // For Hashable protocol.
     var hashValue: Int {
-        get {
-            return color.toRaw() * 10 + numberInt
-        }
+        return color.toRaw() * 10 + numberInt
     }
-    var numberInt: Int!
-    // Return the card next in sequence. (Max value is 5.)
-    func nextValueCard() -> Card? {
+    // The card next in sequence. (Max value is 5.)
+    var nextValueCard: Card? {
         var optionalCard: Card?
         if numberInt <= 5 {
             optionalCard = Card(color: color, numberInt: numberInt + 1)
         }
         return optionalCard
     }
-    // Each card can be represented by two letters (e.g., "B4," "Y1").
-    func string() -> String {
+    var numberInt: Int!
+    // String representing card (e.g., "B4," "Y1").
+    var string: String {
         return "\(color.letterString())\(numberInt)"
+    }
+    // String showing cards in the given array.
+    static func stringForArray(cardArray: [Card]) -> String {
+        var string = ""
+        for index in 0...cardArray.count {
+            let cardString = cardArray[index].string
+            if index == 0 {
+                string += "\(cardString)"
+            } else {
+                string += " \(cardString)"
+            }
+        }
+        return string
     }
 }

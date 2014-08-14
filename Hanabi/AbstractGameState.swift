@@ -10,39 +10,37 @@ import UIKit
 
 class AbstractGameState: NSObject {
     var currentPlayer: Player!
-    
-//    var currentPlayerNumberInt = 1
-    
-    var deckCardArray: [Card] = []
+    // Useful data describing game state.
+    var data: (discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreInt: Int, scoreString: String, visibleHandsString: String) {
+        return (discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreInt, scoreString, visibleHandsString)
+    }
+    var deck: Deck!
     var discardsCardArray: [Card] = []
     // String showing the discard pile.
     var discardsString: String {
-        get {
-            var discardsString = ""
-            for index in 0...discardsCardArray.count {
-                let cardString = discardsCardArray[index].string()
-                if index == 0 {
-                    discardsString += "\(cardString)"
-                } else {
-                    discardsString += " \(cardString)"
-                }
+        var discardsString = ""
+        for index in 0...discardsCardArray.count {
+            let cardString = discardsCardArray[index].string
+            if index == 0 {
+                discardsString += "\(cardString)"
+            } else {
+                discardsString += " \(cardString)"
             }
-            return discardsString
         }
+        return discardsString
     }
     // Max number of cards that can be played before the game ends from decking. Once last card is drawn, each player gets one turn. Ignore that the game would end if all 25 points were scored.
     var maxNumberOfPlaysLeftInt: Int {
-        get {
-            return numberOfCardsLeftInt + numberOfPlayersInt
-        }
+        return numberOfCardsLeftInt + numberOfPlayersInt
     }
     // The number of cards in the deck.
     var numberOfCardsLeftInt: Int {
-        get {
-            return deckCardArray.count
-        }
+        return deck.numberOfCardsLeftInt
     }
     var numberOfCluesLeftInt = 8
+    var numberOfPlayersInt: Int {
+        return playerArray.count
+    }
     // Number of points needed for perfect score.
     var numberOfPointsNeededInt: Int {
         get {
@@ -55,38 +53,46 @@ class AbstractGameState: NSObject {
     var playerArray: [Player] = []
     // The score is a number associated with each color. Total score is the sum.
     var scoreDictionary: [Card.Color: Int] = [:]
-    
-    
-    // String showing the score for each color, in order.
-    // WARNING: DICTIONARIES not guaranteed to have order; make this more robust
-    var scoreString: String {
-        get {
-            var scoreString = ""
-            for (_, score) in scoreDictionary {
-                scoreString += String(score)
-            }
-            return scoreString
+    // Sum of score for each color.
+    var scoreInt: Int {
+        var scoreInt = 0
+        for (color, score) in scoreDictionary {
+            scoreInt += score
         }
+        return scoreInt
     }
-    
-    
+    // String showing the score for each color, in order.
+    var scoreString: String {
+        // Score is kept in a dictionary, which does not guarantee order. We'll put each color's score in an array, then join the elements.
+        var stringArray = [String](count: 5, repeatedValue: "")
+        for (color, score) in scoreDictionary {
+            switch color {
+            case .Blue:
+                stringArray[0] = String(score)
+            case .Green:
+                stringArray[1] = String(score)
+            case .Red:
+                stringArray[2] = String(score)
+            case .White:
+                stringArray[3] = String(score)
+            case .Yellow:
+                stringArray[4] = String(score)
+            }
+        }
+        let scoreString = "".join(stringArray)
+        return scoreString
+    }
     // String showing cards in other players' hands.
     var visibleHandsString: String {
-        get {
-            var visibleHandsString = ""
-            for player in playerArray {
-                visibleHandsString += "\n\(player.nameString):"
-                if player != currentPlayer {
-                    visibleHandsString += " \(player.handString)"
-//                    for card in player.handCardArray {
-//                        visibleHandsString += " \(card.string())"
-//                    }
-                }
+        var visibleHandsString = ""
+        for player in playerArray {
+            visibleHandsString += "\n\(player.nameString):"
+            if player != currentPlayer {
+                visibleHandsString += " \(player.handString)"
             }
-            return visibleHandsString
         }
+        return visibleHandsString
     }
-
     // Return whether the given card appears at least twice in the given hand.
     func cardIsDuplicate(card:Card, handCardArray: [Card]) -> Bool {
         var numberOfTimesSeenInt = 0
