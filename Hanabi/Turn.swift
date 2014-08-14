@@ -9,18 +9,17 @@
 import UIKit
 
 class Turn: NSObject {
-    // Make the first turn, given the deck and players.
-    class func firstTurn(deck: Deck, playerArray: [Player]) -> Turn {
-        var turn = Turn(gameState: nil)
-        // set up state
-        // deal hands
-    }
-    // String describing the turn's action and its result.
-    // could package this in data
-//    var actionString: String {
-//        return startingGameState.stringForAction(optionalAction!)
-//    }
     var endingOptionalGameState: EndingGameState?
+    // Score at end of turn.
+    var endingScoreInt: Int {
+        let endingGameState = endingOptionalGameState!
+        return endingGameState.scoreInt
+    }
+    // Whether the game has ended (not necessarily won).
+    var gameIsDone: Bool {
+        let endingGameState = endingOptionalGameState!
+        return endingGameState.isDone
+    }
     var optionalAction: Action?
     var startingGameState: StartingGameState
     // Data for turn. If turn end, the data is for the end of the turn (vs start).
@@ -40,14 +39,15 @@ class Turn: NSObject {
         let visibleHandsString = data.visibleHandsString
         return (actionString, discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsString)
     }
-    // Make turn: use previous game state and move to next player. If no game state, create new game state.
-    init(endingOptionalGameState: EndingGameState?) {
-        startingGameState = StartingGameState(endingOptionalGameState: endingOptionalGameState)
+    // Make new, deal hands to given players.
+    init(deck: Deck, playerArray: [Player]) {
+        startingGameState = StartingGameState(deck: deck, playerArray: playerArray)
         super.init()
     }
-    // Turn following this one.
-    func makeNextTurn() -> Turn {
-        return Turn(endingOptionalGameState: endingOptionalGameState)
+    // Make from previous turn.
+    init(previousTurn: Turn) {
+        startingGameState = StartingGameState(endingGameState: previousTurn.endingOptionalGameState!)
+        super.init()
     }
     // I.e., make the ending state.
     func performAction() {

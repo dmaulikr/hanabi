@@ -9,6 +9,17 @@
 import UIKit
 
 class EndingGameState: AbstractGameState {
+    // Whether the game has ended (not necessarily won).
+    var isDone: Bool {
+        // Game ends if score maxed, if out of strikes or if out of turns. The last case: when the deck is empty, each player gets one more turn.
+        if scoreInt == 25 || numberOfStrikesLeftInt == 0 {
+            return true
+        }
+        if deck.isEmpty && (numberOfTurnsPlayedWithEmptyDeckInt == numberOfPlayersInt) {
+            return true
+        }
+        return false
+    }
     // If deck not empty, draw new card.
     func drawCard() {
         if !deck.isEmpty {
@@ -30,17 +41,6 @@ class EndingGameState: AbstractGameState {
         }
         scoreDictionary = startingGameState.scoreDictionary
         performAction(action)
-    }
-    // Return whether the game has ended (not necessarily won).
-    func isDone() -> Bool {
-        // Game ends if score maxed, if out of strikes or if out of turns. The last case: when the deck is empty, each player gets one more turn.
-        if totalScore() == 25 || numberOfStrikesLeftInt == 0 {
-            return true
-        }
-        if deckCardArray.isEmpty && numberOfTurnsPlayedWithEmptyDeckInt == playerArray.count {
-            return true
-        }
-        return false
     }
     // Determine state resulting from given action.
     func performAction(action: Action) {

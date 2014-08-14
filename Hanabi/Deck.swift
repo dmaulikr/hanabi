@@ -13,25 +13,27 @@ class Deck: NSObject {
     var isEmpty: Bool {
         return cardArray.isEmpty
     }
+    var numberOfCardsLeftInt: Int {
+        return cardArray.count
+    }
     // Number for srandom(). Determines card order.
     var seedUInt32: UInt32!
     // String showing cards in deck.
     var string: String {
-        var string = ""
-        for index in 0...cardArray.count {
-            let cardString = cardArray[index].string
-            if index == 0 {
-                string += "\(cardString)"
-            } else {
-                string += " \(cardString)"
-            }
-        }
-        return string
+        return Card.stringForArray(cardArray)
     }
     // Take top card from the deck and return it. Assumes not empty.
     func drawCard() -> Card {
         let card = cardArray.removeAtIndex(0)
         return card
+    }
+    // Take top N cards and return them. Assumes won't be empty.
+    func drawCards(numberInt: Int) -> [Card] {
+        var tempCardArray: [Card] = []
+        for _ in 1...numberInt {
+            tempCardArray.append(drawCard())
+        }
+        return tempCardArray
     }
     // Unshuffled deck.
     override init() {

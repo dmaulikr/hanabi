@@ -18,16 +18,7 @@ class AbstractGameState: NSObject {
     var discardsCardArray: [Card] = []
     // String showing the discard pile.
     var discardsString: String {
-        var discardsString = ""
-        for index in 0...discardsCardArray.count {
-            let cardString = discardsCardArray[index].string
-            if index == 0 {
-                discardsString += "\(cardString)"
-            } else {
-                discardsString += " \(cardString)"
-            }
-        }
-        return discardsString
+        return Card.stringForArray(discardsCardArray)
     }
     // Max number of cards that can be played before the game ends from decking. Once last card is drawn, each player gets one turn. Ignore that the game would end if all 25 points were scored.
     var maxNumberOfPlaysLeftInt: Int {
@@ -43,9 +34,7 @@ class AbstractGameState: NSObject {
     }
     // Number of points needed for perfect score.
     var numberOfPointsNeededInt: Int {
-        get {
-            return 25 - totalScore()
-        }
+        return 25 - scoreInt
     }
     var numberOfStrikesLeftInt = 3
     // Number of turns played after the deck became empty. To determine game end.
@@ -126,21 +115,6 @@ class AbstractGameState: NSObject {
             return false
         }
     }
-//    override func copy() -> AnyObject! {
-//        var gameState = GameState()
-//        gameState.currentPlayerNumberInt = currentPlayerNumberInt
-//        gameState.deckCardArray = deckCardArray
-//        gameState.discardsCardArray = discardsCardArray
-//        gameState.numberOfCluesLeftInt = numberOfCluesLeftInt
-//        gameState.numberOfStrikesLeftInt = numberOfStrikesLeftInt
-//        gameState.numberOfTurnsPlayedWithEmptyDeckInt = numberOfTurnsPlayedWithEmptyDeckInt
-//        // Deep copy.
-//        for player in playerArray {
-//            gameState.playerArray.append(player.copy() as Player)
-//        }
-//        gameState.scoreDictionary = scoreDictionary
-//        return gameState
-//    }
     override init() {
         // Initialize score.
         for int in 1...5 {
@@ -149,22 +123,5 @@ class AbstractGameState: NSObject {
             }
         }
         super.init()
-    }
-    // Return the player who goes after the given player
-    func playerAfter(player: Player) -> Player {
-        var indexInt = find(playerArray, player)!
-        indexInt += 1
-        if indexInt == playerArray.count {
-            indexInt = 0
-        }
-        return playerArray[indexInt]
-    }
-    // Sum of score for each color.
-    func totalScore() -> Int {
-        var scoreInt = 0
-        for (color, score) in scoreDictionary {
-            scoreInt += score
-        }
-        return scoreInt
     }
 }

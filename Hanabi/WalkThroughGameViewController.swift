@@ -91,15 +91,15 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     // Show given turn for given game. If turn end, show action and end of turn. Else, show start of turn.
     func showTurnForGame(gameNumberInt: Int, turnNumberInt: Int, turnEndBool: Bool) {
         var buttonTitleString: String
+        let dataForTurnForGame = solverElf.dataForTurnForGame(1, turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
         if turnEndBool {
             var logString: String = logTextView.text
-            logString += solverElf.actionStringForTurnForGame(1, turnNumberInt: turnNumberInt)
+            logString += dataForTurnForGame.actionString
             logTextView.text = logString
             buttonTitleString = HideActionTitleString
         } else {
             buttonTitleString = ShowActionTitleString
         }
-        let dataForTurnForGame = solverElf.dataForTurnForGame(1, turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
         cushionLabel.text = "Points needed: \(dataForTurnForGame.numberOfPointsNeededInt)" +
         "\nPlays left, max: (\(dataForTurnForGame.maxNumberOfPlaysLeftInt))"
         discardsLabel.text = "Discards: \(dataForTurnForGame.discardsString)"

@@ -16,7 +16,7 @@ class OpenHandElf: NSObject {
         let gameState = turn.startingGameState
         let currentPlayerHandCardArray = gameState.currentPlayer.handCardArray
         // If can play, do. Play cards whose sequence will take the longest. (E.g., 132 before 123.)
-        let mostTurnsForChainCardArray = gameState.mostTurnsForChainCardArray()
+        let mostTurnsForChainCardArray = gameState.mostTurnsForChainCardArray
         if !mostTurnsForChainCardArray.isEmpty {
             action.type = .Play
             // If multiple options, choose first card with lowest number.
@@ -33,12 +33,12 @@ class OpenHandElf: NSObject {
             let numberOfCluesLeftInt = turn.startingGameState.numberOfCluesLeftInt
             if numberOfCluesLeftInt < 8 {
                 // If a safe discard, do. Else, if no one can play or do a safe discard, then discard. Else, give clue. If no clues, discard.
-                let cheatingSafeDiscardsCardArray = gameState.cheatingSafeDiscardsCardArray()
+                let cheatingSafeDiscardsCardArray = gameState.cheatingSafeDiscardsCardArray
                 if !cheatingSafeDiscardsCardArray.isEmpty {
                     action.type = .Discard
                     let theDiscardCard = cheatingSafeDiscardsCardArray.first!
                     action.targetCardIndexInt = find(currentPlayerHandCardArray, theDiscardCard)!
-                } else if !gameState.cheatingAnyPlaysOrSafeDiscards() {
+                } else if !gameState.cheatingAnyPlaysOrSafeDiscards {
                     println("Rare: no one has a play or safe discard?")
                     action.type = .Discard
                     // choose suitable discard
