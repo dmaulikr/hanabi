@@ -9,19 +9,9 @@
 import Foundation
     
 // Round value to the given number of decimal places.
-// Thanks to post: http://stackoverflow.com/questions/24791734/cgfloat-call-rintf-when-float-and-rint-when-double/24792640#24792640
-// Couldn't figure out better way.
-func round<T: FloatingPointType>(value: T, #numberOfDecimalsInt: Int) -> T {
-    switch value {
-    case let value as Float:
-        let powerOfTenInt = pow(10, Float(numberOfDecimalsInt))
-        let roundedValue = round(value * powerOfTenInt) / powerOfTenInt
-        return roundedValue as T
-    case let value as Double:
-        let powerOfTenInt = pow(10, Double(numberOfDecimalsInt))
-        let roundedValue = round(value * powerOfTenInt) / powerOfTenInt
-        return roundedValue as T
-    default:
-        return 0.0 as T
-    }
+// works better with Double than Float?
+func round(value: Double, #numberOfDecimalsInt: Int) -> Double {
+    let powerOfTenInt = pow(10, Double(numberOfDecimalsInt))
+    let roundedValue = round(value * powerOfTenInt) / powerOfTenInt
+    return roundedValue
 }

@@ -17,6 +17,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     }
     let HideActionTitleString = "Hide Action"
     let ShowActionTitleString = "Show Action"
+    let LogTextViewTextKeyPathString = "logTextView.text"
     @IBOutlet weak var cancelButton: UIButton!
     // How many non-play actions players can make and still win.
     @IBOutlet weak var cushionLabel: UILabel!
@@ -55,6 +56,9 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     @IBOutlet weak var visibleHandsLabel: UILabel!
     // View enclosing visible-hands label. To make bigger border.
     @IBOutlet weak var visibleHandsView: UIView!
+    deinit {
+        removeObserver(self, forKeyPath: LogTextViewTextKeyPathString)
+    }
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
         mode = .Planning
@@ -76,6 +80,14 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     @IBAction func handleStartButtonTapped() {
         mode = .Solving
         solverElf.solveGameWithSeed(userSeedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
+    }
+    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>) {
+        if keyPath == LogTextViewTextKeyPathString {
+            let lengthInt = logTextView.text.utf16Count
+            logTextView.scrollRangeToVisible(NSMakeRange(lengthInt, 0))
+        } else {
+            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
     }
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
     @IBAction func playButtonDownSound() {
@@ -217,6 +229,8 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         scoreView.backgroundColor = UIColor.clearColor()
         visibleHandsView.backgroundColor = UIColor.clearColor()
         logTextView.text = ""
+        // To show bottom of log.
+        addObserver(self, forKeyPath: LogTextViewTextKeyPathString, options: NSKeyValueObservingOptions.New, context: nil)
         updateUIBasedOnMode()
     }
 }

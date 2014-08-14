@@ -15,6 +15,7 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         // Solved: game done.
         case Planning, Solving, Solved
     }
+    let LogTextViewTextKeyPathString = "logTextView.text"
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var logTextView: UITextView!
     var mode: Mode = .Planning {
@@ -29,6 +30,9 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
     var solverElf: SolverElf!
     @IBOutlet weak var startButton: UIButton!
     var viewControllerElf: ViewControllerElf!
+    deinit {
+        removeObserver(self, forKeyPath: LogTextViewTextKeyPathString)
+    }
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
         mode = .Planning
@@ -39,6 +43,14 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         mode = .Solving
         solverElf.solveGames(numberOfGamesInt, numberOfPlayersInt: 3)
     }
+    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>) {
+        if keyPath == LogTextViewTextKeyPathString {
+            let lengthInt = logTextView.text.utf16Count
+            logTextView.scrollRangeToVisible(NSMakeRange(lengthInt, 0))
+        } else {
+            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
+    }
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
     @IBAction func playButtonDownSound() {
         viewControllerElf.playButtonDownSound()
@@ -46,17 +58,12 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
     func showResults() {
         var resultsString = ""
         resultsString += "\n\nGames: \(solverElf.numberOfGamesPlayedInt)"
-        // Rounding, then truncating to get desired correct decimal.
-        let averageScoreFloat = round(solverElf.averageScoreFloat, numberOfDecimalsInt: 1)
-        resultsString += String(format: "\nAverage score: %.1f", averageScoreFloat)
-//        resultsString += "\nAverage score: \(averageScoreFloat)"
-        let averageNumberOfTurnsForGamesWonFloat = round(solverElf.averageNumberOfTurnsForGamesWonFloat, numberOfDecimalsInt: 1)
-        resultsString += String(format: "\nAvg # of turns for games won: %.1f", averageNumberOfTurnsForGamesWonFloat)
-//        resultsString += "\nAvg # of turns for games won: \(averageNumberOfTurnsForGamesWonFloat)"
+        let averageScoreDouble = round(Double(solverElf.averageScoreFloat), numberOfDecimalsInt: 1)
+        resultsString += "\nAverage score: \(averageScoreDouble)"
+//        resultsString += String(format: "\nAverage score: %.1f", solverElf.averageScoreFloat)
+        resultsString += String(format: "\nAvg # of turns for games won: %.1f", solverElf.averageNumberOfTurnsForGamesWonFloat)
         let dataForGamesLost = solverElf.dataForGamesLost
-        let percentOfGamesLostFloat = round(dataForGamesLost.percentFloat, numberOfDecimalsInt: 3)
-        resultsString += String(format: "\nGames lost: %d (%.3f%%)", dataForGamesLost.numberInt, percentOfGamesLostFloat)
-//        resultsString += "\nGames lost: \(dataForGamesLost.numberInt) (\(percentOfGamesLostFloat)%)"
+        resultsString += String(format: "\nGames lost: %d (%.3f%%)", dataForGamesLost.numberInt, dataForGamesLost.percentFloat)
         // Show up to 10 seeds.
         let seedArray = dataForGamesLost.seedArray
         let numberOfSeedsToShowInt = min(10, seedArray.count)
@@ -120,6 +127,8 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: startButton)
         logTextView.backgroundColor = UIColor.clearColor()
         logTextView.text = ""
+        // To show bottom of log.
+        addObserver(self, forKeyPath: LogTextViewTextKeyPathString, options: NSKeyValueObservingOptions.New, context: nil)
         updateUIBasedOnMode()
     }
 }
