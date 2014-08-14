@@ -55,7 +55,10 @@ class AbstractGameState: NSObject {
     var playerArray: [Player] = []
     // The score is a number associated with each color. Total score is the sum.
     var scoreDictionary: [Card.Color: Int] = [:]
+    
+    
     // String showing the score for each color, in order.
+    // WARNING: DICTIONARIES not guaranteed to have order; make this more robust
     var scoreString: String {
         get {
             var scoreString = ""
@@ -65,6 +68,8 @@ class AbstractGameState: NSObject {
             return scoreString
         }
     }
+    
+    
     // String showing cards in other players' hands.
     var visibleHandsString: String {
         get {

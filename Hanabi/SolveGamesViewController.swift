@@ -45,48 +45,44 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
     }
     func showResults() {
         var resultsString = ""
-//        let numberOfGamesPlayedInt = solverElf.numberOfGamesPlayedInt
         resultsString += "Games: \(solverElf.numberOfGamesPlayedInt)"
-        // Round to 1 digit.
         let averageScoreFloat = round(solverElf.averageScoreFloat, numberOfDecimalsInt: 1)
         resultsString += "\nAverage score: \(averageScoreFloat)"
-        // Round to 1 digit.
-        let averageNumberOfTurnsFloat = round(solverElf.averageNumberOfTurnsFloat, numberOfDecimalsInt: 1)
-        resultsString += "\nAverage # of turns: \(solverElf.averageNumberOfTurnsFloat)"
-//        let numberOfGamesLostInt = solverElf.numberOfGamesLostInt
-        // let gamesLost = solverElf.numberAndPercentOfGamesLost()
-        // gamesLost.numberInt, gamesLost.percentFloat
-        solverElf.percentOfGamesLostFloat
-//        let percentOfGamesLostFloat = Float(numberOfGamesLostInt) * 100 / Float(numberOfGamesPlayedInt)
-        resultsString += "\nGames lost: \(solverElf.numberOfGamesLostInt) (\(solverElf.percentOfGamesLostFloat)%)"
-        resultsString += "\nSeeds for games lost (max 10):"
-        var seedsShownInt = 0
-        for game in solverElf.gameArray {
-            if !game.wasWon() && seedsShownInt < 10 {
-                resultsString += "\n\(game.seedUInt32)"
-                seedsShownInt++
+        let averageNumberOfTurnsForGamesWonFloat = round(solverElf.averageNumberOfTurnsForGamesWonFloat, numberOfDecimalsInt: 1)
+        resultsString += "\nAverage # of turns for games won: \(averageNumberOfTurnsForGamesWonFloat)"
+        let dataForGamesLost = solverElf.dataForGamesLost
+        let percentOfGamesLostFloat = round(dataForGamesLost.percentFloat, numberOfDecimalsInt: 3)
+        resultsString += "\nGames lost: \(dataForGamesLost.numberInt) (\(percentOfGamesLostFloat)%)"
+        // Show up to 10 seeds.
+        let seedArray = dataForGamesLost.seedArray
+        let numberOfSeedsToShowInt = min(10, seedArray.count)
+        if numberOfSeedsToShowInt > 0 {
+            resultsString += "\nSeeds for games lost (max 10):"
+            for numberInt in 1...numberOfSeedsToShowInt {
+                let index = numberInt - 1
+                resultsString += "\n\(seedArray[index])"
             }
         }
-        // Round to 3 digits.
-        let numberOfSecondsSpentDouble = round(solverElf.numberOfSecondsSpentDouble * 1000) / 1000
-        let averageSecondsSpentDouble = round(solverElf.numberOfSecondsSpentDouble * 1000 / Double(numberOfGamesPlayedInt)) / 1000
+        let dataForSecondsSpent = solverElf.dataForSecondsSpent
+        let numberOfSecondsSpentDouble = round(dataForSecondsSpent.numberDouble, numberOfDecimalsInt: 3)
+        let averageSecondsSpentDouble = round(dataForSecondsSpent.averageDouble, numberOfDecimalsInt: 3)
         resultsString += "\nTime spent: \(numberOfSecondsSpentDouble) seconds (average: \(averageSecondsSpentDouble))"
-        logTextView.text = resultsString
+        logTextView.text = logTextView.text + resultsString
     }
     func solverElfDidFinishAllGames() {
         mode = .Solved
         updateUIBasedOnMode()
     }
     // Text field is for number of games to play/solve.
-    // If a valid value, then update model. Show current value in text field.
+    // Check if valid value. Show current value in text field.
     func textFieldDidEndEditing(theTextField: UITextField!) {
         // Valid: Int >= 1.
-        if let theInt = theTextField.text.toInt() {
-            if theInt >= 1 {
-                numberOfGames = theInt
+        if let int = theTextField.text.toInt() {
+            if int >= 1 {
+                numberOfGamesInt = int
             }
         }
-        theTextField.text = String(numberOfGames)
+        theTextField.text = String(numberOfGamesInt)
     }
     // Dismiss keyboard.
     func textFieldShouldReturn(theTextField: UITextField!) -> Bool {
@@ -98,7 +94,7 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         case .Planning:
             cancelButton.enabled = false
             numberOfGamesTextField.enabled = true
-            numberOfGamesTextField.text = String(numberOfGames)
+            numberOfGamesTextField.text = String(numberOfGamesInt)
             startButton.enabled = true
         case .Solving:
             cancelButton.enabled = true
@@ -117,7 +113,10 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         solverElf.delegate = self;
         viewControllerElf = ViewControllerElf()
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cancelButton)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: logTextView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: startButton)
+        logTextView.backgroundColor = UIColor.clearColor()
+        logTextView.text = ""
         updateUIBasedOnMode()
     }
 }

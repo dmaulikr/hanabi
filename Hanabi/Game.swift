@@ -19,6 +19,13 @@ class Game: NSObject {
     // Number for srandom(). Determines card order.
     var seedUInt32: UInt32
     var turnArray: [Turn] = []
+    
+    // String describing action for given turn.
+    func actionStringForTurn(turnNumberInt: Int) -> String {
+        
+    }
+
+    
     // Return the number of the current turn.
     func currentTurnNumberOptionalInt() -> Int? {
         if let turn = currentOptionalTurn {
@@ -29,6 +36,25 @@ class Game: NSObject {
         }
         return nil
     }
+    
+    // Data for given turn. If turn end, the data is for the end of the turn (vs start).
+    func dataForTurn(turnNumberInt: Int, turnEndBool: Bool) -> (discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsString: String) {
+        let index = turnNumberInt - 1
+        let turn = turnArray[index]
+        // Could add this if needed.
+        // var turnNumberInt: Int
+        let data = turn.data(turnEndBool: turnEndBool)
+        let discardsString = data.discardsString
+        let maxNumberOfPlaysLeftInt = data.maxNumberOfPlaysLeftInt
+        let numberOfCardsLeftInt = data.numberOfCardsLeftInt
+        let numberOfCluesLeftInt = data.numberOfCluesLeftInt
+        let numberOfPointsNeededInt = data.discardsString
+        let numberOfStrikesLeftInt = data.numberOfStrikesLeftInt
+        let scoreString = data.scoreString
+        let visibleHandsString = data.visibleHandsString
+        return (discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsString)
+    }
+    
     // Deal starting hands to the given players.
     func dealHandsFromDeck(inout deckCardArray: [Card], inout playerArray: [Player]) {
         // In reality, we'd deal a card to a player at a time, because the cards may not be well-shuffled. Here, we'll deal each player completely. This makes games with the same deck but different numbers of players more comparable.

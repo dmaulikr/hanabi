@@ -45,12 +45,10 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     var userSeedOptionalUInt32: UInt32?
     // String showing user-requested seed, which may be nil. If nil, return "" to allow text field's placeholder. (Placeholder says "random," because game will choose a random seed.)
     var userSeedString: String {
-        get {
-            if let uint32 = userSeedOptionalUInt32 {
-                return String(uint32)
-            } else {
-                return ""
-            }
+        if let uint32 = userSeedOptionalUInt32 {
+            return String(uint32)
+        } else {
+            return ""
         }
     }
     var viewControllerElf: ViewControllerElf!
@@ -86,7 +84,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     // Show seed used to create this game.
     func showSeedUsed() {
         var logString: String = logTextView.text
-        let seedUInt32 = solverElf.seedUInt32ForGame(1)
+        let seedUInt32 = solverElf.seedUInt32ForFirstGame
         logString += "\nSeed: \(seedUInt32)"
         logTextView.text = logString
     }
@@ -101,16 +99,16 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         } else {
             buttonTitleString = ShowActionTitleString
         }
-        let turnDataForGame = solverElf.turnDataForGame(1, turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
-        cushionLabel.text = "Points needed: \(turnDataForGame.numberOfPointsNeededInt)" +
-        "\nPlays left, max: (\(turnDataForGame.maxNumberOfPlaysLeftInt))"
-        discardsLabel.text = "Discards: \(turnDataForGame.discardsString)"
+        let dataForTurnForGame = solverElf.dataForTurnForGame(1, turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
+        cushionLabel.text = "Points needed: \(dataForTurnForGame.numberOfPointsNeededInt)" +
+        "\nPlays left, max: (\(dataForTurnForGame.maxNumberOfPlaysLeftInt))"
+        discardsLabel.text = "Discards: \(dataForTurnForGame.discardsString)"
         scoreLabel.text = "Score: BGRWY" +
-            "\n       \(turnDataForGame.scoreString)" +
-            "\nClues left: \(turnDataForGame.numberOfCluesLeftInt)" +
-            "\nStrikes left: \(turnDataForGame.numberOfStrikesLeftInt)" +
-        "\nCards left: \(turnDataForGame.numberOfCardsLeftInt)"
-        visibleHandsLabel.text = "Visible hands:\(turnDataForGame.visibleHandsString)"
+            "\n       \(dataForTurnForGame.scoreString)" +
+            "\nClues left: \(dataForTurnForGame.numberOfCluesLeftInt)" +
+            "\nStrikes left: \(dataForTurnForGame.numberOfStrikesLeftInt)" +
+        "\nCards left: \(dataForTurnForGame.numberOfCardsLeftInt)"
+        visibleHandsLabel.text = "Visible hands:\(dataForTurnForGame.visibleHandsString)"
         // Let user hide (or see) turn's action and end.
         showOrHideActionButton.enabled = true
         showOrHideActionButton.setTitle(buttonTitleString, forState: UIControlState.Normal)
@@ -128,13 +126,17 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         let tableViewCell = tableView.dequeueReusableCellWithIdentifier("TurnCell") as UITableViewCell
         let turnNumberInt = indexPath.row + 1
-        let roundSubroundString = solverElf.roundSubroundString(turnNumberInt)
+        let roundSubroundString = solverElf.roundSubroundStringForTurnForFirstGame(turnNumberInt)
         tableViewCell.textLabel.text = "Round \(roundSubroundString)"
         return tableViewCell;
     }
-    // Return the number of turns.
+    // Return number of turns.
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
-        return solverElf.numberOfTurnsForGame(1)
+        if let numberOfTurnsInt = solverElf.numberOfTurnsOptionalIntForFirstGame {
+            return numberOfTurnsInt
+        } else {
+            return 0
+        }
     }
     // Text fields: user seed.
     // Check if valid value. Show current value in text field.

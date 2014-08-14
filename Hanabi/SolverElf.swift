@@ -17,86 +17,106 @@ import UIKit
 private var myContext = 0
 
 class SolverElf: NSObject {
-    // Info for a game's turn.
-    struct TurnDataForGame {
-        var discardsString: String
-        // Could add this if needed.
-        // var gameNumberInt: Int
-        var maxNumberOfPlaysLeftInt: Int
-        var numberOfCardsLeftInt: Int
-        var numberOfCluesLeftInt: Int
-        var numberOfPointsNeededInt: Int
-        var numberOfStrikesLeftInt: Int
-        var scoreString: String
-        var visibleHandsString: String
+    // Average number of turns to finish currently solved games that were won.
+    var averageNumberOfTurnsForGamesWonFloat: Float {
+        var totalTurnsInt = 0
+        var numberOfGamesWonInt = 0
+        for game in gameArray {
+            if game.wasWon() {
+                numberOfGamesWonInt++
+                totalTurnsInt += game.numberOfTurnsInt
+            }
+        }
+        return Float(totalTurnsInt) / Float(numberOfGamesWonInt)
     }
     // Average for currently solved games.
     var averageScoreFloat: Float {
-        get {
-            var totalScoresInt = 0
-            for game in gameArray {
-                totalScoresInt += game.finalScore()
-            }
-            return Float(totalScoresInt) / Float(gameArray.count)
+        var totalScoresInt = 0
+        for game in gameArray {
+            totalScoresInt += game.finalScore()
         }
+        return Float(totalScoresInt) / Float(numberOfGamesPlayedInt)
+    }
+    // Number of games lost, % of games lost, seeds for lost games.
+    var dataForGamesLost: (numberInt: Int, percentFloat: Float, seedArray: [UInt32]) {
+        var numberInt = 0
+        var seedArray: [UInt32] = []
+        for game in gameArray {
+            if !game.wasWon() {
+                numberInt++
+                seedArray.append(game.seedUInt32)
+            }
+        }
+        let percentFloat = Float(numberInt * 100) / Float(numberOfGamesPlayedInt)
+        return (numberInt, percentFloat, seedArray)
+    }
+    // Number of seconds spent solving, average seconds per game.
+    var dataForSecondsSpent: (numberDouble: Double, averageDouble: Double) {
+        let numberDouble = numberOfSecondsSpentDouble
+        let averageDouble = numberDouble / Double(numberOfGamesPlayedInt)
+        return (numberDouble, averageDouble)
     }
     var delegate: SolverElfDelegate?
-//    var currentOptionalGame: Game?
     // Games solved.
     var gameArray: [Game] = []
+    var numberOfGamesPlayedInt: Int {
+        return gameArray.count
+    }
+    // Number of seconds spent solving the current games.
     var numberOfSecondsSpentDouble = 0.0
+    // Number of turns the first solved game took. If no game, return nil.
+    var numberOfTurnsOptionalIntForFirstGame: Int? {
+        if let game = gameArray.first {
+            return game.numberOfTurnsInt
+        } else {
+            return nil
+        }
+    }
+    // Seed used to make first game. Assumes exists.
+    var seedUInt32ForFirstGame: UInt32 {
+        return gameArray.first!.seedUInt32
+    }
     // String describing action for given turn for given game.
     func actionStringForTurnForGame(gameNumberInt: Int, turnNumberInt: Int) -> String {
         // Could put game number here.
         var actionStringForTurnForGame: String = ""
-        let game = gameArray[gameNumberInt]
-        actionStringForTurnForGame += game.actionStringForTurn(turnNumberInt: Int)
+        let index = gameNumberInt - 1
+        let game = gameArray[index]
+        actionStringForTurnForGame += game.actionStringForTurn(turnNumberInt)
         return actionStringForTurnForGame
     }
-    // Average number of turns to finish currently solved games. (To be meaningful, presumes most/all games were won.)
-    func averageNumberOfTurns() -> Float {
-        var totalTurnsInt = 0
-        for game in gameArray {
-            totalTurnsInt += game.turnArray.count
-        }
-        return Float(totalTurnsInt) / Float(gameArray.count)
-    }
-    
     // Return the best action for the given turn.
     func bestActionForTurn(turn: Turn) -> Action {
 //        let alwaysDiscardElf = AlwaysDiscardElf()
 //        let action = alwaysDiscardElf.bestActionForTurn(turn)
-        
         let openHandElf = OpenHandElf()
         let action = openHandElf.bestActionForTurn(turn)
         return action
     }
-    override init() {
-        super.init()
+    // Data for given turn for given game. If turn end, the data is for the end of the turn (vs start).
+    func dataForTurnForGame(gameNumberInt: Int, turnNumberInt: Int, turnEndBool: Bool) -> (discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsString: String) {
+        let index = gameNumberInt - 1
+        let game = gameArray[index]
+        // Could add this if needed.
+        // var gameNumberInt: Int
+        let dataForTurn = game.dataForTurn(turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
+        let discardsString = dataForTurn.discardsString
+        let maxNumberOfPlaysLeftInt = dataForTurn.maxNumberOfPlaysLeftInt
+        let numberOfCardsLeftInt = dataForTurn.numberOfCardsLeftInt
+        let numberOfCluesLeftInt = dataForTurn.numberOfCluesLeftInt
+        let numberOfPointsNeededInt = dataForTurn.discardsString
+        let numberOfStrikesLeftInt = dataForTurn.numberOfStrikesLeftInt
+        let scoreString = dataForTurn.scoreString
+        let visibleHandsString = dataForTurn.visibleHandsString
+        return (discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsString)
     }
-    func numberOfGamesLost() -> Int {
-        var numberOfGamesLost = 0
-        for game in gameArray {
-            if !game.wasWon() {
-                numberOfGamesLost++
-            }
-        }
-        return numberOfGamesLost
-    }
-    func numberOfGamesPlayed() -> Int {
-        return gameArray.count
-    }
-    // Number of turns the given game took.
-    func numberOfTurnsForGame(gameNumberInt: Int) -> Int {
-        
-        //        if let game = solverElf.currentOptionalGame {
-        //            return game.numberOfTurnsInt
-        //        } else {
-        //            return 0
-        //        }
-    }
+//    override init() {
+//        super.init()
+//    }
     // String for the round and subround for the given turn. (E.g., in a 3-player game, turn 4 = round 2.1.)
-    func roundSubroundString(turnNumberInt: Int) -> String {
+    func roundSubroundStringForTurnForFirstGame(turnNumberInt: Int) -> String {
+        let game = gameArray.first!
+        return game.roundSubroundStringForTurn(turnNumberInt: Int)
         //        if let game = solverElf.currentOptionalGame {
         //            let rowIndexInt = indexPath.row
         //            let numberOfPlayersInt = game.numberOfPlayersInt()
@@ -106,48 +126,46 @@ class SolverElf: NSObject {
         //            let playerNumberInt = (rowIndexInt % numberOfPlayersInt) + 1
         //            tableViewCell.textLabel.text = "Turn \(turnNumberInt).\(playerNumberInt)"
         //        }
-
     }
-    // Seed used to make given game.
-    func seedUInt32ForGame(gameNumberInt: Int) -> UInt32 {
-        return gameArray[gameNumberInt].seedUInt32
-    }
-    // Make, play and return a game.
-    func solveGameWithSeed(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) -> Game {
+    // Reset list of solved games. Make a game. Solve it.
+    func solveGameWithSeed(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
+        gameArray = []
         let game = Game(seedOptionalUInt32: seedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
-        gameArray = [game]
+        solveGame(game)
+    }
+    // Play the given game to the end. Store game and notify delegate.
+    func solveGame(game: Game) {
         do {
             solveCurrentTurnForGame(game)
             game.finishCurrentTurn()
         } while !game.isDone()
-        currentOptionalGame = game
+        gameArray.append(game)
         delegate?.solverElfDidFinishAGame?()
-        return game
     }
+    // Reset list of solved games. Make games. Solve them.
     func solveGames(numberOfGames: Int, numberOfPlayersInt: Int) {
         numberOfSecondsSpentDouble = 0.0
         gameArray = []
         // Track time spent.
         let startDate = NSDate()
-        // Solve one at a time.
+        // Report every x time units. 10 seconds? increasing intervals?
+        // can set a repeating timer to print count of gameArray
+        // can notify delegate
+        // logTextView: ("Games played: \(gameArray.count)")
         for gameNumber in 1...numberOfGames {
-            //            println("Playing game \(gameNumber)")
-            let game = solveGameWithSeed(nil, numberOfPlayersInt: numberOfPlayersInt)
-            gameArray.append(game)
+            let game = Game(seedOptionalUInt32: nil, numberOfPlayersInt: numberOfPlayersInt)
+            solveGame(game)
         }
         let endDate = NSDate()
         numberOfSecondsSpentDouble = endDate.timeIntervalSinceDate(startDate)
         delegate?.solverElfDidFinishAllGames?()
     }
-    // Determine best action for given turn. Do it.
+    // Determine best action for given turn.
     func solveTurn(turn: Turn) {
-        // calculate options, or at least best option
-        // do it...
-        // action is either discard (which card?), give clue (what to whom?), play card (which one?)
-        // action is a class with type (discard/give clue/play), card to discard/play, clue is a class; has a target player, and target cards, which gives the number, then either a color or a number.
+        // should really do something like currentPlayer.bestActionForGameState(startingGameState)
+        // just make sure player doesn't retain the gamestate and create a retain cycle
+        // turn.bestAction() -> sGS.bestAction() -> currentPlayer.bestActionForGameState(SGS: SGS) -> elf.bestActionForGameStateForPlayer(playerNumber, SGS: SGS)
         turn.optionalAction = bestActionForTurn(turn)
-        // well, that sets the turn's action
-        // but we still have to do it to get the next turn
     }
     // Determine best action for current turn. Do it.
     func solveCurrentTurnForGame(game: Game) {
@@ -156,16 +174,5 @@ class SolverElf: NSObject {
         }
     }
     func stopSolving() {
-    }
-    
-//    let turnDataForGame = solverElf.turnDataForGame(1, turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
-
-    // Data for given turn for given game. If turn end, the data is for the end of the turn (vs start).
-    func turnDataForGame(gameNumberInt: Int, turnNumberInt: Int, turnEndBool: Bool) -> TurnDataForGame {
-        var turnDataForGame: TurnDataForGame = TurnDataForGame()
-        let game = gameArray[gameNumberInt]
-        let turnData = game.turnData(turnNumberInt: turnNumberInt, turnEndBool: turnEndBool)
-        turnDataForGame.discardsString = turnData.discardsString
-        return turnDataForGame
     }
 }
