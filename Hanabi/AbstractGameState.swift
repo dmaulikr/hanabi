@@ -13,10 +13,6 @@ class AbstractGameState: NSObject {
         return playerArray[currentPlayerIndex]
     }
     var currentPlayerIndex: Int!
-    // Useful data describing game state.
-    var data: (discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreInt: Int, scoreString: String, visibleHandsString: String) {
-        return (discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreInt, scoreString, visibleHandsString)
-    }
     var deck: Deck!
     var discardsCardArray: [Card] = []
     // String showing the discard pile.
@@ -74,17 +70,6 @@ class AbstractGameState: NSObject {
         let scoreString = "".join(stringArray)
         return scoreString
     }
-    // String showing cards in other players' hands.
-    var visibleHandsString: String {
-        var visibleHandsString = ""
-        for player in playerArray {
-            visibleHandsString += "\n\(player.nameString):"
-            if player != currentPlayer {
-                visibleHandsString += " \(player.handString)"
-            }
-        }
-        return visibleHandsString
-    }
     // Return whether the given card appears at least twice in the given hand.
     func cardIsDuplicate(card:Card, handCardArray: [Card]) -> Bool {
         var numberOfTimesSeenInt = 0
@@ -118,6 +103,11 @@ class AbstractGameState: NSObject {
             return false
         }
     }
+    // Useful data describing game state.
+    func data(#showCurrentHandBool: Bool) -> (discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {
+        let vHAttributedString = visibleHandsAttributedString(showCurrentHandBool: showCurrentHandBool)
+        return (discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreInt, scoreString, vHAttributedString)
+    }
     override init() {
         // Initialize score.
         for int in 1...5 {
@@ -126,5 +116,26 @@ class AbstractGameState: NSObject {
             }
         }
         super.init()
+    }
+    // Attributed string showing cards in hands. Current player is in bold.
+    func visibleHandsAttributedString(#showCurrentHandBool: Bool) -> NSAttributedString {
+        var vHMutableAttributedString = NSMutableAttributedString()
+        for player in playerArray {
+            var playerString: String
+            playerString = "\n\(player.nameString):"
+            // Add hand if player is not current player, or if asked to show current player.
+            if (player != currentPlayer) || showCurrentHandBool  {
+                playerString += " \(player.handString)"
+            }
+            var playerAttributedString: NSAttributedString
+            if player == currentPlayer {
+                let attributesDictionary = [NSFontAttributeName : UIFont(name: "Courier-Bold", size: 15.0)]
+                playerAttributedString = NSAttributedString(string: playerString, attributes: attributesDictionary)
+            } else {
+                playerAttributedString = NSAttributedString(string: playerString)
+            }
+            vHMutableAttributedString.appendAttributedString(playerAttributedString)
+        }
+        return vHMutableAttributedString
     }
 }

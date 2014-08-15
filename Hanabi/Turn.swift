@@ -26,11 +26,12 @@ class Turn: NSObject {
     var optionalAction: Action?
     var startingGameState: StartingGameState
     // Data for turn. If turn end, the data is for the end of the turn (vs start).
-    func data(#turnEndBool: Bool) -> (actionString: String, discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsString: String) {
-        var data = startingGameState.data
+    func data(#turnEndBool: Bool, showCurrentHandBool: Bool) -> (actionString: String, discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {
+        var gameState: AbstractGameState = startingGameState
         if turnEndBool {
-            data = endingOptionalGameState!.data
+            gameState = endingOptionalGameState!
         }
+        let data = gameState.data(showCurrentHandBool: showCurrentHandBool)
         let actionString = startingGameState.stringForAction(optionalAction!)
         let discardsString = data.discardsString
         let maxNumberOfPlaysLeftInt = data.maxNumberOfPlaysLeftInt
@@ -39,8 +40,8 @@ class Turn: NSObject {
         let numberOfPointsNeededInt = data.numberOfPointsNeededInt
         let numberOfStrikesLeftInt = data.numberOfStrikesLeftInt
         let scoreString = data.scoreString
-        let visibleHandsString = data.visibleHandsString
-        return (actionString, discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsString)
+        let visibleHandsAttributedString = data.visibleHandsAttributedString
+        return (actionString, discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsAttributedString)
     }
     // Make new, deal hands to given players.
     init(deck: Deck, playerArray: [Player]) {

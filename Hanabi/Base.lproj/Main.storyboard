@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6205" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="H6o-ER-rm6">
     <dependencies>
+        <deployment defaultVersion="1808" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6198"/>
     </dependencies>
     <scenes>
@@ -166,7 +167,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="BYJ-wB-0Zk">
-                                <rect key="frame" x="16" y="248" width="235" height="120"/>
+                                <rect key="frame" x="16" y="303" width="235" height="120"/>
                                 <string key="text">Deduced hands
    Strict      Guess
 P1 BGRWY 12345 BGRWY 12345
@@ -180,7 +181,7 @@ c5</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="e43-hf-Pq7">
-                                <rect key="frame" x="16" y="376" width="235" height="90"/>
+                                <rect key="frame" x="16" y="431" width="235" height="90"/>
                                 <string key="text">P2 BGRWY 12345 BGRWY 12345
 c1
 c2
@@ -192,7 +193,7 @@ c5</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="xte-fx-9Is">
-                                <rect key="frame" x="16" y="474" width="235" height="90"/>
+                                <rect key="frame" x="16" y="529" width="235" height="90"/>
                                 <string key="text">P3 BGRWY 12345 BGRWY 12345
 c1
 c2
@@ -204,7 +205,7 @@ c5</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="nKP-pC-TaO">
-                                <rect key="frame" x="16" y="572" width="235" height="90"/>
+                                <rect key="frame" x="16" y="627" width="235" height="90"/>
                                 <string key="text">P4 BGRWY 12345 BGRWY 12345
 c1
 c2
@@ -218,18 +219,6 @@ c5</string>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2 players: same as &quot;-Score, Discards&quot;" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4tc-f2-Tu0">
                                 <rect key="frame" x="666" y="681" width="694" height="21"/>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="fTM-tr-sWb">
-                                <rect key="frame" x="16" y="670" width="235" height="90"/>
-                                <string key="text">P5 BGRWY 12345 BGRWY 12345
-c1
-c2
-c3
-c4
-c5</string>
-                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="15"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -286,7 +275,7 @@ Deck: 40</string>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GUp-rM-lLi">
-                                <rect key="frame" x="355" y="135" width="179" height="106"/>
+                                <rect key="frame" x="355" y="135" width="179" height="145"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="163" translatesAutoresizingMaskIntoConstraints="NO" id="Ahb-fF-gh5">
                                         <rect key="frame" x="8" y="8" width="163" height="90"/>
@@ -303,14 +292,31 @@ P5: x</string>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="1jg-VW-qax">
+                                        <rect key="frame" x="108" y="106" width="52" height="31"/>
+                                        <connections>
+                                            <action selector="handleShowCurrentHandSwitchTapped:" destination="riQ-Gg-tMq" eventType="valueChanged" id="jEW-wl-lGR"/>
+                                        </connections>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show hand" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GFI-cg-lgR">
+                                        <rect key="frame" x="22" y="113" width="78" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="Ahb-fF-gh5" secondAttribute="bottom" constant="8" id="BZp-Vr-k74"/>
+                                    <constraint firstItem="1jg-VW-qax" firstAttribute="centerY" secondItem="GFI-cg-lgR" secondAttribute="centerY" constant="-0.5" id="BC4-Io-wcW"/>
+                                    <constraint firstAttribute="bottom" secondItem="1jg-VW-qax" secondAttribute="bottom" constant="8" id="LLA-5B-nUF"/>
+                                    <constraint firstItem="1jg-VW-qax" firstAttribute="leading" secondItem="GFI-cg-lgR" secondAttribute="trailing" constant="8" id="MBf-WC-CXk"/>
                                     <constraint firstItem="Ahb-fF-gh5" firstAttribute="leading" secondItem="GUp-rM-lLi" secondAttribute="leading" constant="8" id="X2i-Te-Ltx"/>
                                     <constraint firstAttribute="trailing" secondItem="Ahb-fF-gh5" secondAttribute="trailing" constant="8" id="Y0s-pR-wbJ"/>
                                     <constraint firstItem="Ahb-fF-gh5" firstAttribute="top" secondItem="GUp-rM-lLi" secondAttribute="top" constant="8" id="gRC-Vc-En8"/>
+                                    <constraint firstItem="1jg-VW-qax" firstAttribute="top" secondItem="Ahb-fF-gh5" secondAttribute="bottom" constant="8" id="kbc-iO-Qt1"/>
                                     <constraint firstAttribute="centerX" secondItem="Ahb-fF-gh5" secondAttribute="centerX" id="npm-eD-KC9"/>
+                                    <constraint firstItem="GFI-cg-lgR" firstAttribute="top" secondItem="Ahb-fF-gh5" secondAttribute="bottom" constant="15" id="oci-dL-3hB"/>
+                                    <constraint firstItem="GFI-cg-lgR" firstAttribute="leading" secondItem="GUp-rM-lLi" secondAttribute="leading" constant="22" id="rob-Jt-kLC"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="460" translatesAutoresizingMaskIntoConstraints="NO" id="7gE-9m-6do">
@@ -366,17 +372,17 @@ B12345G12345R12345W12345Y12345  B G R W Y  1 2 3 45</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r4D-s0-0iE">
-                                <rect key="frame" x="346" y="249" width="188" height="46"/>
+                                <rect key="frame" x="8" y="234" width="135" height="50"/>
                                 <subviews>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="172" translatesAutoresizingMaskIntoConstraints="NO" id="Tut-2N-kkV">
-                                        <rect key="frame" x="8" y="8" width="172" height="30"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="119" translatesAutoresizingMaskIntoConstraints="NO" id="Tut-2N-kkV">
+                                        <rect key="frame" x="8" y="8" width="119" height="34"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="172" id="JIz-7d-a8N"/>
-                                            <constraint firstAttribute="height" constant="30" id="ZCP-i7-rdN"/>
+                                            <constraint firstAttribute="height" constant="34" id="WPQ-Xm-nVw"/>
+                                            <constraint firstAttribute="width" constant="119" id="mU5-wo-2im"/>
                                         </constraints>
-                                        <string key="text">Points needed: 25
+                                        <string key="text">Plays needed: 25
 Plays left, max: 38</string>
-                                        <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -390,7 +396,7 @@ Plays left, max: 38</string>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LjZ-20-QVP">
-                                <rect key="frame" x="666" y="77" width="105" height="44"/>
+                                <rect key="frame" x="665" y="77" width="102" height="44"/>
                                 <state key="normal" title="Show Action">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -398,18 +404,30 @@ Plays left, max: 38</string>
                                     <action selector="handleShowOrHideActionButtonTapped:" destination="riQ-Gg-tMq" eventType="touchUpInside" id="6ql-Hy-9f2"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="fTM-tr-sWb">
+                                <rect key="frame" x="274" y="673" width="235" height="90"/>
+                                <string key="text">P5 BGRWY 12345 BGRWY 12345
+c1
+c2
+c3
+c4
+c5</string>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="fdO-UC-mDz" firstAttribute="leading" secondItem="bsf-GH-zAa" secondAttribute="trailing" constant="8" id="4HM-jj-iU1"/>
+                            <constraint firstItem="r4D-s0-0iE" firstAttribute="top" secondItem="bsf-GH-zAa" secondAttribute="bottom" constant="8" id="BdS-Ca-EzD"/>
+                            <constraint firstItem="r4D-s0-0iE" firstAttribute="leading" secondItem="30n-cn-mVA" secondAttribute="leading" constant="8" id="DmL-yf-Lha"/>
                             <constraint firstItem="Q3t-a7-Xcr" firstAttribute="leading" secondItem="30n-cn-mVA" secondAttribute="leading" constant="8" id="O3f-rl-YaT"/>
                             <constraint firstItem="fdO-UC-mDz" firstAttribute="top" secondItem="Q3t-a7-Xcr" secondAttribute="bottom" constant="8" id="PdS-rG-DCS"/>
                             <constraint firstItem="bsf-GH-zAa" firstAttribute="top" secondItem="Q3t-a7-Xcr" secondAttribute="bottom" constant="8" id="QIJ-Va-MYQ"/>
                             <constraint firstItem="GUp-rM-lLi" firstAttribute="leading" secondItem="fdO-UC-mDz" secondAttribute="trailing" constant="8" id="TF9-iQ-Leb"/>
                             <constraint firstItem="bsf-GH-zAa" firstAttribute="leading" secondItem="30n-cn-mVA" secondAttribute="leading" constant="8" id="X5h-bt-bkd"/>
                             <constraint firstItem="Q3t-a7-Xcr" firstAttribute="top" secondItem="FhF-wu-5hc" secondAttribute="bottom" constant="7" id="fis-0u-l7B"/>
-                            <constraint firstItem="r4D-s0-0iE" firstAttribute="trailing" secondItem="Ahb-fF-gh5" secondAttribute="trailing" constant="8" id="nCr-Ix-S6C"/>
-                            <constraint firstItem="r4D-s0-0iE" firstAttribute="top" secondItem="GUp-rM-lLi" secondAttribute="bottom" constant="8" id="sMA-HR-Y7W"/>
                             <constraint firstItem="GUp-rM-lLi" firstAttribute="top" secondItem="Q3t-a7-Xcr" secondAttribute="bottom" constant="8" id="vd3-to-ffV"/>
                         </constraints>
                     </view>
@@ -424,6 +442,7 @@ Plays left, max: 38</string>
                         <outlet property="logTextView" destination="64G-dN-d3B" id="ifG-gh-skI"/>
                         <outlet property="scoreLabel" destination="mXO-oN-Iq1" id="bJo-4U-FFu"/>
                         <outlet property="scoreView" destination="bsf-GH-zAa" id="7hB-qa-qi6"/>
+                        <outlet property="showCurrentHandSwitch" destination="1jg-VW-qax" id="RN2-dq-vps"/>
                         <outlet property="showOrHideActionButton" destination="LjZ-20-QVP" id="IWB-LW-Npj"/>
                         <outlet property="startButton" destination="gOb-Nk-Zr8" id="XHK-gZ-oHL"/>
                         <outlet property="turnTableView" destination="ET2-nK-nqg" id="yvn-jU-A7t"/>
