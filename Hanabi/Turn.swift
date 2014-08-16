@@ -9,6 +9,11 @@
 import UIKit
 
 class Turn: NSObject {
+    // Max plays left at end of turn.
+    var endingMaxPlaysLeftInt: Int {
+        let endingGameState = endingOptionalGameState!
+        return endingGameState.maxNumberOfPlaysLeftInt
+    }
     var endingOptionalGameState: EndingGameState?
     // Score at end of turn.
     var endingScoreInt: Int {

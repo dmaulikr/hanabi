@@ -74,6 +74,7 @@ class Deck: NSObject {
             seedUInt32 = seedOptionalUInt32!
         }
         // Shuffle: Pull a random card and put in new array. Repeat.
+//        println("Seed: \(seedUInt32)")
         srandom(seedUInt32)
         var tempCardArray: [Card] = []
         // Number of cards in deck will decrease each time.

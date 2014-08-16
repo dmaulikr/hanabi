@@ -27,7 +27,10 @@ class AbstractGameState: NSObject {
     var numberOfCardsLeftInt: Int {
         return deck.numberOfCardsLeftInt
     }
-    var numberOfCluesLeftInt = 8
+    class var numberOfCluesAtStartInt: Int {
+        return 8
+    }
+    var numberOfCluesLeftInt = numberOfCluesAtStartInt
     var numberOfPlayersInt: Int {
         return playerArray.count
     }
@@ -35,7 +38,10 @@ class AbstractGameState: NSObject {
     var numberOfPointsNeededInt: Int {
         return 25 - scoreInt
     }
-    var numberOfStrikesLeftInt = 3
+    class var numberOfStrikesAtStartInt: Int {
+        return 3
+    }
+    var numberOfStrikesLeftInt = numberOfStrikesAtStartInt
     // Number of turns played after the deck became empty. To determine game end.
     var numberOfTurnsPlayedWithEmptyDeckInt = 0
     var playerArray: [Player] = []

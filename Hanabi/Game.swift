@@ -19,6 +19,11 @@ class Game: NSObject {
         let lastTurn = turnArray.last!
         return lastTurn.gameIsDone
     }
+    // Max plays left at end of last turn.
+    var numberOfMaxPlaysLeftInt: Int {
+        let lastTurn = turnArray.last!
+        return lastTurn.endingMaxPlaysLeftInt
+    }
     var numberOfPlayersInt: Int
     var numberOfTurnsInt: Int {
         return turnArray.count
@@ -70,7 +75,7 @@ class Game: NSObject {
         deck.shuffleWithSeed(seedOptionalUInt32)
         seedUInt32 = deck.seedUInt32
         // debugging
-        println("Game Deck: \(deck.string)")
+//        println("Game Deck: \(deck.string)")
         var playerArray: [Player] = []
         for playerNumberInt in 1...numberOfPlayersInt {
             let player = Player()

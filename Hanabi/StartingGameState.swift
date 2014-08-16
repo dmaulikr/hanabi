@@ -76,6 +76,17 @@ class StartingGameState: AbstractGameState {
         }
         return mostTurnsForChainCardArray
     }
+    var turnNumberInt: Int {
+        // Turn number can be calculated from game state. Turns played = plays + discards + clues given.
+        var turnNumberInt = 0
+        let numberOfPlaysInt = scoreInt
+        let numberOfDiscardsInt = discardsCardArray.count
+        // Number of clues given = clues started with + clues gained - clues left. Clues gained = number of cards in discard pile - number of strikes used.
+        let numberOfCluesGainedInt = numberOfDiscardsInt - (AbstractGameState.numberOfStrikesAtStartInt - numberOfStrikesLeftInt)
+        let numberOfCluesGivenInt = AbstractGameState.numberOfCluesAtStartInt + numberOfCluesGainedInt - numberOfCluesLeftInt
+        // Turn number = turns played + 1.
+        return numberOfPlaysInt + numberOfDiscardsInt + numberOfCluesGivenInt + 1
+    }
     // Deal starting hands to players.
     func dealHands() {
         // In reality, we'd deal a card to a player at a time, because the cards may not be well-shuffled. Here, we'll deal each player completely. This makes games with the same deck but different numbers of players more comparable.

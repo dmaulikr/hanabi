@@ -64,11 +64,12 @@ class SolveGamesViewController: UIViewController, LogModelDelegate, SolverElfDel
         var resultsString = "\n"
         resultsString += "Games: \(solverElf.numberOfGamesPlayedInt)"
         let averageScoreDouble = round(Double(solverElf.averageScoreFloat), numberOfDecimalsInt: 1)
-        resultsString += "\nAverage score: \(averageScoreDouble)"
-//        resultsString += String(format: "\nAverage score: %.1f", solverElf.averageScoreFloat)
-        resultsString += String(format: "\nAvg # of turns for games won: %.1f", solverElf.averageNumberOfTurnsForGamesWonFloat)
+        resultsString += "\nScore, avg.: \(averageScoreDouble)"
+        let averageMaxPlaysLeftDouble = round(Double(solverElf.averageMaxPlaysLeftFloat), numberOfDecimalsInt: 1)
+        resultsString += "\nMax plays left, avg.: \(averageMaxPlaysLeftDouble)"
         let dataForGamesLost = solverElf.dataForGamesLost
-        resultsString += String(format: "\nGames lost: %d (%.3f%%)", dataForGamesLost.numberInt, dataForGamesLost.percentFloat)
+        let percentGamesLostDouble = round(Double(dataForGamesLost.percentFloat), numberOfDecimalsInt: 3)
+        resultsString += "\nGames lost: \(dataForGamesLost.numberInt) (\(percentGamesLostDouble)%)"
         // Show up to 10 seeds.
         let seedArray = dataForGamesLost.seedArray
         let numberOfSeedsToShowInt = min(10, seedArray.count)
@@ -82,7 +83,7 @@ class SolveGamesViewController: UIViewController, LogModelDelegate, SolverElfDel
         let dataForSecondsSpent = solverElf.dataForSecondsSpent
         let numberOfSecondsSpentDouble = round(dataForSecondsSpent.numberDouble, numberOfDecimalsInt: 3)
         let averageSecondsSpentDouble = round(dataForSecondsSpent.averageDouble, numberOfDecimalsInt: 3)
-        resultsString += "\nTime spent: \(numberOfSecondsSpentDouble) sec (avg: \(averageSecondsSpentDouble))"
+        resultsString += "\nTime spent: \(numberOfSecondsSpentDouble) sec (avg.: \(averageSecondsSpentDouble))"
         logModel.addLine(resultsString)
     }
     func solverElfDidFinishAllGames() {

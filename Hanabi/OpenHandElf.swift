@@ -10,13 +10,17 @@ import UIKit
 
 // Looks at own hand. (Cheats.)
 class OpenHandElf: NSObject {
+    var logModel = (UIApplication.sharedApplication().delegate as AppDelegate).logModel
     // Return the best action for the given turn.
     func bestActionForTurn(turn: Turn) -> Action {
         let action = Action()
-        let gameState = turn.startingGameState
-        let currentPlayerHandCardArray = gameState.currentPlayer.handCardArray
+        let startingGameState = turn.startingGameState
+        let turnNumberInt = startingGameState.turnNumberInt
+        let numberOfPlayersInt = startingGameState.numberOfPlayersInt
+        let roundSubroundString = roundSubroundStringForTurn(turnNumberInt, numberOfPlayersInt: numberOfPlayersInt)
+        let currentPlayerHandCardArray = startingGameState.currentPlayer.handCardArray
         // If can play, do. Play cards whose sequence will take the longest. (E.g., 132 before 123.)
-        let mostTurnsForChainCardArray = gameState.mostTurnsForChainCardArray
+        let mostTurnsForChainCardArray = startingGameState.mostTurnsForChainCardArray
         if !mostTurnsForChainCardArray.isEmpty {
             action.type = .Play
             // If multiple options, choose first card with lowest number.
@@ -30,16 +34,16 @@ class OpenHandElf: NSObject {
             }
             action.targetCardIndexInt = find(currentPlayerHandCardArray, thePlayCard)!
         } else {
-            let numberOfCluesLeftInt = turn.startingGameState.numberOfCluesLeftInt
+            let numberOfCluesLeftInt = startingGameState.numberOfCluesLeftInt
             if numberOfCluesLeftInt < 8 {
                 // If a safe discard, do. Else, if no one can play or do a safe discard, then discard. Else, give clue. If no clues, discard.
-                let cheatingSafeDiscardsCardArray = gameState.cheatingSafeDiscardsCardArray
+                let cheatingSafeDiscardsCardArray = startingGameState.cheatingSafeDiscardsCardArray
                 if !cheatingSafeDiscardsCardArray.isEmpty {
                     action.type = .Discard
                     let theDiscardCard = cheatingSafeDiscardsCardArray.first!
                     action.targetCardIndexInt = find(currentPlayerHandCardArray, theDiscardCard)!
-                } else if !gameState.cheatingAnyPlaysOrSafeDiscards {
-                    println("Rare: no one has a play or safe discard?")
+                } else if !startingGameState.cheatingAnyPlaysOrSafeDiscards {
+                    logModel.addLine("Rare: no one has a play or safe discard? (Round \(roundSubroundString))")
                     action.type = .Discard
                     // choose suitable discard
                     // for now, just discard 1st card; refine later
@@ -47,7 +51,7 @@ class OpenHandElf: NSObject {
                 } else if numberOfCluesLeftInt > 0 {
                     action.type = .Clue
                 } else {
-                    println("Rare for OpenHandElf? No safe discards and no clues.")
+                    logModel.addLine("Rare for OpenHandElf? No safe discards and no clues. (Round \(roundSubroundString))")
                     action.type = .Discard
                     // discard 1st card; refine later
                     action.targetCardIndexInt = 0

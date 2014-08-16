@@ -17,18 +17,30 @@ import UIKit
 private var myContext = 0
 
 class SolverElf: NSObject {
-    // Average number of turns to finish currently solved games that were won.
-    var averageNumberOfTurnsForGamesWonFloat: Float {
-        var totalTurnsInt = 0
+    // Average number of "max plays left" for currently solved games.
+    var averageMaxPlaysLeftFloat: Float {
+        var totalMaxPlaysLeftInt = 0
         var numberOfGamesWonInt = 0
         for game in gameArray {
             if game.wasWon {
                 numberOfGamesWonInt++
-                totalTurnsInt += game.numberOfTurnsInt
+                totalMaxPlaysLeftInt += game.numberOfMaxPlaysLeftInt
             }
         }
-        return Float(totalTurnsInt) / Float(numberOfGamesWonInt)
+        return Float(totalMaxPlaysLeftInt) / Float(numberOfGamesWonInt)
     }
+    // Average number of turns to finish currently solved games that were won.
+//    var averageNumberOfTurnsForGamesWonFloat: Float {
+//        var totalTurnsInt = 0
+//        var numberOfGamesWonInt = 0
+//        for game in gameArray {
+//            if game.wasWon {
+//                numberOfGamesWonInt++
+//                totalTurnsInt += game.numberOfTurnsInt
+//            }
+//        }
+//        return Float(totalTurnsInt) / Float(numberOfGamesWonInt)
+//    }
     // Average for currently solved games.
     var averageScoreFloat: Float {
         var totalScoresInt = 0
@@ -107,11 +119,7 @@ class SolverElf: NSObject {
     func roundSubroundStringForTurnForFirstGame(turnNumberInt: Int) -> String {
         let game = gameArray.first!
         let numberOfPlayersInt = game.numberOfPlayersInt
-        // 3 players: turns 1, 2, 3, 4 = rounds 1, 1, 1, 2
-        let roundInt = (turnNumberInt + 2) / numberOfPlayersInt
-        // 3 players: turns 1, 2, 3, 4 = subrounds 1, 2, 3, 1
-        let subroundInt = ((turnNumberInt + 2) % numberOfPlayersInt) + 1
-        let string = "\(roundInt).\(subroundInt)"
+        let string = roundSubroundStringForTurn(turnNumberInt, numberOfPlayersInt: numberOfPlayersInt)
         return string
     }
     // Determine best action for current turn. Do it.
