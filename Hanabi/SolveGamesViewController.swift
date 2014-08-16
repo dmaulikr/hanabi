@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextFieldDelegate {
+class SolveGamesViewController: UIViewController, LogModelDelegate, SolverElfDelegate, UITextFieldDelegate {
     enum Mode: Int {
         // Planning: user can set things.
         // Solving: elf is calculating/playing.
@@ -17,6 +17,7 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
     }
     let LogTextViewTextKeyPathString = "logTextView.text"
     @IBOutlet weak var cancelButton: UIButton!
+    var logModel: LogModel!
     @IBOutlet weak var logTextView: UITextView!
     var mode: Mode = .Planning {
         didSet {
@@ -43,6 +44,10 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         mode = .Solving
         solverElf.solveGames(numberOfGamesInt, numberOfPlayersInt: 3)
     }
+    // Update log view.
+    func logModelDidAddText() {
+        logTextView.text = logModel.text
+    }
     override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>) {
         if keyPath == LogTextViewTextKeyPathString {
             let lengthInt = logTextView.text.utf16Count
@@ -56,8 +61,8 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         viewControllerElf.playButtonDownSound()
     }
     func showResults() {
-        var resultsString = ""
-        resultsString += "\n\nGames: \(solverElf.numberOfGamesPlayedInt)"
+        var resultsString = "\n"
+        resultsString += "Games: \(solverElf.numberOfGamesPlayedInt)"
         let averageScoreDouble = round(Double(solverElf.averageScoreFloat), numberOfDecimalsInt: 1)
         resultsString += "\nAverage score: \(averageScoreDouble)"
 //        resultsString += String(format: "\nAverage score: %.1f", solverElf.averageScoreFloat)
@@ -78,7 +83,7 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         let numberOfSecondsSpentDouble = round(dataForSecondsSpent.numberDouble, numberOfDecimalsInt: 3)
         let averageSecondsSpentDouble = round(dataForSecondsSpent.averageDouble, numberOfDecimalsInt: 3)
         resultsString += "\nTime spent: \(numberOfSecondsSpentDouble) sec (avg: \(averageSecondsSpentDouble))"
-        logTextView.text = logTextView.text + resultsString
+        logModel.addLine(resultsString)
     }
     func solverElfDidFinishAllGames() {
         mode = .Solved
@@ -119,6 +124,8 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        logModel = (UIApplication.sharedApplication().delegate as AppDelegate).logModel
+        logModel.delegate = self
         solverElf = SolverElf()
         solverElf.delegate = self;
         viewControllerElf = ViewControllerElf()
@@ -126,7 +133,7 @@ class SolveGamesViewController: UIViewController, SolverElfDelegate, UITextField
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: logTextView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: startButton)
         logTextView.backgroundColor = UIColor.clearColor()
-        logTextView.text = ""
+        logModel.reset()
         // To show bottom of log.
         addObserver(self, forKeyPath: LogTextViewTextKeyPathString, options: NSKeyValueObservingOptions.New, context: nil)
         updateUIBasedOnMode()

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITableViewDataSource,  UITableViewDelegate, UITextFieldDelegate {
+class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverElfDelegate, UITableViewDataSource,  UITableViewDelegate, UITextFieldDelegate {
     enum Mode: Int {
         // Planning: user can set things.
         // Solving: elf is calculating/playing.
@@ -26,6 +26,8 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     // View enclosing discards label. To make bigger border.
     @IBOutlet weak var discardsView: UIView!
     @IBOutlet weak var gameSettingsView: UIView!
+    @IBOutlet weak var logDeckButton: UIButton!
+    var logModel: LogModel!
     @IBOutlet weak var logTextView: UITextView!
     var mode: Mode = .Planning {
         didSet {
@@ -68,6 +70,11 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         mode = .Planning
         solverElf.stopSolving()
     }
+    // Show deck from turn's start in log.
+    @IBAction func handleLogDeckButtonTapped() {
+        let dataForTurnForGame = solverElf.dataForTurnForGame(1, turnNumberInt: turnNumberOptionalInt!, turnEndBool: showTurnEndSwitch.on, showCurrentHandBool: showCurrentHandSwitch.on)
+        logModel.addLine("Deck: \(dataForTurnForGame.deckString)")
+    }
     // Update UI.
     @IBAction func handleShowActionSwitchTapped(theSwitch: UISwitch) {
         updateUIBasedOnMode()
@@ -85,12 +92,14 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         mode = .Solving
         solverElf.solveGameWithSeed(userSeedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
     }
+    // Update log view.
+    func logModelDidAddText() {
+        logTextView.text = logModel.text
+    }
     // Log the seed used to create this game.
     func logSeedUsed() {
-        var logString: String = logTextView.text
         let seedUInt32 = solverElf.seedUInt32ForFirstGame
-        logString += "\nSeed: \(seedUInt32)"
-        logTextView.text = logString
+        logModel.addLine("Seed: \(seedUInt32)")
     }
     override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>) {
         if keyPath == LogTextViewTextKeyPathString {
@@ -152,18 +161,18 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     }
     // Text fields: user seed.
     // Check if valid value. Show current value in text field.
-    func textFieldDidEndEditing(theTextField: UITextField!) {
-        // Valid seed: User should enter either an Int >= 0 or nothing (""). Latter lets computer choose a random seed. If neither, do nothing.
-        if let int = theTextField.text.toInt() {
+    func textFieldDidEndEditing(textField: UITextField!) {
+        // Valid seed: Either Int32 >= 0 or nothing (""). Latter lets computer choose a random seed. If neither, do nothing.
+        if let int = textField.text.toInt() {
             if int >= 0 {
                 // Convert Int to UInt32. srandom() requires UInt32.
                 userSeedOptionalUInt32 = UInt32(int)
             }
         }
-        if theTextField.text == "" {
+        if textField.text == "" {
             userSeedOptionalUInt32 = nil
         }
-        theTextField.text = userSeedString
+        textField.text = userSeedString
     }
     // Dismiss keyboard.
     func textFieldShouldReturn(theTextField: UITextField!) -> Bool {
@@ -177,6 +186,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
             cancelButton.enabled = false
             cushionView.hidden = true
             discardsView.hidden = true
+            logDeckButton.hidden = true
             scoreView.hidden = true
             startButton.enabled = true
             turnTableView.hidden = true
@@ -193,6 +203,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
             cancelButton.enabled = false
             cushionView.hidden = false
             discardsView.hidden = false
+            logDeckButton.hidden = false
             scoreView.hidden = false
             startButton.enabled = true
             turnTableView.hidden = false
@@ -209,6 +220,8 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        logModel = (UIApplication.sharedApplication().delegate as AppDelegate).logModel
+        logModel.delegate = self
         solverElf = SolverElf()
         solverElf.delegate = self;
         viewControllerElf = ViewControllerElf()
@@ -217,6 +230,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cushionView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: discardsView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: gameSettingsView)
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: logDeckButton)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: logTextView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: scoreView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: startButton)
@@ -229,7 +243,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         logTextView.backgroundColor = UIColor.clearColor()
         scoreView.backgroundColor = UIColor.clearColor()
         visibleHandsView.backgroundColor = UIColor.clearColor()
-        logTextView.text = ""
+        logModel.reset()
         // To show bottom of log.
         addObserver(self, forKeyPath: LogTextViewTextKeyPathString, options: NSKeyValueObservingOptions.New, context: nil)
         updateUIBasedOnMode()

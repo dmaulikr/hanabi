@@ -85,13 +85,14 @@ class SolverElf: NSObject {
         return action
     }
     // Data for given turn for given game. If turn end, the data is for the end of the turn (vs start). As we're bundling a lot of data here, this should be used only for reporting and not for solving many games at once.
-    func dataForTurnForGame(gameNumberInt: Int, turnNumberInt: Int, turnEndBool: Bool, showCurrentHandBool: Bool) -> (actionString: String, discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {
+    func dataForTurnForGame(gameNumberInt: Int, turnNumberInt: Int, turnEndBool: Bool, showCurrentHandBool: Bool) -> (actionString: String, deckString: String, discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {
         let index = gameNumberInt - 1
         let game = gameArray[index]
         // Could add this if needed.
         // var gameNumberInt: Int
         let dataForTurn = game.dataForTurn(turnNumberInt, turnEndBool: turnEndBool, showCurrentHandBool: showCurrentHandBool)
         let actionString = dataForTurn.actionString
+        let deckString = dataForTurn.deckString
         let discardsString = dataForTurn.discardsString
         let maxNumberOfPlaysLeftInt = dataForTurn.maxNumberOfPlaysLeftInt
         let numberOfCardsLeftInt = dataForTurn.numberOfCardsLeftInt
@@ -100,7 +101,7 @@ class SolverElf: NSObject {
         let numberOfStrikesLeftInt = dataForTurn.numberOfStrikesLeftInt
         let scoreString = dataForTurn.scoreString
         let visibleHandsAttributedString = dataForTurn.visibleHandsAttributedString
-        return (actionString, discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsAttributedString)
+        return (actionString, deckString, discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsAttributedString)
     }
     // String for the round and subround for the given turn. (E.g., in a 3-player game, turn 4 = round 2.1.)
     func roundSubroundStringForTurnForFirstGame(turnNumberInt: Int) -> String {

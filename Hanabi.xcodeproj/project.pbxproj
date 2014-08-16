@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		931D9270199F59A1005B2186 /* LogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931D926F199F59A1005B2186 /* LogModel.swift */; };
 		932D2DF61997EC2F00CA1306 /* AlwaysDiscardElf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932D2DF51997EC2F00CA1306 /* AlwaysDiscardElf.swift */; };
 		932D2DFA1998C8A300CA1306 /* OpenHandElf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932D2DF91998C8A300CA1306 /* OpenHandElf.swift */; };
 		9348E04D1992236700C19BB0 /* WalkThroughGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */; };
@@ -48,6 +49,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		931D926F199F59A1005B2186 /* LogModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogModel.swift; sourceTree = "<group>"; };
 		932D2DF51997EC2F00CA1306 /* AlwaysDiscardElf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlwaysDiscardElf.swift; sourceTree = "<group>"; };
 		932D2DF91998C8A300CA1306 /* OpenHandElf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenHandElf.swift; sourceTree = "<group>"; };
 		9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkThroughGameViewController.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				93D42FD6198F7A59006A28D9 /* Hanabi.xcdatamodeld */,
 				93D42FF8198F8E59006A28D9 /* Hanabi-Bridging-Header.h */,
 				93D42FDE198F7A59006A28D9 /* Images.xcassets */,
+				931D926F199F59A1005B2186 /* LogModel.swift */,
 				93D42FDB198F7A59006A28D9 /* Main.storyboard */,
 				93F653BA1990272A00198AB6 /* MainMenuViewController.swift */,
 				932D2DF91998C8A300CA1306 /* OpenHandElf.swift */,
@@ -301,6 +304,7 @@
 				93D91E53199ABF6E00685BF1 /* StartingGameState.swift in Sources */,
 				93C748CB199BAD3D00247E08 /* Utilities.swift in Sources */,
 				9362C79C19949FDB0030E820 /* Action.swift in Sources */,
+				931D9270199F59A1005B2186 /* LogModel.swift in Sources */,
 				93D42FFB198F8E5A006A28D9 /* GGKUtilities.m in Sources */,
 				93D42FFE198F997F006A28D9 /* GGKViewController.m in Sources */,
 				9362C7A2199577110030E820 /* Player.swift in Sources */,

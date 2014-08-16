@@ -21,7 +21,7 @@ class AbstractGameState: NSObject {
     }
     // Max number of cards that can be played before the game ends from decking. Once last card is drawn, each player gets one turn. Ignore that the game would end if all 25 points were scored.
     var maxNumberOfPlaysLeftInt: Int {
-        return numberOfCardsLeftInt + numberOfPlayersInt
+        return numberOfCardsLeftInt + numberOfPlayersInt - numberOfTurnsPlayedWithEmptyDeckInt
     }
     // The number of cards in the deck.
     var numberOfCardsLeftInt: Int {

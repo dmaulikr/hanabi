@@ -35,13 +35,14 @@ class Game: NSObject {
         }
     }
     // Data for given turn. If turn end, the data is for the end of the turn (vs start).
-    func dataForTurn(turnNumberInt: Int, turnEndBool: Bool, showCurrentHandBool: Bool) -> (actionString: String, discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {
+    func dataForTurn(turnNumberInt: Int, turnEndBool: Bool, showCurrentHandBool: Bool) -> (actionString: String, deckString: String, discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {
         let index = turnNumberInt - 1
         let turn = turnArray[index]
         // Could add this if needed.
         // var turnNumberInt: Int
         let data = turn.data(turnEndBool: turnEndBool, showCurrentHandBool: showCurrentHandBool)
         let actionString = data.actionString
+        let deckString = data.deckString
         let discardsString = data.discardsString
         let maxNumberOfPlaysLeftInt = data.maxNumberOfPlaysLeftInt
         let numberOfCardsLeftInt = data.numberOfCardsLeftInt
@@ -50,7 +51,7 @@ class Game: NSObject {
         let numberOfStrikesLeftInt = data.numberOfStrikesLeftInt
         let scoreString = data.scoreString
         let visibleHandsAttributedString = data.visibleHandsAttributedString
-        return (actionString, discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsAttributedString)
+        return (actionString, deckString, discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsAttributedString)
     }
     // Perform current action. If game not done, make next turn.
     func finishCurrentTurn() {

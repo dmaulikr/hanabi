@@ -68,7 +68,8 @@ class Deck: NSObject {
     // Shuffle deck. A seed is used to shuffle reproducibly. If no seed, use a random one.
     func shuffleWithSeed(seedOptionalUInt32: UInt32?) {
         if seedOptionalUInt32 == nil {
-            seedUInt32 = arc4random()
+            // Want seed that fits in Int so we can use string.toInt() elsewhere.
+            seedUInt32 = arc4random_uniform(UInt32(Int32.max))
         } else {
             seedUInt32 = seedOptionalUInt32!
         }

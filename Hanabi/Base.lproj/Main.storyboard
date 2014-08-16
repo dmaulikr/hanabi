@@ -47,7 +47,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="(Notes)" translatesAutoresizingMaskIntoConstraints="NO" id="64G-dN-d3B">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="(Log)" translatesAutoresizingMaskIntoConstraints="NO" id="64G-dN-d3B">
                                 <rect key="frame" x="809" y="72" width="208" height="327"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
@@ -446,6 +446,16 @@ You have three Yellows.</string>
                                     <constraint firstItem="IHB-mH-Js9" firstAttribute="leading" secondItem="Ytz-xs-E2Z" secondAttribute="leading" constant="8" id="zI8-c4-FJn"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bm1-8h-Ikr">
+                                <rect key="frame" x="727" y="79" width="74" height="44"/>
+                                <state key="normal" title="Log Deck">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="handleLogDeckButtonTapped" destination="riQ-Gg-tMq" eventType="touchUpInside" id="cBi-cf-4vK"/>
+                                    <action selector="playButtonDownSound" destination="riQ-Gg-tMq" eventType="touchDown" id="xcv-b1-8dM"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -472,6 +482,7 @@ You have three Yellows.</string>
                         <outlet property="discardsLabel" destination="JJ6-4F-7wY" id="BUC-dP-Dvw"/>
                         <outlet property="discardsView" destination="fdO-UC-mDz" id="NZ1-dp-cF6"/>
                         <outlet property="gameSettingsView" destination="Q3t-a7-Xcr" id="BAh-Wj-COe"/>
+                        <outlet property="logDeckButton" destination="Bm1-8h-Ikr" id="Ikf-gz-k44"/>
                         <outlet property="logTextView" destination="64G-dN-d3B" id="ifG-gh-skI"/>
                         <outlet property="scoreLabel" destination="mXO-oN-Iq1" id="bJo-4U-FFu"/>
                         <outlet property="scoreView" destination="bsf-GH-zAa" id="7hB-qa-qi6"/>
@@ -584,8 +595,8 @@ You have three Yellows.</string>
                                     <action selector="playButtonDownSound" destination="ibi-Ri-ADg" eventType="touchDown" id="mdY-wi-l1i"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="(Notes)" translatesAutoresizingMaskIntoConstraints="NO" id="0P8-U2-PUW">
-                                <rect key="frame" x="371" y="81" width="308" height="277"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="(Log)" translatesAutoresizingMaskIntoConstraints="NO" id="0P8-U2-PUW">
+                                <rect key="frame" x="470" y="81" width="308" height="277"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
