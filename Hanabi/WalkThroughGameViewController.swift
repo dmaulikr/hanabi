@@ -15,9 +15,9 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         // Solved: game done.
         case Planning, Solving, Solved
     }
-    let HideActionTitleString = "Hide Action"
-    let ShowActionTitleString = "Show Action"
     let LogTextViewTextKeyPathString = "logTextView.text"
+    @IBOutlet weak var actionLabel: UILabel!
+    @IBOutlet weak var actionView: UIView!
     @IBOutlet weak var cancelButton: UIButton!
     // How many non-play actions players can make and still win.
     @IBOutlet weak var cushionLabel: UILabel!
@@ -38,10 +38,9 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     @IBOutlet weak var scoreLabel: UILabel!
     // View enclosing score label. To make bigger border.
     @IBOutlet weak var scoreView: UIView!
+    @IBOutlet weak var showActionSwitch: UISwitch!
     @IBOutlet weak var showCurrentHandSwitch: UISwitch!
-    @IBOutlet weak var showOrHideActionButton: UIButton!
-    // Whether to show a turn's ending state (vs. starting state).
-    var showTurnEndBool = false
+    @IBOutlet weak var showTurnEndSwitch: UISwitch!
     var solverElf: SolverElf!
     @IBOutlet weak var startButton: UIButton!
     // Turn to view.
@@ -69,13 +68,16 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         mode = .Planning
         solverElf.stopSolving()
     }
-    // Change flag. Update UI.
-    @IBAction func handleShowOrHideActionButtonTapped(button: UIButton) {
-        showTurnEndBool = !showTurnEndBool
+    // Update UI.
+    @IBAction func handleShowActionSwitchTapped(theSwitch: UISwitch) {
         updateUIBasedOnMode()
     }
     // Update UI.
     @IBAction func handleShowCurrentHandSwitchTapped(theSwitch: UISwitch) {
+        updateUIBasedOnMode()
+    }
+    // Update UI.
+    @IBAction func handleShowTurnEndSwitchTapped(theSwitch: UISwitch) {
         updateUIBasedOnMode()
     }
     // Play/solve the requested game.
@@ -104,14 +106,7 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     }
     // Show selected turn for given game.
     func showSelectedTurnForGame(gameNumberInt: Int) {
-        let dataForTurnForGame = solverElf.dataForTurnForGame(1, turnNumberInt: turnNumberOptionalInt!, turnEndBool: showTurnEndBool, showCurrentHandBool: showCurrentHandSwitch.on)
-        //If show turn end, show action and end of turn. Else, show start of turn.
-        if showTurnEndBool {
-            var logString: String = logTextView.text
-            logString += dataForTurnForGame.actionString
-            logTextView.text = logString
-        } else {
-        }
+        let dataForTurnForGame = solverElf.dataForTurnForGame(1, turnNumberInt: turnNumberOptionalInt!, turnEndBool: showTurnEndSwitch.on, showCurrentHandBool: showCurrentHandSwitch.on)
         cushionLabel.text = "Plays needed: \(dataForTurnForGame.numberOfPointsNeededInt)" +
         "\nPlays left, max: \(dataForTurnForGame.maxNumberOfPlaysLeftInt)"
         discardsLabel.text = "Discards: \(dataForTurnForGame.discardsString)"
@@ -123,16 +118,20 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         var vHMutableAttributedString = NSMutableAttributedString(string:"Visible hands:")
         vHMutableAttributedString.appendAttributedString(dataForTurnForGame.visibleHandsAttributedString)
         visibleHandsLabel.attributedText = vHMutableAttributedString
+        if showActionSwitch.on {
+            actionLabel.text = dataForTurnForGame.actionString
+        } else {
+            actionLabel.text = ""
+        }
     }
     func solverElfDidFinishAGame() {
         logSeedUsed()
         turnTableView.reloadData()
         mode = .Solved
     }
-    // Show selected turn.
+    // Note selected turn. Update UI.
     func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
         turnNumberOptionalInt = indexPath.row + 1
-        showTurnEndBool = false
         updateUIBasedOnMode()
     }
     // Each cell is "Round A.B," where A is the round and B is the player number. E.g., "Round 1.1."
@@ -174,11 +173,11 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
     func updateUIBasedOnMode() {
         switch mode {
         case .Planning:
+            actionView.hidden = true
             cancelButton.enabled = false
             cushionView.hidden = true
             discardsView.hidden = true
             scoreView.hidden = true
-            showOrHideActionButton.hidden = true
             startButton.enabled = true
             turnTableView.hidden = true
             userSeedNumberTextField.enabled = true
@@ -186,23 +185,15 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
             visibleHandsView.hidden = true
         case .Solving:
             cancelButton.enabled = true
-            showOrHideActionButton.hidden = true
             startButton.enabled = false
             turnTableView.hidden = true
             userSeedNumberTextField.enabled = false
         case .Solved:
+            actionView.hidden = false
             cancelButton.enabled = false
             cushionView.hidden = false
             discardsView.hidden = false
             scoreView.hidden = false
-            showOrHideActionButton.hidden = false
-            var buttonTitleString: String
-            if showTurnEndBool {
-                buttonTitleString = HideActionTitleString
-            } else {
-                buttonTitleString = ShowActionTitleString
-            }
-            showOrHideActionButton.setTitle(buttonTitleString, forState: UIControlState.Normal)
             startButton.enabled = true
             turnTableView.hidden = false
             userSeedNumberTextField.enabled = true
@@ -221,16 +212,17 @@ class WalkThroughGameViewController: UIViewController, SolverElfDelegate, UITabl
         solverElf = SolverElf()
         solverElf.delegate = self;
         viewControllerElf = ViewControllerElf()
+        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: actionView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cancelButton)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cushionView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: discardsView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: gameSettingsView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: logTextView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: scoreView)
-        GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: showOrHideActionButton)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: startButton)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: turnTableView)
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: visibleHandsView)
+        actionView.backgroundColor = UIColor.clearColor()
         cushionView.backgroundColor = UIColor.clearColor()
         discardsView.backgroundColor = UIColor.clearColor()
         gameSettingsView.backgroundColor = UIColor.clearColor()

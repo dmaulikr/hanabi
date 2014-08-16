@@ -133,27 +133,27 @@ class StartingGameState: AbstractGameState {
     }
     // String describing the given action and its result.
     func stringForAction(action: Action) -> String {
-        var resultString = "\n\(currentPlayer.nameString)"
+        var resultString = "\(currentPlayer.nameString)"
         let index = action.targetCardIndexInt
         let card = currentPlayer.handCardArray[index]
         // Card position and abbreviation.
         let cardPositionString = "card \(index + 1): \(card.string)"
         switch action.type {
         case .Clue:
-            resultString += " gave a clue: X."
+            resultString += " clues P_: You have _____ _______."
         case .Discard:
-            resultString += " discarded \(cardPositionString)."
+            resultString += " discards \(cardPositionString)."
             if numberOfCardsLeftInt >= 1 {
-                resultString += " Drew a card."
+                resultString += " Draws."
             }
         case .Play:
-            resultString += " played \(cardPositionString)."
+            resultString += " plays \(cardPositionString)."
             // If invalid play, mention that.
             if !cardIsPlayable(card) {
                 resultString += " Invalid play. Strike."
             }
             if numberOfCardsLeftInt >= 1 {
-                resultString += " Drew a card."
+                resultString += " Draws."
             }
         }
         return resultString
