@@ -7,12 +7,22 @@
 //
 
 import Foundation
-    
-// Round value to the given number of decimal places.
-// works better with Double than Float?
-func round(value: Double, #numberOfDecimalsInt: Int) -> Double {
+
+// For round() to accept a Float or Double.
+protocol FloatingPoint {}
+extension Double: FloatingPoint {}
+extension Float: FloatingPoint {}
+
+// Round value to the given number of decimal places. Seems to work better returning Double than Float.
+func round(value: FloatingPoint, #numberOfDecimalsInt: Int) -> Double {
     let powerOfTenInt = pow(10, Double(numberOfDecimalsInt))
-    let roundedValue = round(value * powerOfTenInt) / powerOfTenInt
+    var valueDouble: Double
+    if value is Float {
+        valueDouble = Double(value as Float)
+    } else {
+        valueDouble = value as Double
+    }
+    let roundedValue = round(valueDouble * powerOfTenInt) / powerOfTenInt
     return roundedValue
 }
 // String for the round and subround for the given turn and number of players. (E.g., in a 3-player game, turn 4 = round "2.1.")

@@ -23,14 +23,28 @@ class AbstractGameState: NSObject {
     var maxNumberOfPlaysLeftInt: Int {
         return numberOfCardsLeftInt + numberOfPlayersInt - numberOfTurnsPlayedWithEmptyDeckInt
     }
-    // The number of cards in the deck.
+    // Number of invalid plays up to this point.
+    var numberOfBadPlaysInt: Int {
+        return AbstractGameState.numberOfStrikesAtStartInt - numberOfStrikesLeftInt
+    }
+    // Number of cards in the deck.
     var numberOfCardsLeftInt: Int {
         return deck.numberOfCardsLeftInt
     }
     class var numberOfCluesAtStartInt: Int {
         return 8
     }
+    // Number of clues given up to this point. Equals clues started with + clues gained - clues left. Clues gained = number of discards.
+    var numberOfCluesGivenInt: Int {
+        let numberOfCluesGainedInt = numberOfDiscardsInt
+        let numberOfCluesGivenInt = AbstractGameState.numberOfCluesAtStartInt + numberOfCluesGainedInt - numberOfCluesLeftInt
+        return numberOfCluesGivenInt
+    }
     var numberOfCluesLeftInt = numberOfCluesAtStartInt
+    // Number of cards discarded. Equals number of cards in discard pile - number of bad plays.
+    var numberOfDiscardsInt: Int {
+        return discardsCardArray.count - numberOfBadPlaysInt
+    }
     var numberOfPlayersInt: Int {
         return playerArray.count
     }

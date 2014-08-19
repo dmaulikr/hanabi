@@ -19,6 +19,21 @@ class Game: NSObject {
         let lastTurn = turnArray.last!
         return lastTurn.gameIsDone
     }
+    // Number of bad plays by end of game.
+    var numberOfBadPlaysInt: Int {
+        let lastTurn = turnArray.last!
+            return lastTurn.endingNumberOfBadPlaysInt
+    }
+    // Number of clues given by end of game.
+    var numberOfCluesGivenInt: Int {
+        let lastTurn = turnArray.last!
+            return lastTurn.endingNumberOfCluesGivenInt
+    }
+    // Number of discards by end of game.
+    var numberOfDiscardsInt: Int {
+        let lastTurn = turnArray.last!
+            return lastTurn.endingNumberOfDiscardsInt
+    }
     // Max plays left at end of last turn.
     var numberOfMaxPlaysLeftInt: Int {
         let lastTurn = turnArray.last!

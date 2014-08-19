@@ -65,11 +65,21 @@ class SolveGamesViewController: UIViewController, LogModelDelegate, SolverElfDel
         resultsString += "Games: \(solverElf.numberOfGamesPlayedInt)"
         let averageScoreDouble = round(Double(solverElf.averageScoreFloat), numberOfDecimalsInt: 1)
         resultsString += "\nScore, avg.: \(averageScoreDouble)"
-        let averageMaxPlaysLeftDouble = round(Double(solverElf.averageMaxPlaysLeftFloat), numberOfDecimalsInt: 1)
-        resultsString += "\nMax plays left, avg.: \(averageMaxPlaysLeftDouble)"
+        let dataForGamesWon = solverElf.dataForGamesWon
+        let averageMaxPlaysLeftDouble = round(dataForGamesWon.averageMaxPlaysLeftFloat, numberOfDecimalsInt: 1)
+        resultsString += "\nMax plays left in games won, avg.: \(averageMaxPlaysLeftDouble)"
+        let averageCluesGivenInWonGamesDouble = round(dataForGamesWon.averageCluesGivenFloat, numberOfDecimalsInt: 1)
         let dataForGamesLost = solverElf.dataForGamesLost
-        let percentGamesLostDouble = round(Double(dataForGamesLost.percentFloat), numberOfDecimalsInt: 3)
+        let percentGamesLostDouble = round(dataForGamesLost.percentFloat, numberOfDecimalsInt: 3)
         resultsString += "\nGames lost: \(dataForGamesLost.numberInt) (\(percentGamesLostDouble)%)"
+        let averageCluesGivenInLostGamesDouble = round(dataForGamesLost.averageCluesGivenFloat, numberOfDecimalsInt: 1)
+        resultsString += "\nClues given in games won, avg.: \(averageCluesGivenInWonGamesDouble) (lost: \(averageCluesGivenInLostGamesDouble))"
+        let averageNumberOfDiscardsInWonGamesDouble = round(dataForGamesWon.averageNumberOfDiscardsFloat, numberOfDecimalsInt: 1)
+        let averageNumberOfDiscardsInLostGamesDouble = round(dataForGamesLost.averageNumberOfDiscardsFloat, numberOfDecimalsInt: 1)
+        resultsString += "\nDiscards in games won, avg.: \(averageNumberOfDiscardsInWonGamesDouble) (lost: \(averageNumberOfDiscardsInLostGamesDouble))"
+        let averageNumberOfBadPlaysInWonGamesDouble = round(dataForGamesWon.averageNumberOfBadPlaysFloat, numberOfDecimalsInt: 1)
+        let averageNumberOfBadPlaysInLostGamesDouble = round(dataForGamesLost.averageNumberOfBadPlaysFloat, numberOfDecimalsInt: 1)
+        resultsString += "\nBad plays in games won, avg.: \(averageNumberOfBadPlaysInWonGamesDouble) (lost: \(averageNumberOfBadPlaysInLostGamesDouble))"
         // Show up to 10 seeds.
         let seedArray = dataForGamesLost.seedArray
         let numberOfSeedsToShowInt = min(10, seedArray.count)

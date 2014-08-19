@@ -14,6 +14,21 @@ class Turn: NSObject {
         let endingGameState = endingOptionalGameState!
         return endingGameState.maxNumberOfPlaysLeftInt
     }
+    // Number of bad plays by end of turn.
+    var endingNumberOfBadPlaysInt: Int {
+        let endingGameState = endingOptionalGameState!
+            return endingGameState.numberOfBadPlaysInt
+    }
+    // Number of clues given by end of turn.
+    var endingNumberOfCluesGivenInt: Int {
+        let endingGameState = endingOptionalGameState!
+            return endingGameState.numberOfCluesGivenInt
+    }
+    // Number of discards by end of turn.
+    var endingNumberOfDiscardsInt: Int {
+        let endingGameState = endingOptionalGameState!
+            return endingGameState.numberOfDiscardsInt
+    }
     var endingOptionalGameState: EndingGameState?
     // Score at end of turn.
     var endingScoreInt: Int {

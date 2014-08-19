@@ -17,30 +17,6 @@ import UIKit
 private var myContext = 0
 
 class SolverElf: NSObject {
-    // Average number of "max plays left" for currently solved games.
-    var averageMaxPlaysLeftFloat: Float {
-        var totalMaxPlaysLeftInt = 0
-        var numberOfGamesWonInt = 0
-        for game in gameArray {
-            if game.wasWon {
-                numberOfGamesWonInt++
-                totalMaxPlaysLeftInt += game.numberOfMaxPlaysLeftInt
-            }
-        }
-        return Float(totalMaxPlaysLeftInt) / Float(numberOfGamesWonInt)
-    }
-    // Average number of turns to finish currently solved games that were won.
-//    var averageNumberOfTurnsForGamesWonFloat: Float {
-//        var totalTurnsInt = 0
-//        var numberOfGamesWonInt = 0
-//        for game in gameArray {
-//            if game.wasWon {
-//                numberOfGamesWonInt++
-//                totalTurnsInt += game.numberOfTurnsInt
-//            }
-//        }
-//        return Float(totalTurnsInt) / Float(numberOfGamesWonInt)
-//    }
     // Average for currently solved games.
     var averageScoreFloat: Float {
         var totalScoresInt = 0
@@ -49,18 +25,28 @@ class SolverElf: NSObject {
         }
         return Float(totalScoresInt) / Float(numberOfGamesPlayedInt)
     }
-    // Number of games lost, % of games lost, seeds for lost games.
-    var dataForGamesLost: (numberInt: Int, percentFloat: Float, seedArray: [UInt32]) {
-        var numberInt = 0
+    // Various data on lost games.
+    var dataForGamesLost: (averageCluesGivenFloat: Float, averageNumberOfBadPlaysFloat: Float, averageNumberOfDiscardsFloat: Float, numberInt: Int, percentFloat: Float, seedArray: [UInt32]) {
+        let averageCluesGivenFloat = averageXIntInLostGamesFloat(xIntKey: "numberOfCluesGivenInt")
+        let averageNumberOfBadPlaysFloat = averageXIntInLostGamesFloat(xIntKey: "numberOfBadPlaysInt")
+        let averageNumberOfDiscardsFloat = averageXIntInLostGamesFloat(xIntKey: "numberOfDiscardsInt")
         var seedArray: [UInt32] = []
         for game in gameArray {
             if !game.wasWon {
-                numberInt++
                 seedArray.append(game.seedUInt32)
             }
         }
-        let percentFloat = Float(numberInt * 100) / Float(numberOfGamesPlayedInt)
-        return (numberInt, percentFloat, seedArray)
+        let percentFloat = Float(numberOfGamesLostInt * 100) / Float(numberOfGamesPlayedInt)
+        return (averageCluesGivenFloat, averageNumberOfBadPlaysFloat, averageNumberOfDiscardsFloat, numberOfGamesLostInt, percentFloat, seedArray)
+    }
+    // Various data on won games.
+    var dataForGamesWon: (averageCluesGivenFloat: Float, averageMaxPlaysLeftFloat: Float, averageNumberOfBadPlaysFloat: Float, averageNumberOfDiscardsFloat: Float) {
+        let averageCluesGivenFloat = averageXIntInWonGamesFloat(xIntKey: "numberOfCluesGivenInt")
+        // Average number of "max plays left" in games that were won.
+        let averageMaxPlaysLeftFloat = averageXIntInWonGamesFloat(xIntKey: "numberOfMaxPlaysLeftInt")
+        let averageNumberOfBadPlaysFloat = averageXIntInWonGamesFloat(xIntKey: "numberOfBadPlaysInt")
+        let averageNumberOfDiscardsFloat = averageXIntInWonGamesFloat(xIntKey: "numberOfDiscardsInt")
+        return (averageCluesGivenFloat, averageMaxPlaysLeftFloat, averageNumberOfBadPlaysFloat, averageNumberOfDiscardsFloat)
     }
     // Number of seconds spent solving, average seconds per game.
     var dataForSecondsSpent: (numberDouble: Double, averageDouble: Double) {
@@ -71,8 +57,20 @@ class SolverElf: NSObject {
     var delegate: SolverElfDelegate?
     // Games solved.
     var gameArray: [Game] = []
+    var numberOfGamesLostInt: Int {
+        return numberOfGamesPlayedInt - numberOfGamesWonInt
+    }
     var numberOfGamesPlayedInt: Int {
         return gameArray.count
+    }
+    var numberOfGamesWonInt: Int {
+        var numberOfGamesWonInt = 0
+        for game in gameArray {
+            if game.wasWon {
+                numberOfGamesWonInt++
+            }
+        }
+        return numberOfGamesWonInt
     }
     // Number of seconds spent solving the current games.
     var numberOfSecondsSpentDouble = 0.0
@@ -87,6 +85,34 @@ class SolverElf: NSObject {
     // Seed used to make first game. Assumes exists.
     var seedUInt32ForFirstGame: UInt32 {
         return gameArray.first!.seedUInt32
+    }
+    // For the game property corresponding to the given key, the average for all lost games. If no lost games, returns 0. Property must be an Int.
+    func averageXIntInLostGamesFloat(# xIntKey: String) -> Float {
+        var totalXIntInLostGames = 0
+        for game in gameArray {
+            if !game.wasWon {
+                totalXIntInLostGames += game.valueForKey(xIntKey) as Int
+            }
+        }
+        if numberOfGamesLostInt == 0 {
+            return 0
+        } else {
+            return Float(totalXIntInLostGames) / Float(numberOfGamesLostInt)
+        }
+    }
+    // For the game property corresponding to the given key, the average for all won games. If no won games, returns 0. Property must be an Int.
+    func averageXIntInWonGamesFloat(# xIntKey: String) -> Float {
+        var totalXIntInWonGames = 0
+        for game in gameArray {
+            if game.wasWon {
+                totalXIntInWonGames += game.valueForKey(xIntKey) as Int
+            }
+        }
+        if numberOfGamesWonInt == 0 {
+            return 0
+        } else {
+            return Float(totalXIntInWonGames) / Float(numberOfGamesWonInt)
+        }
     }
     // Return the best action for the given turn.
     func bestActionForTurn(turn: Turn) -> Action {

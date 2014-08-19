@@ -596,7 +596,7 @@ You have three Yellows.</string>
                                 </connections>
                             </button>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="(Log)" translatesAutoresizingMaskIntoConstraints="NO" id="0P8-U2-PUW">
-                                <rect key="frame" x="470" y="81" width="308" height="277"/>
+                                <rect key="frame" x="470" y="81" width="328" height="277"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
