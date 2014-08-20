@@ -91,7 +91,7 @@ class AbstractGameState: NSObject {
         return scoreString
     }
     // Return whether the given card appears at least twice in the given hand.
-    func cardIsDuplicate(card:Card, handCardArray: [Card]) -> Bool {
+    func cardIsDuplicate(card: Card, handCardArray: [Card]) -> Bool {
         var numberOfTimesSeenInt = 0
         for card2 in handCardArray {
             if card2 == card {
@@ -103,6 +103,26 @@ class AbstractGameState: NSObject {
         } else {
             return false
         }
+    }
+    // Whether the given card appears at least twice among all hands.
+    func cardIsGroupDuplicateBool(card: Card) -> Bool {
+        var numberOfTimesSeenInt = 0
+        for player in playerArray {
+            for card2 in player.handCardArray {
+                if card2 == card {
+                    numberOfTimesSeenInt++
+                }
+            }
+        }
+        if numberOfTimesSeenInt >= 2 {
+            return true
+        } else {
+            return false
+        }
+    }
+    // Whether the given card is in the current deck.
+    func cardIsInDeckBool(card: Card) -> Bool {
+        return contains(deck.cardArray, card)
     }
     // Return whether the given card can be played on the score pile.
     func cardIsPlayable(card: Card) -> Bool {

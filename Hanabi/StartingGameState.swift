@@ -9,8 +9,19 @@
 import UIKit
 
 class StartingGameState: AbstractGameState {
+    // Whether any player, including self, has any group duplicates.
+    var cheatingAnyGroupDuplicatesBool: Bool {
+        for player in playerArray {
+            for card in player.handCardArray {
+                if cardIsGroupDuplicateBool(card) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
     // Whether any player, including self, has a play or safe discard.
-    var cheatingAnyPlaysOrSafeDiscards: Bool {
+    var cheatingAnyPlaysOrSafeDiscardsBool: Bool {
         for player in playerArray {
             let handCardArray = player.handCardArray
             for card in handCardArray {
@@ -21,12 +32,32 @@ class StartingGameState: AbstractGameState {
         }
         return false
     }
+    // Cards the current player shares with the deck.
+    var cheatingCardsAlsoInDeckCardArray: [Card] {
+        var cheatingCardsAlsoInDeckCardArray: [Card] = []
+        for card in currentPlayer.handCardArray {
+            if cardIsInDeckBool(card) {
+                cheatingCardsAlsoInDeckCardArray.append(card)
+            }
+        }
+        return cheatingCardsAlsoInDeckCardArray
+    }
+    // Cards the current player shares with other players.
+    var cheatingGroupDuplicatesCardArray: [Card] {
+        var cheatingGroupDuplicatesCardArray: [Card] = []
+        for card in currentPlayer.handCardArray {
+            if cardIsGroupDuplicateBool(card) {
+                cheatingGroupDuplicatesCardArray.append(card)
+            }
+        }
+        return cheatingGroupDuplicatesCardArray
+    }
     // Cards the current player can safely discard: 1) already played, 2) duplicates in hand. Keep card order, because that can provide info.
     var cheatingSafeDiscardsCardArray: [Card] {
         var cheatingSafeDiscardsCardArray: [Card] = []
         let handCardArray = currentPlayer.handCardArray
         for card in handCardArray {
-            if cardWasAlreadyPlayed(card) || cardIsDuplicate(card, handCardArray:handCardArray) {
+            if cardWasAlreadyPlayed(card) || cardIsDuplicate(card, handCardArray: handCardArray) {
                 cheatingSafeDiscardsCardArray.append(card)
             }
         }

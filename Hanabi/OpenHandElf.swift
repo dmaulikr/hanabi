@@ -36,28 +36,42 @@ class OpenHandElf: NSObject {
         } else {
             let numberOfCluesLeftInt = startingGameState.numberOfCluesLeftInt
             if numberOfCluesLeftInt < 8 {
-                // If a safe discard, do. Else, if no one can play or do a safe discard, then discard. Else, give clue. If no clues, discard.
+                // Do one of the following, in priority order: If player has a safe discard, do. If player has a group duplicate, discard. If anyone else can play, discard safely or discard group duplicate, then give clue. If player has a card that's still in the deck, discard. Discard a unique card.
                 let cheatingSafeDiscardsCardArray = startingGameState.cheatingSafeDiscardsCardArray
                 if !cheatingSafeDiscardsCardArray.isEmpty {
                     action.type = .Discard
                     let theDiscardCard = cheatingSafeDiscardsCardArray.first!
                     action.targetCardIndexInt = find(currentPlayerHandCardArray, theDiscardCard)!
-                } else if !startingGameState.cheatingAnyPlaysOrSafeDiscards {
-                    logModel.addLine("Rare: no one has a play or safe discard? (Round \(roundSubroundString))")
-                    action.type = .Discard
-                    // choose suitable discard
-                    // for now, just discard 1st card; refine later
-                    action.targetCardIndexInt = 0
-                } else if numberOfCluesLeftInt > 0 {
-                    action.type = .Clue
                 } else {
-                    logModel.addLine("Rare for OpenHandElf? No safe discards and no clues. (Round \(roundSubroundString))")
-                    action.type = .Discard
-                    // discard 1st card; refine later
-                    action.targetCardIndexInt = 0
+                    let cheatingGroupDuplicatesCardArray = startingGameState.cheatingGroupDuplicatesCardArray
+                    if !cheatingGroupDuplicatesCardArray.isEmpty {
+                        action.type = .Discard
+                        let theDiscardCard = cheatingGroupDuplicatesCardArray.first!
+                        action.targetCardIndexInt = find(currentPlayerHandCardArray, theDiscardCard)!
+                    } else if (startingGameState.cheatingAnyPlaysOrSafeDiscardsBool || startingGameState.cheatingAnyGroupDuplicatesBool) && (numberOfCluesLeftInt > 0) {
+                        action.type = .Clue
+                    } else {
+                        // If player has a card that's still in the deck, discard highest.
+                        let cheatingCardsAlsoInDeckCardArray = startingGameState.cheatingCardsAlsoInDeckCardArray
+                        if !cheatingCardsAlsoInDeckCardArray.isEmpty {
+                            logModel.addLine("Semi-rare? No one has a play, safe discard or group duplicate.(Or no clues left.) (Round \(roundSubroundString))")
+                            action.type = .Discard
+                            var theDiscardCard = cheatingCardsAlsoInDeckCardArray.first!
+                            var maxNumberInt = theDiscardCard.numberInt
+                            for card in cheatingCardsAlsoInDeckCardArray {
+                                if card.numberInt > maxNumberInt {
+                                    maxNumberInt = card.numberInt
+                                    theDiscardCard = card
+                                }
+                            }
+                            action.targetCardIndexInt = find(currentPlayerHandCardArray, theDiscardCard)!
+                        } else {
+                            logModel.addLine("Rare warning: Discarding unique? (Round \(roundSubroundString))")
+                            action.type = .Discard
+                            action.targetCardIndexInt = 0
+                        }
+                    }
                 }
-            } else if numberOfCluesLeftInt > 0 {
-                action.type = .Clue
             }
         }
         return action
