@@ -92,7 +92,7 @@
                                             <constraint firstAttribute="width" constant="117" id="nAj-MO-M3P"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
                                         <connections>
                                             <action selector="playButtonDownSound" destination="riQ-Gg-tMq" eventType="touchDown" id="39I-nX-h7f"/>
                                             <outlet property="delegate" destination="riQ-Gg-tMq" id="UKo-mA-VND"/>
@@ -532,6 +532,12 @@ You have three Yellows.</string>
                                     <segue destination="riQ-Gg-tMq" kind="push" id="tBp-bd-NnB"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Version: " textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Rd-a0-fRa">
+                                <rect key="frame" x="801" y="727" width="207" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -542,10 +548,13 @@ You have three Yellows.</string>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Hanabi" id="GcN-HU-Utu"/>
+                    <connections>
+                        <outlet property="versionLabel" destination="0Rd-a0-fRa" id="eEo-Em-yK3"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="487.68000000000001" y="832.85333333333335"/>
+            <point key="canvasLocation" x="487" y="832"/>
         </scene>
         <!--Solve Games-->
         <scene sceneID="2q5-oK-6d8">
@@ -562,7 +571,7 @@ You have three Yellows.</string>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="1" borderStyle="roundedRect" placeholder="1" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7W9-h8-lvt">
                                 <rect key="frame" x="83" y="88" width="80" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numbersAndPunctuation"/>
                                 <connections>
                                     <action selector="playButtonDownSound" destination="ibi-Ri-ADg" eventType="touchDown" id="Myx-mQ-mvb"/>
                                     <outlet property="delegate" destination="ibi-Ri-ADg" id="s19-oO-Rb0"/>

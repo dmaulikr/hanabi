@@ -9,6 +9,7 @@
 import UIKit
 
 class MainMenuViewController: UIViewController {
+    @IBOutlet weak var versionLabel: UILabel!
     var viewControllerElf: ViewControllerElf!
     // User interacts with UI. She hears a sound to (subconsciously) know she did something.
     @IBAction func playButtonDownSound() {
@@ -17,5 +18,7 @@ class MainMenuViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewControllerElf = ViewControllerElf()
+        let versionString = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleVersion") as String
+        versionLabel.text = "Version \(versionString)"
     }
 }
