@@ -11,29 +11,44 @@ import UIKit
 class Turn: NSObject {
     // Max plays left at end of turn.
     var endingMaxPlaysLeftInt: Int {
-        let endingGameState = endingOptionalGameState!
-        return endingGameState.maxNumberOfPlaysLeftInt
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.maxNumberOfPlaysLeftInt
+        } else {
+            return startingGameState.maxNumberOfPlaysLeftInt
+        }
     }
     // Number of bad plays by end of turn.
     var endingNumberOfBadPlaysInt: Int {
-        let endingGameState = endingOptionalGameState!
+        if let endingGameState = endingOptionalGameState {
             return endingGameState.numberOfBadPlaysInt
+        } else {
+            return startingGameState.numberOfBadPlaysInt
+        }
     }
     // Number of clues given by end of turn.
     var endingNumberOfCluesGivenInt: Int {
-        let endingGameState = endingOptionalGameState!
+        if let endingGameState = endingOptionalGameState {
             return endingGameState.numberOfCluesGivenInt
+        } else {
+            return startingGameState.numberOfCluesGivenInt
+        }
     }
     // Number of discards by end of turn.
     var endingNumberOfDiscardsInt: Int {
-        let endingGameState = endingOptionalGameState!
+        if let endingGameState = endingOptionalGameState {
             return endingGameState.numberOfDiscardsInt
+        } else {
+            return startingGameState.numberOfDiscardsInt
+        }
     }
     var endingOptionalGameState: EndingGameState?
     // Score at end of turn.
     var endingScoreInt: Int {
-        let endingGameState = endingOptionalGameState!
-        return endingGameState.scoreInt
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.scoreInt
+        } else {
+            return startingGameState.scoreInt
+        }
     }
     // Whether the game has ended (not necessarily won).
     var gameIsDone: Bool {

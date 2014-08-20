@@ -14,8 +14,6 @@ import UIKit
     optional func solverElfDidFinishAllGames()
 }
 
-private var myContext = 0
-
 class SolverElf: NSObject {
     // Average for currently solved games.
     var averageScoreFloat: Float {
@@ -57,6 +55,7 @@ class SolverElf: NSObject {
     var delegate: SolverElfDelegate?
     // Games solved.
     var gameArray: [Game] = []
+    var logModel = (UIApplication.sharedApplication().delegate as AppDelegate).logModel
     var numberOfGamesLostInt: Int {
         return numberOfGamesPlayedInt - numberOfGamesWonInt
     }
@@ -86,6 +85,8 @@ class SolverElf: NSObject {
     var seedUInt32ForFirstGame: UInt32 {
         return gameArray.first!.seedUInt32
     }
+    // Whether to stop solving. Can be either one or multiple games.
+    var stopSolvingBool = false
     // For the game property corresponding to the given key, the average for all lost games. If no lost games, returns 0. Property must be an Int.
     func averageXIntInLostGamesFloat(# xIntKey: String) -> Float {
         var totalXIntInLostGames = 0
@@ -152,39 +153,60 @@ class SolverElf: NSObject {
     func solveCurrentTurnForGame(game: Game) {
         solveTurn(game.currentTurn)
     }
-    // Reset list of solved games. Make a game. Solve it.
+    // Reset list of solved games. Make a game. Solve it. Use bg thread to not block main.
     func solveGameWithSeed(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
+        stopSolvingBool = false
         gameArray = []
-        let game = Game(seedOptionalUInt32: seedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
-        solveGame(game)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            let game = Game(seedOptionalUInt32: seedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
+            self.solveGame(game)
+        }
     }
     // Play the given game to the end. Store game and notify delegate.
     func solveGame(game: Game) {
         do {
             // later might be game.solveCurrentTurn(), once elves attached to players
-            solveCurrentTurnForGame(game)
+            self.solveCurrentTurnForGame(game)
             game.finishCurrentTurn()
-        } while !game.isDone
-        gameArray.append(game)
-        delegate?.solverElfDidFinishAGame?()
+        } while !game.isDone && !self.stopSolvingBool
+        self.gameArray.append(game)
+        // Assume delegate wants to be notified on main thread.
+        dispatch_async(dispatch_get_main_queue()) {
+            self.delegate?.solverElfDidFinishAGame?()
+            // Need this line as single-line closures return implicitly.
+            return
+        }
     }
-    // Reset list of solved games. Make games. Solve them.
+    // Reset list of solved games. Make games. Solve them. Games are solved in bg thread to not block main.
     func solveGames(numberOfGames: Int, numberOfPlayersInt: Int) {
+        stopSolvingBool = false
         numberOfSecondsSpentDouble = 0.0
         gameArray = []
         // Track time spent.
         let startDate = NSDate()
-        // Report every x time units. 10 seconds? increasing intervals?
-        // can set a repeating timer to print count of gameArray
-        // can notify delegate
-        // logTextView: ("Games played: \(gameArray.count)")
-        for gameNumber in 1...numberOfGames {
-            let game = Game(seedOptionalUInt32: nil, numberOfPlayersInt: numberOfPlayersInt)
-            solveGame(game)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            var numberOfSecondsToWaitToLogDouble: Double = 1.0
+            for gameNumberInt in 1...numberOfGames {
+                if self.stopSolvingBool {
+                    break
+                }
+                // Give feedback in increasing intervals.
+                let tempDate = NSDate()
+                let numberOfSecondsSoFarDouble = tempDate.timeIntervalSinceDate(startDate)
+                if numberOfSecondsSoFarDouble > numberOfSecondsToWaitToLogDouble {
+                    numberOfSecondsToWaitToLogDouble = numberOfSecondsToWaitToLogDouble * 3.0
+                    self.logModel.addLine("Games so far: \(self.numberOfGamesPlayedInt). Next update: \(Int(numberOfSecondsToWaitToLogDouble)) seconds.")
+                }
+                let game = Game(seedOptionalUInt32: nil, numberOfPlayersInt: numberOfPlayersInt)
+                self.solveGame(game)
+            }
+            // Assume delegate wants to be notified on main thread.
+            dispatch_async(dispatch_get_main_queue()) {
+                let endDate = NSDate()
+                self.numberOfSecondsSpentDouble = endDate.timeIntervalSinceDate(startDate)
+                self.delegate?.solverElfDidFinishAllGames?()
+            }
         }
-        let endDate = NSDate()
-        numberOfSecondsSpentDouble = endDate.timeIntervalSinceDate(startDate)
-        delegate?.solverElfDidFinishAllGames?()
     }
     // Determine best action for given turn.
     func solveTurn(turn: Turn) {
@@ -194,5 +216,6 @@ class SolverElf: NSObject {
         turn.optionalAction = bestActionForTurn(turn)
     }
     func stopSolving() {
+        stopSolvingBool = true
     }
 }

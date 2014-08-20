@@ -94,7 +94,9 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
     }
     // Update log view.
     func logModelDidAddText() {
-        logTextView.text = logModel.text
+        dispatch_async(dispatch_get_main_queue()) {
+            self.logTextView.text = self.logModel.text
+        }
     }
     // Log the seed used to create this game.
     func logSeedUsed() {
@@ -194,6 +196,7 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
             userSeedNumberTextField.text = userSeedString
             visibleHandsView.hidden = true
         case .Solving:
+            turnNumberOptionalInt = nil
             cancelButton.enabled = true
             startButton.enabled = false
             turnTableView.hidden = true

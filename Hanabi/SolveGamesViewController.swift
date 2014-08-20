@@ -46,7 +46,9 @@ class SolveGamesViewController: UIViewController, LogModelDelegate, SolverElfDel
     }
     // Update log view.
     func logModelDidAddText() {
-        logTextView.text = logModel.text
+        dispatch_async(dispatch_get_main_queue()) {
+            self.logTextView.text = self.logModel.text
+        }
     }
     override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>) {
         if keyPath == LogTextViewTextKeyPathString {
@@ -94,6 +96,7 @@ class SolveGamesViewController: UIViewController, LogModelDelegate, SolverElfDel
         let numberOfSecondsSpentDouble = round(dataForSecondsSpent.numberDouble, numberOfDecimalsInt: 3)
         let averageSecondsSpentDouble = round(dataForSecondsSpent.averageDouble, numberOfDecimalsInt: 3)
         resultsString += "\nTime spent: \(numberOfSecondsSpentDouble) sec (avg.: \(averageSecondsSpentDouble))"
+        resultsString += "\n"
         logModel.addLine(resultsString)
     }
     func solverElfDidFinishAllGames() {
