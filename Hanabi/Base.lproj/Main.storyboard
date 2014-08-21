@@ -275,6 +275,9 @@ Cards left: 40</string>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="163" translatesAutoresizingMaskIntoConstraints="NO" id="Ahb-fF-gh5">
                                         <rect key="frame" x="8" y="8" width="163" height="90"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="163" id="iIf-5x-0ah"/>
+                                        </constraints>
                                         <string key="text">Visible hands
 P1: 
 P2: B3 C2

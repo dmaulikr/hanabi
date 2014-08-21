@@ -65,7 +65,7 @@ class SolveGamesViewController: UIViewController, LogModelDelegate, SolverElfDel
     func showResults() {
         var resultsString = "\n"
         resultsString += "Games: \(solverElf.numberOfGamesPlayedInt)"
-        let averageScoreDouble = round(Double(solverElf.averageScoreFloat), numberOfDecimalsInt: 1)
+        let averageScoreDouble = round(Double(solverElf.averageScoreFloat), numberOfDecimalsInt: 2)
         resultsString += "\nScore, avg.: \(averageScoreDouble)"
         let dataForGamesWon = solverElf.dataForGamesWon
         let averageMaxPlaysLeftDouble = round(dataForGamesWon.averageMaxPlaysLeftFloat, numberOfDecimalsInt: 1)

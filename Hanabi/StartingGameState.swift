@@ -52,6 +52,26 @@ class StartingGameState: AbstractGameState {
         }
         return cheatingGroupDuplicatesCardArray
     }
+    // Number of cards in all players hands that can be played. Includes chains. Ignores duplicates.
+    var cheatingNumberOfVisiblePlaysInt: Int {
+        var cheatingNumberOfVisiblePlaysInt = 0;
+        // For each color, go up the unscored values to see how many plays we can make.
+        for (color, score) in scoreDictionary {
+            // While a desired card exists and is in a hand, go up the chain.
+            let card = Card(color: color, numberInt: score)
+            var desiredOptionalCard = card.nextValueOptionalCard
+            while let desiredCard = desiredOptionalCard {
+                if cardIsInAHandBool(desiredCard) {
+                    cheatingNumberOfVisiblePlaysInt++
+                    desiredOptionalCard = desiredCard.nextValueOptionalCard
+                } else {
+                    break
+                }
+            }
+        }
+//        println("cheatingNumberOfVisiblePlaysInt: \(cheatingNumberOfVisiblePlaysInt)")
+        return cheatingNumberOfVisiblePlaysInt
+    }
     // Cards the current player can safely discard: 1) already played, 2) duplicates in hand. Keep card order, because that can provide info.
     var cheatingSafeDiscardsCardArray: [Card] {
         var cheatingSafeDiscardsCardArray: [Card] = []
@@ -79,7 +99,7 @@ class StartingGameState: AbstractGameState {
                 var playerWithCard = currentPlayer
                 while cardWasFound {
                     cardWasFound = false
-                    let cardToFindOptional = cardToFind.nextValueCard
+                    let cardToFindOptional = cardToFind.nextValueOptionalCard
                     if cardToFindOptional != nil {
                         cardToFind = cardToFindOptional!
                         var playerToSearch = playerAfter(playerWithCard)

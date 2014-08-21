@@ -46,7 +46,7 @@ struct Card: Hashable {
         return color.toRaw() * 10 + numberInt
     }
     // The card next in sequence. (Max value is 5.)
-    var nextValueCard: Card? {
+    var nextValueOptionalCard: Card? {
         var optionalCard: Card?
         if numberInt <= 5 {
             optionalCard = Card(color: color, numberInt: numberInt + 1)

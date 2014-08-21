@@ -104,7 +104,7 @@ class AbstractGameState: NSObject {
             return false
         }
     }
-    // Whether the given card appears at least twice among all hands.
+    // Whether the given card appears at least twice among all hands. (Cheating?)
     func cardIsGroupDuplicateBool(card: Card) -> Bool {
         var numberOfTimesSeenInt = 0
         for player in playerArray {
@@ -119,6 +119,15 @@ class AbstractGameState: NSObject {
         } else {
             return false
         }
+    }
+    // Whether the given card is in any hand. (Cheating?)
+    func cardIsInAHandBool(card: Card) -> Bool {
+        for player in playerArray {
+            if contains(player.handCardArray, card) {
+                return true
+            }
+        }
+        return false
     }
     // Whether the given card is in the current deck.
     func cardIsInDeckBool(card: Card) -> Bool {
