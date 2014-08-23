@@ -138,9 +138,10 @@ class SolveGamesViewController: UIViewController, LogModelDelegate, SolverElfDel
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        logModel = (UIApplication.sharedApplication().delegate as AppDelegate).logModel
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        logModel = appDelegate.logModel
         logModel.delegate = self
-        solverElf = SolverElf()
+        solverElf = appDelegate.solverElf
         solverElf.delegate = self;
         viewControllerElf = ViewControllerElf()
         GGKUtilities.addBorderOfColor(UIColor.blackColor(), toView: cancelButton)

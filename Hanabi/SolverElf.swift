@@ -13,8 +13,8 @@ import UIKit
     optional func solverElfDidFinishAGame()
     optional func solverElfDidFinishAllGames()
 }
-
 class SolverElf: NSObject {
+    var aiArray: [AbstractAI] = []
     // Average for currently solved games.
     var averageScoreFloat: Float {
         var totalScoresInt = 0
@@ -22,6 +22,24 @@ class SolverElf: NSObject {
             totalScoresInt += game.finalScoreInt
         }
         return Float(totalScoresInt) / Float(numberOfGamesPlayedInt)
+    }
+    // AI for solving games. If not set, use Omniscient.
+    var currentAI: AbstractAI {
+        get {
+            let aiInt = NSUserDefaults.standardUserDefaults().integerForKey(AITypeUserDefaultsKeyString)
+            if let aiType = AIType.fromRaw(aiInt) {
+                return aiForType(aiType)
+            } else {
+                return aiForType(AIType.Omniscient)
+            }
+        }
+        set(newAI) {
+            let aiInt = newAI.type.toRaw()
+            NSUserDefaults.standardUserDefaults().setInteger(aiInt, forKey: AITypeUserDefaultsKeyString)
+        }
+    }
+    var currentAIButtonTitleString: String {
+        return currentAI.buttonTitleString
     }
     // Various data on lost games.
     var dataForGamesLost: (averageCluesGivenFloat: Float, averageNumberOfBadPlaysFloat: Float, averageNumberOfDiscardsFloat: Float, numberInt: Int, percentFloat: Float, seedArray: [UInt32]) {
@@ -56,6 +74,9 @@ class SolverElf: NSObject {
     // Games solved.
     var gameArray: [Game] = []
     var logModel = (UIApplication.sharedApplication().delegate as AppDelegate).logModel
+    var numberOfAIs: Int {
+        return aiArray.count
+    }
     var numberOfGamesLostInt: Int {
         return numberOfGamesPlayedInt - numberOfGamesWonInt
     }
@@ -87,6 +108,21 @@ class SolverElf: NSObject {
     }
     // Whether to stop solving. Can be either one or multiple games.
     var stopSolvingBool = false
+    // AI for the given number. AIs are in an undefined order.
+    func aiForNumberInt(numberInt: Int) -> AbstractAI {
+        let indexInt = numberInt - 1
+        return aiArray[indexInt]
+    }
+    // AI for the given AI type. If type not found, return first value.
+    func aiForType(aiType: AIType) -> AbstractAI {
+        for ai in aiArray {
+            if ai.type == aiType {
+                return ai
+            }
+        }
+        println("Warning: AI type not found: \(aiType.toRaw()).")
+        return aiArray[0]
+    }
     // For the game property corresponding to the given key, the average for all lost games. If no lost games, returns 0. Property must be an Int.
     func averageXIntInLostGamesFloat(# xIntKey: String) -> Float {
         var totalXIntInLostGames = 0
@@ -119,8 +155,8 @@ class SolverElf: NSObject {
     func bestActionForTurn(turn: Turn) -> Action {
 //        let alwaysDiscardElf = AlwaysDiscardElf()
 //        let action = alwaysDiscardElf.bestActionForTurn(turn)
-        let openHandElf = OpenHandElf()
-        let action = openHandElf.bestActionForTurn(turn)
+        let omniscientAI = OmniscientAI()
+        let action = omniscientAI.bestActionForTurn(turn)
         return action
     }
     // Data for given turn for given game. If turn end, the data is for the end of the turn (vs start). As we're bundling a lot of data here, this should be used only for reporting and not for solving many games at once.
@@ -141,6 +177,21 @@ class SolverElf: NSObject {
         let scoreString = dataForTurn.scoreString
         let visibleHandsAttributedString = dataForTurn.visibleHandsAttributedString
         return (actionString, deckString, discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsAttributedString)
+    }
+    override init() {
+        super.init()
+        aiArray.append(OmniscientAI())
+        aiArray.append(PureInfoAI())
+    }
+    // Order number for the given AI. First number is 1. If AI not found, return 1.
+    func numberIntForAI(ai: AbstractAI) -> Int {
+        for index in 0...aiArray.count {
+            let ai2 = aiArray[index]
+            if ai2 == ai {
+                return index + 1
+            }
+        }
+        return 1
     }
     // String for the round and subround for the given turn. (E.g., in a 3-player game, turn 4 = round 2.1.)
     func roundSubroundStringForTurnForFirstGame(turnNumberInt: Int) -> String {

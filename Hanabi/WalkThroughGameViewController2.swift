@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverElfDelegate, UITableViewDataSource,  UITableViewDelegate, UITextFieldDelegate {
+class WalkThroughGameViewController2: UIViewController, AITableViewControllerDelegate, LogModelDelegate, SolverElfDelegate, UITableViewDataSource,  UITableViewDelegate, UITextFieldDelegate {
     enum Mode: Int {
         // Planning: user can set things.
         // Solving: elf is calculating/playing.
@@ -18,7 +18,11 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
     let LogTextViewTextKeyPathString = "logTextView.text"
     @IBOutlet weak var actionLabel: UILabel!
     @IBOutlet weak var actionView: UIView!
+    // Shows current AI. User taps to select AI.
+    @IBOutlet weak var aiButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
+    // For dismissing the current popover. Would name "popoverController," but UIViewController already has a private variable named that.
+    var currentOptionalPopoverController: UIPopoverController?
     // How many non-play actions players can make and still win.
     @IBOutlet weak var cushionLabel: UILabel!
     @IBOutlet weak var cushionView: UIView!
@@ -62,6 +66,10 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
     @IBOutlet weak var visibleHandsLabel: UILabel!
     // View enclosing visible-hands label. To make bigger border.
     @IBOutlet weak var visibleHandsView: UIView!
+    func aiTableViewControllerDidSelectAI() {
+        updateUIBasedOnMode()
+        currentOptionalPopoverController?.dismissPopoverAnimated(true)
+    }
     deinit {
         removeObserver(self, forKeyPath: LogTextViewTextKeyPathString)
     }
@@ -115,6 +123,16 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
     @IBAction func playButtonDownSound() {
         viewControllerElf.playButtonDownSound()
     }
+    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+        if segue.identifier == "ShowAISelector" {
+            // Retain popover controller, to dismiss later.
+            currentOptionalPopoverController = (segue as UIStoryboardPopoverSegue).popoverController
+            let aiTableViewController = currentOptionalPopoverController!.contentViewController as AITableViewController
+            aiTableViewController.delegate = self
+        } else {
+            super.prepareForSegue(segue, sender: sender)
+        }
+    }
     // Show selected turn for given game.
     func showSelectedTurnForGame(gameNumberInt: Int) {
         let dataForTurnForGame = solverElf.dataForTurnForGame(1, turnNumberInt: turnNumberOptionalInt!, turnEndBool: showTurnEndSwitch.on, showCurrentHandBool: showCurrentHandSwitch.on)
@@ -151,7 +169,7 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
         let turnNumberInt = indexPath.row + 1
         let roundSubroundString = solverElf.roundSubroundStringForTurnForFirstGame(turnNumberInt)
         tableViewCell.textLabel.text = "Round \(roundSubroundString)"
-        return tableViewCell
+        return tableViewCell;
     }
     // Return number of turns.
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
@@ -185,6 +203,8 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
         switch mode {
         case .Planning:
             actionView.hidden = true
+            aiButton.enabled = true
+            aiButton.setTitle(solverElf.currentAIButtonTitleString, forState: UIControlState.Normal)
             cancelButton.enabled = false
             cushionView.hidden = true
             discardsView.hidden = true
@@ -196,13 +216,17 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
             userSeedNumberTextField.text = userSeedString
             visibleHandsView.hidden = true
         case .Solving:
-            turnNumberOptionalInt = nil
+            aiButton.enabled = false
+            aiButton.setTitle(solverElf.currentAIButtonTitleString, forState: UIControlState.Disabled)
             cancelButton.enabled = true
             startButton.enabled = false
+            turnNumberOptionalInt = nil
             turnTableView.hidden = true
             userSeedNumberTextField.enabled = false
         case .Solved:
             actionView.hidden = false
+            aiButton.enabled = true
+            aiButton.setTitle(solverElf.currentAIButtonTitleString, forState: UIControlState.Normal)
             cancelButton.enabled = false
             cushionView.hidden = false
             discardsView.hidden = false
@@ -247,6 +271,10 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
         logTextView.backgroundColor = UIColor.clearColor()
         scoreView.backgroundColor = UIColor.clearColor()
         visibleHandsView.backgroundColor = UIColor.clearColor()
+        
+        // AI needs to be saved when selected by user; when game starts, it needs to access this AI. SolverElf can handle the storage/retrieval for now
+        // after the user selects an AI via popover, need to update this either via updateUI or just directly
+       
         logModel.reset()
         // To show bottom of log.
         addObserver(self, forKeyPath: LogTextViewTextKeyPathString, options: NSKeyValueObservingOptions.New, context: nil)

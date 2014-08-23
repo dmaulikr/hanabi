@@ -9,8 +9,13 @@
 import UIKit
 
 // Looks at own hand. (Cheats.)
-class OpenHandElf: NSObject {
-    var logModel = (UIApplication.sharedApplication().delegate as AppDelegate).logModel
+class OmniscientAI: AbstractAI {
+    override var buttonTitleString: String {
+        return "Omniscient"
+    }
+    override var tableViewCellString: String {
+        return "Omniscient"
+    }
     // Return the best action for the given turn.
     func bestActionForTurn(turn: Turn) -> Action {
         let action = Action()
@@ -86,5 +91,9 @@ class OpenHandElf: NSObject {
             }
         }
         return action
+    }
+    override init() {
+        super.init()
+        type = AIType.Omniscient
     }
 }
