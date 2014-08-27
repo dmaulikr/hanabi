@@ -20,21 +20,15 @@ class PureInfoAI: AbstractAI {
         // If player knows she has a playable card, play it.
         let startingGameState = turn.startingGameState
         let currentPlayer = startingGameState.currentPlayer
-        let handUnknownCardArray = currentPlayer.handUnknownCardArray
-        for unknownCard in handUnknownCardArray {
-//            if unknownCard.isPlayableBool(scoreDictionary: startingGameState.scoreDictionary) {
-//                action.type = .Play
-//                action.targetCardIndexInt = find(handUnknownCardArray, unknownCard)!
-//                return action
-//            }
+        let handCardBackArray = currentPlayer.handCardBackArray
+        for indexInt in 0...(handCardBackArray.count - 1) {
+            let cardBack = handCardBackArray[indexInt]
+            if startingGameState.cardBackIsKnownPlayableBool(cardBack) {
+                action.type = .Play
+                action.targetCardIndexInt = indexInt
+                return action
+            }
         }
-        
-        
-        // Whether the given unknown card is a valid play.
-//        func isPlayableBool(scoreDictionary: Card) -> Bool {
-//            // doesn't need to be known to be playable
-//            
-//        }
         
         // If player knows she has a safe discard, discard it.
         // something in between?

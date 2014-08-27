@@ -64,11 +64,11 @@ class AbstractGameState: NSObject {
         return scorePile.currentInt
     }
     // Return whether the given card appears at least twice in the given hand.
-    func cardIsDuplicate(card: Card, handCardArray: [Card]) -> Bool {
+    func cardValueIsDuplicate(card: Card, handCardArray: [Card]) -> Bool {
         var numberOfTimesSeenInt = 0
         for card2 in handCardArray {
-            if card2 == card {
-                numberOfTimesSeenInt++
+            if card2.isEqualColorAndNumber(card) {
+                ++numberOfTimesSeenInt
             }
         }
         if numberOfTimesSeenInt >= 2 {
@@ -78,12 +78,12 @@ class AbstractGameState: NSObject {
         }
     }
     // Whether the given card appears at least twice among all hands. (Cheating?)
-    func cardIsGroupDuplicateBool(card: Card) -> Bool {
+    func cardValueIsGroupDuplicateBool(card: Card) -> Bool {
         var numberOfTimesSeenInt = 0
         for player in playerArray {
             for card2 in player.handCardArray {
-                if card2 == card {
-                    numberOfTimesSeenInt++
+                if card2.isEqualColorAndNumber(card) {
+                    ++numberOfTimesSeenInt
                 }
             }
         }
@@ -94,17 +94,17 @@ class AbstractGameState: NSObject {
         }
     }
     // Whether the given card is in any hand. (Cheating?)
-    func cardIsInAHandBool(card: Card) -> Bool {
+    func cardValueIsInAHandBool(card: Card) -> Bool {
         for player in playerArray {
-            if contains(player.handCardArray, card) {
+            if Card.cardValueIsInArrayBool(card, cardArray: player.handCardArray) {
                 return true
             }
         }
         return false
     }
     // Whether the given card is in the current deck.
-    func cardIsInDeckBool(card: Card) -> Bool {
-        return contains(deck.cardArray, card)
+    func cardValueIsInDeckBool(card: Card) -> Bool {
+        return Card.cardValueIsInArrayBool(card, cardArray: deck.cardArray)
     }
     // Useful data describing game state.
     func data(#showCurrentHandBool: Bool) -> (discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {

@@ -13,7 +13,7 @@ class StartingGameState: AbstractGameState {
     var cheatingAnyGroupDuplicatesBool: Bool {
         for player in playerArray {
             for card in player.handCardArray {
-                if cardIsGroupDuplicateBool(card) {
+                if cardValueIsGroupDuplicateBool(card) {
                     return true
                 }
             }
@@ -25,7 +25,7 @@ class StartingGameState: AbstractGameState {
         for player in playerArray {
             let handCardArray = player.handCardArray
             for card in handCardArray {
-                if scorePile.cardIsPlayable(card) || scorePile.cardWasAlreadyPlayed(card) || cardIsDuplicate(card, handCardArray:handCardArray) {
+                if scorePile.cardIsPlayable(card) || scorePile.cardWasAlreadyPlayed(card) || cardValueIsDuplicate(card, handCardArray:handCardArray) {
                     return true
                 }
             }
@@ -36,7 +36,7 @@ class StartingGameState: AbstractGameState {
     var cheatingCardsAlsoInDeckCardArray: [Card] {
         var cheatingCardsAlsoInDeckCardArray: [Card] = []
         for card in currentPlayer.handCardArray {
-            if cardIsInDeckBool(card) {
+            if cardValueIsInDeckBool(card) {
                 cheatingCardsAlsoInDeckCardArray.append(card)
             }
         }
@@ -46,7 +46,7 @@ class StartingGameState: AbstractGameState {
     var cheatingGroupDuplicatesCardArray: [Card] {
         var cheatingGroupDuplicatesCardArray: [Card] = []
         for card in currentPlayer.handCardArray {
-            if cardIsGroupDuplicateBool(card) {
+            if cardValueIsGroupDuplicateBool(card) {
                 cheatingGroupDuplicatesCardArray.append(card)
             }
         }
@@ -63,7 +63,7 @@ class StartingGameState: AbstractGameState {
             if topValueInt <= 4 {
                 var desiredOptionalCard: Card? = Card(color: color, numberInt: topValueInt + 1)
                 while let desiredCard = desiredOptionalCard {
-                    if cardIsInAHandBool(desiredCard) {
+                    if cardValueIsInAHandBool(desiredCard) {
                         cheatingNumberOfVisiblePlaysInt++
                         desiredOptionalCard = desiredCard.nextValueOptionalCard
                     } else {
@@ -96,7 +96,7 @@ class StartingGameState: AbstractGameState {
         var cheatingSafeDiscardsCardArray: [Card] = []
         let handCardArray = currentPlayer.handCardArray
         for card in handCardArray {
-            if scorePile.cardWasAlreadyPlayed(card) || cardIsDuplicate(card, handCardArray: handCardArray) {
+            if scorePile.cardWasAlreadyPlayed(card) || cardValueIsDuplicate(card, handCardArray: handCardArray) {
                 cheatingSafeDiscardsCardArray.append(card)
             }
         }
@@ -106,10 +106,10 @@ class StartingGameState: AbstractGameState {
     var mostTurnsForChainCardArray: [Card] {
         var mostTurnsForChainCardArray: [Card] = []
         var maxNumberOfTurnsForChainInt = 0
-        // Assuming we want cards in only the current player's hand.
-        for card in currentPlayer.handCardArray {
-            // Want only playable cards, ignoring duplicates in hand.
-            if scorePile.cardIsPlayable(card) && !contains(mostTurnsForChainCardArray, card) {
+        // Assume we want cards in only the current player's hand. No duplicates.
+        for card in currentPlayer.noDupsHandCardArray {
+            // Want only playable cards.
+            if scorePile.cardIsPlayable(card) {
                 // Calculate turns for card's visible chain.
                 // Look for next card in chain. If found, note turns needed. Repeat.
                 var numberOfTurnsForChainInt = 1
@@ -126,7 +126,7 @@ class StartingGameState: AbstractGameState {
                         // Search each player once, including player with the previous card.
                         while numberOfTurnsForCardInt < numberOfPlayersInt {
                             numberOfTurnsForCardInt++
-                            if contains(playerToSearch.handCardArray, cardToFind) {
+                            if Card.cardValueIsInArrayBool(cardToFind, cardArray: playerToSearch.handCardArray) {
                                 cardWasFound = true
                                 numberOfTurnsForChainInt += numberOfTurnsForCardInt
                                 break
@@ -152,6 +152,10 @@ class StartingGameState: AbstractGameState {
         let numberOfGoodPlaysInt = scorePile.currentInt
         // Turn number = turns played + 1.
         return numberOfGoodPlaysInt + numberOfBadPlaysInt + numberOfDiscardsInt + numberOfCluesGivenInt + 1
+    }
+    // Whether player knows the given card back is playable.
+    func cardBackIsKnownPlayableBool(cardBack: CardBack) -> Bool {
+        return scorePile.cardBackIsKnownPlayableBool(cardBack)
     }
     // Deal starting hands to players.
     func dealHands() {

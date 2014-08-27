@@ -8,6 +8,6 @@
 // A card whose identity is hidden to some. Includes info on what is known.
 import UIKit
 
-class UnknownCard: Card {
+class CardBack: NSObject {
    
 }

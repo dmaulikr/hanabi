@@ -8,17 +8,8 @@
 
 import Foundation
 
-// For Hashable protocol.
-func ==(card1: Card, card2: Card) -> Bool {
-    if (card1.color == card2.color) && (card1.numberInt == card2.numberInt) {
-        return true
-    } else {
-        return false
-    }
-}
-
 // Each card has a color and a number.
-class Card: Hashable {
+class Card: NSObject {
     enum Color: Int {
         case Blue = 1, Green, Red, White, Yellow
         func letterString() -> String {
@@ -40,23 +31,24 @@ class Card: Hashable {
             return aLetterString
         }
     }
-    var color: Color
-    // For Hashable protocol.
-    var hashValue: Int {
-        return color.toRaw() * 10 + numberInt
-    }
-    // The card next in sequence. (Max value is 5.)
-    var nextValueOptionalCard: Card? {
-        var optionalCard: Card?
-        if numberInt <= 5 {
-            optionalCard = Card(color: color, numberInt: numberInt + 1)
+    // Whether given card is in given array, value-wise.
+    class func cardValueIsInArrayBool(card: Card, cardArray: [Card]) -> Bool {
+        for card2 in cardArray {
+            if card2.isEqualColorAndNumber(card) {
+                return true
+            }
         }
-        return optionalCard
+        return false
     }
-    var numberInt: Int!
-    // String representing card (e.g., "B4," "Y1").
-    var string: String {
-        return "\(color.letterString())\(numberInt)"
+    // Index of the given card in the given array, value-wise. Returns first match.
+    class func indexOptionalIntOfCardValueInArray(card: Card, cardArray: [Card]) -> Int? {
+        for indexInt in 0...(cardArray.count - 1) {
+            let card2 = cardArray[indexInt]
+            if card2.isEqualColorAndNumber(card) {
+                return indexInt
+            }
+        }
+        return nil
     }
     // String showing cards in the given array.
     class func stringForArray(cardArray: [Card]) -> String {
@@ -73,8 +65,26 @@ class Card: Hashable {
         }
         return string
     }
+    var color: Color
+    // The card next in sequence. (Max value is 5.)
+    var nextValueOptionalCard: Card? {
+        var optionalCard: Card?
+        if numberInt <= 5 {
+            optionalCard = Card(color: color, numberInt: numberInt + 1)
+        }
+        return optionalCard
+    }
+    var numberInt: Int!
+    // String representing card (e.g., "B4," "Y1").
+    var string: String {
+        return "\(color.letterString())\(numberInt)"
+    }
     init(color: Color, numberInt: Int) {
         self.color = color
         self.numberInt = numberInt
+    }
+    // To tell duplicate cards, vs cards with the same reference.
+    func isEqualColorAndNumber(card: Card) -> Bool {
+        return (card.color == self.color) && (card.numberInt == self.numberInt)
     }
 }

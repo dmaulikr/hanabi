@@ -43,6 +43,13 @@ class ScorePile {
     func addCard(card: Card) {
         topDictionary[card.color] = card.numberInt
     }
+    // Whether player knows the given card back is playable.
+    func cardBackIsKnownPlayableBool(cardBack: CardBack) -> Bool {
+        
+        // how to do this?
+        // doesn't need to be known to be playable
+        return false
+    }
     // Whether given card is a valid play.
     func cardIsPlayable(card: Card) -> Bool {
         // It's playable if the card's number is 1 more than its color's current score.

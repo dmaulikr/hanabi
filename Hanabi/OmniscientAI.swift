@@ -22,12 +22,14 @@ class OmniscientAI: AbstractAI {
         let turnNumberInt = startingGameState.turnNumberInt
         let numberOfPlayersInt = startingGameState.numberOfPlayersInt
         let roundSubroundString = roundSubroundStringForTurn(turnNumberInt, numberOfPlayersInt: numberOfPlayersInt)
+//        println("Round \(roundSubroundString).")
         let currentPlayerHandCardArray = startingGameState.currentPlayer.handCardArray
         let numberOfCluesLeftInt = startingGameState.numberOfCluesLeftInt
         let cheatingNumberOfVisiblePlaysInt = startingGameState.cheatingNumberOfVisiblePlaysInt
         // If can play, do. Play cards whose sequence will take the longest. (E.g., 132 before 123.)
         let mostTurnsForChainCardArray = startingGameState.mostTurnsForChainCardArray
         if !mostTurnsForChainCardArray.isEmpty {
+//            println("Play.")
             action.type = .Play
             // If multiple options, choose first card with lowest number.
             var thePlayCard: Card = mostTurnsForChainCardArray.first!
@@ -38,13 +40,14 @@ class OmniscientAI: AbstractAI {
                     thePlayCard = card
                 }
             }
-            action.targetCardIndexInt = find(currentPlayerHandCardArray, thePlayCard)!
+            action.targetCardIndexInt = Card.indexOptionalIntOfCardValueInArray(thePlayCard, cardArray: currentPlayerHandCardArray)!
         // If the number of visible plays >= number of cards - 1 in the deck, give a clue. (To avoid decking.)
         } else if (cheatingNumberOfVisiblePlaysInt > 0) && (cheatingNumberOfVisiblePlaysInt >= startingGameState.numberOfCardsLeftInt - 1) && (numberOfCluesLeftInt > 0) {
 //            println("avoiding decking; (Round \(roundSubroundString))")
             action.type = .Clue
         // If max clues, can't discard, so give a clue.
         } else if numberOfCluesLeftInt == 8 {
+//            println("Max clues: give clue.")
             action.type = .Clue
         } else {
             // Do one of the following, in priority order:
@@ -55,16 +58,19 @@ class OmniscientAI: AbstractAI {
             // Discard a unique card.
             let cheatingSafeDiscardsCardArray = startingGameState.cheatingSafeDiscardsCardArray
             if !cheatingSafeDiscardsCardArray.isEmpty {
+//                println("Round \(roundSubroundString): Safe discard.")
                 action.type = .Discard
                 let theDiscardCard = cheatingSafeDiscardsCardArray.first!
-                action.targetCardIndexInt = find(currentPlayerHandCardArray, theDiscardCard)!
+                action.targetCardIndexInt = Card.indexOptionalIntOfCardValueInArray(theDiscardCard, cardArray: currentPlayerHandCardArray)!
             } else {
                 let cheatingGroupDuplicatesCardArray = startingGameState.cheatingGroupDuplicatesCardArray
                 if !cheatingGroupDuplicatesCardArray.isEmpty {
+//                    println("Round \(roundSubroundString): Group discard.")
                     action.type = .Discard
                     let theDiscardCard = cheatingGroupDuplicatesCardArray.first!
-                    action.targetCardIndexInt = find(currentPlayerHandCardArray, theDiscardCard)!
+                    action.targetCardIndexInt = Card.indexOptionalIntOfCardValueInArray(theDiscardCard, cardArray: currentPlayerHandCardArray)!
                 } else if (startingGameState.cheatingAnyPlaysOrSafeDiscardsBool || startingGameState.cheatingAnyGroupDuplicatesBool) && (numberOfCluesLeftInt > 0) {
+//                    println("Round \(roundSubroundString): Another can play/discard. Give clue.")
                     action.type = .Clue
                 } else {
                     // If player has a card that's still in the deck, discard highest.
@@ -80,7 +86,7 @@ class OmniscientAI: AbstractAI {
                                 theDiscardCard = card
                             }
                         }
-                        action.targetCardIndexInt = find(currentPlayerHandCardArray, theDiscardCard)!
+                        action.targetCardIndexInt = Card.indexOptionalIntOfCardValueInArray(theDiscardCard, cardArray: currentPlayerHandCardArray)!
                     } else {
                         logModel.addLine("Rare warning: Discarding unique? Seed: \(startingGameState.deck.seedUInt32). Round \(roundSubroundString).")
                         action.type = .Discard

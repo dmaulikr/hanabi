@@ -16,12 +16,22 @@ class Player: NSObject {
         return Card.stringForArray(handCardArray)
     }
     // What player knows about her hand.
-    var handUnknownCardArray: [UnknownCard] = []
+    var handCardBackArray: [CardBack] = []
     var nameString: String = ""
+    // Hand, with duplicate cards removed.
+    var noDupsHandCardArray: [Card] {
+        var noDupsHandCardArray: [Card] = []
+        for card in handCardArray {
+            if !Card.cardValueIsInArrayBool(card, cardArray: noDupsHandCardArray) {
+                noDupsHandCardArray.append(card)
+            }
+        }
+        return noDupsHandCardArray
+    }
     override func copy() -> AnyObject! {
         var player = Player()
         player.handCardArray = handCardArray
-        player.handUnknownCardArray = handUnknownCardArray
+        player.handCardBackArray = handCardBackArray
         player.nameString = nameString
         return player
     }
