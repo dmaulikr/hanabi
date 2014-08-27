@@ -25,7 +25,7 @@ class StartingGameState: AbstractGameState {
         for player in playerArray {
             let handCardArray = player.handCardArray
             for card in handCardArray {
-                if cardIsPlayable(card) || cardWasAlreadyPlayed(card) || cardIsDuplicate(card, handCardArray:handCardArray) {
+                if scorePile.cardIsPlayable(card) || scorePile.cardWasAlreadyPlayed(card) || cardIsDuplicate(card, handCardArray:handCardArray) {
                     return true
                 }
             }
@@ -56,19 +56,38 @@ class StartingGameState: AbstractGameState {
     var cheatingNumberOfVisiblePlaysInt: Int {
         var cheatingNumberOfVisiblePlaysInt = 0;
         // For each color, go up the unscored values to see how many plays we can make.
-        for (color, score) in scoreDictionary {
+        var int = 1
+        while let color = Card.Color.fromRaw(int) {
             // While a desired card exists and is in a hand, go up the chain.
-            let card = Card(color: color, numberInt: score)
-            var desiredOptionalCard = card.nextValueOptionalCard
-            while let desiredCard = desiredOptionalCard {
-                if cardIsInAHandBool(desiredCard) {
-                    cheatingNumberOfVisiblePlaysInt++
-                    desiredOptionalCard = desiredCard.nextValueOptionalCard
-                } else {
-                    break
+            let topValueInt = scorePile.topValueIntForColor(color)
+            if topValueInt <= 4 {
+                var desiredOptionalCard: Card? = Card(color: color, numberInt: topValueInt + 1)
+                while let desiredCard = desiredOptionalCard {
+                    if cardIsInAHandBool(desiredCard) {
+                        cheatingNumberOfVisiblePlaysInt++
+                        desiredOptionalCard = desiredCard.nextValueOptionalCard
+                    } else {
+                        break
+                    }
                 }
             }
+            int++
         }
+            
+        // For each color, go up the unscored values to see how many plays we can make.
+//        for (color, score) in scoreDictionary {
+//            // While a desired card exists and is in a hand, go up the chain.
+//            let card = Card(color: color, numberInt: score)
+//            var desiredOptionalCard = card.nextValueOptionalCard
+//            while let desiredCard = desiredOptionalCard {
+//                if cardIsInAHandBool(desiredCard) {
+//                    cheatingNumberOfVisiblePlaysInt++
+//                    desiredOptionalCard = desiredCard.nextValueOptionalCard
+//                } else {
+//                    break
+//                }
+//            }
+//        }
 //        println("cheatingNumberOfVisiblePlaysInt: \(cheatingNumberOfVisiblePlaysInt)")
         return cheatingNumberOfVisiblePlaysInt
     }
@@ -77,7 +96,7 @@ class StartingGameState: AbstractGameState {
         var cheatingSafeDiscardsCardArray: [Card] = []
         let handCardArray = currentPlayer.handCardArray
         for card in handCardArray {
-            if cardWasAlreadyPlayed(card) || cardIsDuplicate(card, handCardArray: handCardArray) {
+            if scorePile.cardWasAlreadyPlayed(card) || cardIsDuplicate(card, handCardArray: handCardArray) {
                 cheatingSafeDiscardsCardArray.append(card)
             }
         }
@@ -90,7 +109,7 @@ class StartingGameState: AbstractGameState {
         // Assuming we want cards in only the current player's hand.
         for card in currentPlayer.handCardArray {
             // Want only playable cards, ignoring duplicates in hand.
-            if cardIsPlayable(card) && !contains(mostTurnsForChainCardArray, card) {
+            if scorePile.cardIsPlayable(card) && !contains(mostTurnsForChainCardArray, card) {
                 // Calculate turns for card's visible chain.
                 // Look for next card in chain. If found, note turns needed. Repeat.
                 var numberOfTurnsForChainInt = 1
@@ -130,7 +149,7 @@ class StartingGameState: AbstractGameState {
     var turnNumberInt: Int {
         // Turn number can be calculated from game state. Turns played = good plays + bad plays + discards + clues given.
         var turnNumberInt = 0
-        let numberOfGoodPlaysInt = scoreInt
+        let numberOfGoodPlaysInt = scorePile.currentInt
         // Turn number = turns played + 1.
         return numberOfGoodPlaysInt + numberOfBadPlaysInt + numberOfDiscardsInt + numberOfCluesGivenInt + 1
     }
@@ -170,7 +189,7 @@ class StartingGameState: AbstractGameState {
         for player in endingGameState.playerArray {
             playerArray.append(player.copy() as Player)
         }
-        scoreDictionary = endingGameState.scoreDictionary
+        scorePile = endingGameState.scorePile.copy()
         moveToNextPlayer()
     }
     // Change current player to next player.
@@ -207,7 +226,7 @@ class StartingGameState: AbstractGameState {
         case .Play:
             resultString += " plays \(cardPositionString)."
             // If invalid play, mention that.
-            if !cardIsPlayable(card) {
+            if !scorePile.cardIsPlayable(card) {
                 resultString += " Invalid play. Strike."
             }
             if numberOfCardsLeftInt >= 1 {

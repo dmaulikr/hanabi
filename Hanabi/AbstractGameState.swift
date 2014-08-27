@@ -50,7 +50,7 @@ class AbstractGameState: NSObject {
     }
     // Number of points needed for perfect score.
     var numberOfPointsNeededInt: Int {
-        return 25 - scoreInt
+        return 25 - scorePile.currentInt
     }
     class var numberOfStrikesAtStartInt: Int {
         return 3
@@ -59,36 +59,9 @@ class AbstractGameState: NSObject {
     // Number of turns played after the deck became empty. To determine game end.
     var numberOfTurnsPlayedWithEmptyDeckInt = 0
     var playerArray: [Player] = []
-    // The score is a number associated with each color. Total score is the sum.
-    var scoreDictionary: [Card.Color: Int] = [:]
-    // Sum of score for each color.
+    var scorePile: ScorePile!
     var scoreInt: Int {
-        var scoreInt = 0
-        for (color, score) in scoreDictionary {
-            scoreInt += score
-        }
-        return scoreInt
-    }
-    // String showing the score for each color, in order.
-    var scoreString: String {
-        // Score is kept in a dictionary, which does not guarantee order. We'll put each color's score in an array, then join the elements.
-        var stringArray = [String](count: 5, repeatedValue: "")
-        for (color, score) in scoreDictionary {
-            switch color {
-            case .Blue:
-                stringArray[0] = String(score)
-            case .Green:
-                stringArray[1] = String(score)
-            case .Red:
-                stringArray[2] = String(score)
-            case .White:
-                stringArray[3] = String(score)
-            case .Yellow:
-                stringArray[4] = String(score)
-            }
-        }
-        let scoreString = "".join(stringArray)
-        return scoreString
+        return scorePile.currentInt
     }
     // Return whether the given card appears at least twice in the given hand.
     func cardIsDuplicate(card: Card, handCardArray: [Card]) -> Bool {
@@ -133,37 +106,15 @@ class AbstractGameState: NSObject {
     func cardIsInDeckBool(card: Card) -> Bool {
         return contains(deck.cardArray, card)
     }
-    // Return whether the given card can be played on the score pile.
-    func cardIsPlayable(card: Card) -> Bool {
-        // It's playable if the card's number is 1 more than its color's current score.
-        let currentValueOptionalInt = scoreDictionary[card.color]
-        if card.numberInt == currentValueOptionalInt! + 1 {
-            return true
-        } else {
-            return false
-        }
-    }
-    // Return whether given card has already been scored.
-    func cardWasAlreadyPlayed(card: Card) -> Bool {
-        let scoreForColorInt = scoreDictionary[card.color]!
-        if card.numberInt <= scoreForColorInt {
-            return true
-        } else {
-            return false
-        }
-    }
     // Useful data describing game state.
     func data(#showCurrentHandBool: Bool) -> (discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {
+        let scoreInt = scorePile.currentInt
+        let scoreString = scorePile.string
         let vHAttributedString = visibleHandsAttributedString(showCurrentHandBool: showCurrentHandBool)
         return (discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreInt, scoreString, vHAttributedString)
     }
     override init() {
-        // Initialize score.
-        for int in 1...5 {
-            if let color = Card.Color.fromRaw(int) {
-                scoreDictionary[color] = 0
-            }
-        }
+        scorePile = ScorePile()
         super.init()
     }
     // Attributed string showing cards in hands. Current player is in bold.

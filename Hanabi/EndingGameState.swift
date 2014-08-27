@@ -12,7 +12,7 @@ class EndingGameState: AbstractGameState {
     // Whether the game has ended (not necessarily won).
     var isDone: Bool {
         // Game ends if score maxed, if out of strikes or if out of turns. The last case: when the deck is empty, each player gets one more turn.
-        if scoreInt == 25 || numberOfStrikesLeftInt == 0 {
+        if scorePile.currentInt == 25 || numberOfStrikesLeftInt == 0 {
             return true
         }
         if deck.isEmpty && (numberOfTurnsPlayedWithEmptyDeckInt == numberOfPlayersInt) {
@@ -39,7 +39,7 @@ class EndingGameState: AbstractGameState {
         for player in startingGameState.playerArray {
             playerArray.append(player.copy() as Player)
         }
-        scoreDictionary = startingGameState.scoreDictionary
+        scorePile = startingGameState.scorePile.copy()
         performAction(action)
     }
     // Determine state resulting from given action.
@@ -58,10 +58,8 @@ class EndingGameState: AbstractGameState {
 //            println("play a card")
             // Remove card from hand. Play it. If okay, increase score. Else, lose strike and put in discard pile. Draw card.
             let playCard = currentPlayer.handCardArray.removeAtIndex(action.targetCardIndexInt)
-            if cardIsPlayable(playCard) {
-                var scoreInt = scoreDictionary[playCard.color]!
-                scoreInt++
-                scoreDictionary[playCard.color] = scoreInt
+            if scorePile.cardIsPlayable(playCard) {
+                scorePile.addCard(playCard)
             } else {
                 numberOfStrikesLeftInt--
                 discardsCardArray.append(playCard)

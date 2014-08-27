@@ -12,6 +12,7 @@
 		932D2DFA1998C8A300CA1306 /* OmniscientAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932D2DF91998C8A300CA1306 /* OmniscientAI.swift */; };
 		9348E04D1992236700C19BB0 /* WalkThroughGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */; };
 		935932D919AD2A9E009AC4EF /* UnknownCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935932D819AD2A9E009AC4EF /* UnknownCard.swift */; };
+		935932DB19AD5EEA009AC4EF /* ScorePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935932DA19AD5EEA009AC4EF /* ScorePile.swift */; };
 		9362C79A19948F6D0030E820 /* Turn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C79919948F6D0030E820 /* Turn.swift */; };
 		9362C79C19949FDB0030E820 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C79B19949FDB0030E820 /* Action.swift */; };
 		9362C79E19949FE60030E820 /* Clue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362C79D19949FE60030E820 /* Clue.swift */; };
@@ -59,6 +60,7 @@
 		932D2DF91998C8A300CA1306 /* OmniscientAI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OmniscientAI.swift; sourceTree = "<group>"; };
 		9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkThroughGameViewController.swift; sourceTree = "<group>"; };
 		935932D819AD2A9E009AC4EF /* UnknownCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnknownCard.swift; sourceTree = "<group>"; };
+		935932DA19AD5EEA009AC4EF /* ScorePile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScorePile.swift; sourceTree = "<group>"; };
 		9362C79919948F6D0030E820 /* Turn.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Turn.swift; sourceTree = "<group>"; };
 		9362C79B19949FDB0030E820 /* Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Action.swift; sourceTree = "<group>"; };
 		9362C79D19949FE60030E820 /* Clue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Clue.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 				9362C7A1199577110030E820 /* Player.swift */,
 				93C2EE3A199424F900A29B15 /* Playground.playground */,
 				939DDB9519A86B3D00403727 /* PureInfoAI.swift */,
+				935932DA19AD5EEA009AC4EF /* ScorePile.swift */,
 				93D42FF6198F8A6D006A28D9 /* SolveGamesViewController.swift */,
 				93F653BE1990CAE800198AB6 /* SolverElf.swift */,
 				93D91E52199ABF6E00685BF1 /* StartingGameState.swift */,
@@ -329,6 +332,7 @@
 				93F653BD1990447400198AB6 /* ViewControllerElf.swift in Sources */,
 				93D43001198F99AC006A28D9 /* GGKSoundModel.m in Sources */,
 				93C2EE391992DCDD00A29B15 /* Game.swift in Sources */,
+				935932DB19AD5EEA009AC4EF /* ScorePile.swift in Sources */,
 				939DDB9619A86B3D00403727 /* PureInfoAI.swift in Sources */,
 				93C748CF199C656B00247E08 /* Deck.swift in Sources */,
 				9362C79E19949FE60030E820 /* Clue.swift in Sources */,
