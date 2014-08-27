@@ -18,7 +18,7 @@ func ==(card1: Card, card2: Card) -> Bool {
 }
 
 // Each card has a color and a number.
-struct Card: Hashable {
+class Card: Hashable {
     enum Color: Int {
         case Blue = 1, Green, Red, White, Yellow
         func letterString() -> String {
@@ -59,7 +59,7 @@ struct Card: Hashable {
         return "\(color.letterString())\(numberInt)"
     }
     // String showing cards in the given array.
-    static func stringForArray(cardArray: [Card]) -> String {
+    class func stringForArray(cardArray: [Card]) -> String {
         var string = ""
         if !cardArray.isEmpty {
             for index in 0...(cardArray.count - 1) {
@@ -72,5 +72,9 @@ struct Card: Hashable {
             }
         }
         return string
+    }
+    init(color: Color, numberInt: Int) {
+        self.color = color
+        self.numberInt = numberInt
     }
 }

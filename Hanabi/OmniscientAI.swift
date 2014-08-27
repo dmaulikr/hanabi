@@ -16,8 +16,7 @@ class OmniscientAI: AbstractAI {
     override var tableViewCellString: String {
         return "Omniscient"
     }
-    // Return the best action for the given turn.
-    func bestActionForTurn(turn: Turn) -> Action {
+    override func bestActionForTurn(turn: Turn) -> Action {
         let action = Action()
         let startingGameState = turn.startingGameState
         let turnNumberInt = startingGameState.turnNumberInt

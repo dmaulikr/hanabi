@@ -708,72 +708,12 @@ You have three Yellows.</string>
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="-P1 clues" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tDH-9i-g0d">
-                                <rect key="frame" x="628" y="710" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="-P1 guess" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TTH-HE-kYv">
-                                <rect key="frame" x="721" y="732" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="-P2 via P1 see" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nRV-HG-Rte">
-                                <rect key="frame" x="389" y="624" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="-P2 via P1 clues" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iBH-vF-jAa">
-                                <rect key="frame" x="842" y="733" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="-P2 via P1 guess" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GdT-Vv-ajU">
-                                <rect key="frame" x="818" y="710" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="(Log)" translatesAutoresizingMaskIntoConstraints="NO" id="UkD-d8-Nt4">
                                 <rect key="frame" x="809" y="72" width="208" height="327"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="-P3 via P1 see" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bYa-gU-Y4H">
-                                <rect key="frame" x="389" y="647" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="rpx-qX-lkb">
-                                <rect key="frame" x="542" y="72" width="115" height="154"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TurnCell" textLabel="bgq-8Q-tGR" style="IBUITableViewCellStyleDefault" id="opg-VY-70Y">
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="opg-VY-70Y" id="yKN-Jh-xvh">
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Round 22.3" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bgq-8Q-tGR">
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="xoM-VI-yXl" id="sw6-AG-oP0"/>
-                                    <outlet property="delegate" destination="xoM-VI-yXl" id="NGO-JT-z0B"/>
-                                </connections>
-                            </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9j9-Xl-x7S">
                                 <rect key="frame" x="8" y="72" width="525" height="56"/>
                                 <subviews>
@@ -886,64 +826,8 @@ You have three Yellows.</string>
                                     <constraint firstAttribute="trailing" secondItem="7zX-nu-wT1" secondAttribute="trailing" constant="8" id="xde-kh-Y9V"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="Av6-MI-Tos">
-                                <rect key="frame" x="16" y="303" width="235" height="120"/>
-                                <string key="text">Deduced hands
-   Strict      Guess
-P1 BGRWY 12345 BGRWY 12345
-c1
-c2
-c3
-c4
-c5</string>
-                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="KdS-gs-JCX">
-                                <rect key="frame" x="16" y="431" width="235" height="90"/>
-                                <string key="text">P2 BGRWY 12345 BGRWY 12345
-c1
-c2
-c3
-c4
-c5</string>
-                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="RSp-If-csg">
-                                <rect key="frame" x="16" y="529" width="235" height="90"/>
-                                <string key="text">P3 BGRWY 12345 BGRWY 12345
-c1
-c2
-c3
-c4
-c5</string>
-                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="iSE-h6-BHX">
-                                <rect key="frame" x="16" y="627" width="235" height="90"/>
-                                <string key="text">P4 BGRWY 12345 BGRWY 12345
-c1
-c2
-c3
-c4
-c5</string>
-                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2 players: same as &quot;-Score, Discards&quot;" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sSL-Z0-mw7">
-                                <rect key="frame" x="666" y="681" width="694" height="21"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Xd4-RZ-LbZ">
-                                <rect key="frame" x="168" y="136" width="179" height="76"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xd4-RZ-LbZ">
+                                <rect key="frame" x="291" y="136" width="179" height="76"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="163" translatesAutoresizingMaskIntoConstraints="NO" id="OuW-CV-7T5">
                                         <rect key="frame" x="8" y="8" width="163" height="60"/>
@@ -965,8 +849,8 @@ B1 B1 B5 R3 G2 R4 B1 B1 B5 R3 G2 R4 B1 B1 B5 R3 G2 R4</string>
                                     <constraint firstAttribute="bottom" secondItem="OuW-CV-7T5" secondAttribute="bottom" constant="8" id="lDS-5e-4r1"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K7r-d1-T9B">
-                                <rect key="frame" x="8" y="136" width="152" height="91"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K7r-d1-T9B">
+                                <rect key="frame" x="131" y="136" width="152" height="91"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="136" translatesAutoresizingMaskIntoConstraints="NO" id="NJ0-Jh-Tkd">
                                         <rect key="frame" x="8" y="8" width="136" height="75"/>
@@ -986,8 +870,8 @@ Cards left: 40</string>
                                     <constraint firstAttribute="width" constant="152" id="lb2-oJ-Ja0"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UDI-bG-6iV">
-                                <rect key="frame" x="355" y="136" width="179" height="145"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UDI-bG-6iV">
+                                <rect key="frame" x="478" y="136" width="179" height="145"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="163" translatesAutoresizingMaskIntoConstraints="NO" id="Xjm-0W-lzh">
                                         <rect key="frame" x="8" y="8" width="163" height="90"/>
@@ -1031,7 +915,7 @@ P5: x</string>
                                 </constraints>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="460" translatesAutoresizingMaskIntoConstraints="NO" id="zvp-zc-fN9">
-                                <rect key="frame" x="548" y="514" width="460" height="30"/>
+                                <rect key="frame" x="548" y="686" width="460" height="30"/>
                                 <string key="text">Cards left
 B12345G12345R12345W12345Y12345  B G R W Y  1 2 3 45</string>
                                 <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="15"/>
@@ -1039,76 +923,15 @@ B12345G12345R12345W12345Y12345  B G R W Y  1 2 3 45</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="613" translatesAutoresizingMaskIntoConstraints="NO" id="haL-Xf-XNa">
-                                <rect key="frame" x="395" y="546" width="613" height="30"/>
+                                <rect key="frame" x="395" y="718" width="613" height="30"/>
                                 <string key="text">-Score, Discards: 32221 32221 32221 32221 1 1 1 1010101010 151010105
 -P1 see: 32221 32221 32221 32221 1 1 1 1010101010 151010105</string>
                                 <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Y     Y" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C0a-UK-eKl">
-                                <rect key="frame" x="76" y="681" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="      N  N" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obi-Vk-wIx">
-                                <rect key="frame" x="90" y="697" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="      NnyNn" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JIg-dO-quh">
-                                <rect key="frame" x="68" y="652" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="      N  N" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bxS-bZ-fBd">
-                                <rect key="frame" x="61" y="665" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hsp-3v-mpd">
-                                <subviews>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="119" translatesAutoresizingMaskIntoConstraints="NO" id="1Tr-Rf-2Yt">
-                                        <rect key="frame" x="8" y="8" width="119" height="34"/>
-                                        <string key="text">Plays needed: 25
-Plays left, max: 38</string>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                            </view>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="A7n-33-qkf">
-                                <rect key="frame" x="274" y="673" width="235" height="90"/>
-                                <string key="text">P5 BGRWY 12345 BGRWY 12345
-c1
-c2
-c3
-c4
-c5</string>
-                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Y      Y" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i2j-di-Fkj">
-                                <rect key="frame" x="69" y="732" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="    Y     Y" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C6b-n2-Bfj">
-                                <rect key="frame" x="52" y="719" width="145" height="15"/>
-                                <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="l44-Zh-vyq">
-                                <rect key="frame" x="355" y="289" width="179" height="128"/>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l44-Zh-vyq">
+                                <rect key="frame" x="478" y="289" width="179" height="128"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="163" translatesAutoresizingMaskIntoConstraints="NO" id="x2F-iA-nD0">
                                         <rect key="frame" x="8" y="47" width="163" height="34"/>
@@ -1174,19 +997,265 @@ You have three Yellows.</string>
                                     <action selector="playButtonDownSound" destination="xoM-VI-yXl" eventType="touchDown" id="lCS-Z7-dmI"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9TX-JZ-eoQ">
+                                <rect key="frame" x="131" y="235" width="135" height="67"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="119" translatesAutoresizingMaskIntoConstraints="NO" id="c5Z-zn-69q">
+                                        <rect key="frame" x="8" y="8" width="119" height="51"/>
+                                        <string key="text">Plays needed: 25
+Plays left, max: 38
+Clues left, max: ?</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="c5Z-zn-69q" firstAttribute="top" secondItem="9TX-JZ-eoQ" secondAttribute="top" constant="8" id="gj9-X8-fOf"/>
+                                    <constraint firstAttribute="trailing" secondItem="c5Z-zn-69q" secondAttribute="trailing" constant="8" id="pfo-Dy-shJ"/>
+                                    <constraint firstAttribute="bottom" secondItem="c5Z-zn-69q" secondAttribute="bottom" constant="8" id="vUA-FC-8Qn"/>
+                                    <constraint firstItem="c5Z-zn-69q" firstAttribute="leading" secondItem="9TX-JZ-eoQ" secondAttribute="leading" constant="8" id="w48-xN-g88"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eEq-RH-0Xn">
+                                <rect key="frame" x="586" y="425" width="198" height="192"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shoes" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ISZ-ry-NYe">
+                                        <rect key="frame" x="12" y="8" width="43" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="oEh-Tz-0Ym">
+                                        <rect key="frame" x="8" y="30" width="51" height="110"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="51" id="5kB-Ib-PQm"/>
+                                            <constraint firstAttribute="height" constant="110" id="meQ-e1-pum"/>
+                                        </constraints>
+                                        <prototypes>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TurnCell" textLabel="ekg-ih-dzv" style="IBUITableViewCellStyleDefault" id="Wng-Is-Z9Q">
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Wng-Is-Z9Q" id="PAE-vv-zai">
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="P2" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ekg-ih-dzv">
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="xoM-VI-yXl" id="W89-hB-S9l"/>
+                                            <outlet property="delegate" destination="xoM-VI-yXl" id="lKY-Bm-9X0"/>
+                                        </connections>
+                                    </tableView>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="0L0-AX-5y8">
+                                        <rect key="frame" x="67" y="30" width="51" height="154"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="154" id="CEe-k0-Jlc"/>
+                                            <constraint firstAttribute="width" constant="51" id="bgp-DN-u7X"/>
+                                        </constraints>
+                                        <prototypes>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TurnCell" textLabel="XRS-d8-MEQ" style="IBUITableViewCellStyleDefault" id="tvS-n1-9BE">
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tvS-n1-9BE" id="ZZl-NU-gkN">
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="C3" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="XRS-d8-MEQ">
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <connections>
+                                            <outlet property="dataSource" destination="xoM-VI-yXl" id="tPn-jz-wDP"/>
+                                            <outlet property="delegate" destination="xoM-VI-yXl" id="JLh-hL-gxu"/>
+                                        </connections>
+                                    </tableView>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="163" translatesAutoresizingMaskIntoConstraints="NO" id="kmD-EJ-uho">
+                                        <rect key="frame" x="126" y="30" width="64" height="105"/>
+                                        <string key="text">Options
+  12345
+B 12221
+G 10110
+R 12221
+W 10221
+Y 02211</string>
+                                        <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="0L0-AX-5y8" firstAttribute="top" secondItem="oEh-Tz-0Ym" secondAttribute="top" id="TUf-jP-gBa"/>
+                                    <constraint firstItem="kmD-EJ-uho" firstAttribute="leading" secondItem="0L0-AX-5y8" secondAttribute="trailing" constant="8" id="Xbs-TY-dUe"/>
+                                    <constraint firstItem="0L0-AX-5y8" firstAttribute="top" secondItem="kmD-EJ-uho" secondAttribute="top" id="Z3V-hH-w46"/>
+                                    <constraint firstAttribute="trailing" secondItem="kmD-EJ-uho" secondAttribute="trailing" constant="8" id="a0v-Cm-QLj"/>
+                                    <constraint firstAttribute="bottom" secondItem="0L0-AX-5y8" secondAttribute="bottom" constant="8" id="drX-tC-Wh3"/>
+                                    <constraint firstItem="oEh-Tz-0Ym" firstAttribute="leading" secondItem="eEq-RH-0Xn" secondAttribute="leading" constant="8" id="e8k-GJ-nAt"/>
+                                    <constraint firstItem="oEh-Tz-0Ym" firstAttribute="top" secondItem="ISZ-ry-NYe" secondAttribute="bottom" constant="4" id="eny-R5-y2e"/>
+                                    <constraint firstItem="oEh-Tz-0Ym" firstAttribute="centerX" secondItem="ISZ-ry-NYe" secondAttribute="centerX" id="lJn-am-hRi"/>
+                                    <constraint firstItem="0L0-AX-5y8" firstAttribute="leading" secondItem="oEh-Tz-0Ym" secondAttribute="trailing" constant="8" id="uRH-Hu-eA3"/>
+                                    <constraint firstItem="ISZ-ry-NYe" firstAttribute="top" secondItem="eEq-RH-0Xn" secondAttribute="top" constant="8" id="yUA-2N-Z9X"/>
+                                </constraints>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="rpx-qX-lkb">
+                                <rect key="frame" x="8" y="136" width="115" height="154"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TurnCell" textLabel="bgq-8Q-tGR" style="IBUITableViewCellStyleDefault" id="opg-VY-70Y">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="opg-VY-70Y" id="yKN-Jh-xvh">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Round 22.3" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="bgq-8Q-tGR">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="xoM-VI-yXl" id="sw6-AG-oP0"/>
+                                    <outlet property="delegate" destination="xoM-VI-yXl" id="NGO-JT-z0B"/>
+                                </connections>
+                            </tableView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="235" translatesAutoresizingMaskIntoConstraints="NO" id="Av6-MI-Tos">
+                                <rect key="frame" x="16" y="640" width="235" height="120"/>
+                                <string key="text">Deduced hands
+   Strict      Guess
+P1 BGRWY 12345 BGRWY 12345
+c1
+c2
+c3
+c4
+c5</string>
+                                <fontDescription key="fontDescription" name="Courier-Bold" family="Courier" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qS5-4t-UjK">
+                                <rect key="frame" x="8" y="310" width="439" height="135"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Current player: P1" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Y4-Rn-mfJ">
+                                        <rect key="frame" x="8" y="8" width="423" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="163" translatesAutoresizingMaskIntoConstraints="NO" id="j5a-Sw-PW4">
+                                        <rect key="frame" x="8" y="34" width="64" height="90"/>
+                                        <string key="text">  12345
+B 12221
+G 10110
+R 12221
+W 10221
+Y 02211</string>
+                                        <fontDescription key="fontDescription" name="Courier" family="Courier" pointSize="15"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="4Y4-Rn-mfJ" firstAttribute="leading" secondItem="qS5-4t-UjK" secondAttribute="leading" constant="8" id="4fJ-VZ-GLb"/>
+                                    <constraint firstAttribute="trailing" secondItem="4Y4-Rn-mfJ" secondAttribute="trailing" constant="8" id="Cd0-2A-zdA"/>
+                                    <constraint firstItem="4Y4-Rn-mfJ" firstAttribute="top" secondItem="qS5-4t-UjK" secondAttribute="top" constant="8" id="WvJ-wx-vAg"/>
+                                </constraints>
+                            </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" scrollEnabled="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="zhB-ge-Jfh">
+                                <rect key="frame" x="8" y="460" width="400" height="150"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="aQR-4M-xjS">
+                                    <size key="itemSize" width="64" height="90"/>
+                                    <size key="headerReferenceSize" width="50" height="30"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="RVA-vx-L1U">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="64" height="90"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="1g3-Yv-4Bz">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="64" height="90"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="3wT-Jy-HHg">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="64" height="90"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Q8n-3I-Yrp">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="64" height="90"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="pII-bm-GZy">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="64" height="90"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                                <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="yxA-rn-lKC">
+                                    <rect key="frame" x="0.0" y="0.0" width="512" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </collectionReusableView>
+                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Xd4-RZ-LbZ" firstAttribute="top" secondItem="9j9-Xl-x7S" secondAttribute="bottom" constant="8" id="0v4-Fh-Ohk"/>
+                            <constraint firstItem="qS5-4t-UjK" firstAttribute="leading" secondItem="WmZ-5z-DlU" secondAttribute="leading" constant="8" id="1Yj-Ed-BVR"/>
                             <constraint firstItem="9j9-Xl-x7S" firstAttribute="top" secondItem="m3X-jm-QDS" secondAttribute="bottom" constant="8" id="93H-VB-Ssh"/>
                             <constraint firstItem="K7r-d1-T9B" firstAttribute="leading" secondItem="WmZ-5z-DlU" secondAttribute="leading" constant="8" id="Azv-OQ-Xrv"/>
+                            <constraint firstItem="eEq-RH-0Xn" firstAttribute="top" secondItem="qS5-4t-UjK" secondAttribute="top" id="BBz-0J-t56"/>
                             <constraint firstItem="9j9-Xl-x7S" firstAttribute="leading" secondItem="WmZ-5z-DlU" secondAttribute="leading" constant="8" id="DL3-Iq-SAG"/>
                             <constraint firstItem="UDI-bG-6iV" firstAttribute="leading" secondItem="l44-Zh-vyq" secondAttribute="leading" id="S8p-e1-WjS"/>
                             <constraint firstItem="UDI-bG-6iV" firstAttribute="trailing" secondItem="l44-Zh-vyq" secondAttribute="trailing" id="b53-Bm-Zit"/>
                             <constraint firstItem="UDI-bG-6iV" firstAttribute="leading" secondItem="Xd4-RZ-LbZ" secondAttribute="trailing" constant="8" id="ciu-lE-RUJ"/>
                             <constraint firstItem="UDI-bG-6iV" firstAttribute="top" secondItem="9j9-Xl-x7S" secondAttribute="bottom" constant="8" id="dzk-CH-EMq"/>
                             <constraint firstItem="Xd4-RZ-LbZ" firstAttribute="leading" secondItem="K7r-d1-T9B" secondAttribute="trailing" constant="8" id="lm7-6P-imL"/>
+                            <constraint firstItem="eEq-RH-0Xn" firstAttribute="leading" secondItem="qS5-4t-UjK" secondAttribute="trailing" constant="8" id="mBO-U1-WNs"/>
                             <constraint firstItem="l44-Zh-vyq" firstAttribute="top" secondItem="UDI-bG-6iV" secondAttribute="bottom" constant="8" id="sJW-F0-PCc"/>
+                            <constraint firstItem="qS5-4t-UjK" firstAttribute="top" secondItem="K7r-d1-T9B" secondAttribute="bottom" constant="8" id="v4S-vY-x4D"/>
                             <constraint firstItem="K7r-d1-T9B" firstAttribute="top" secondItem="9j9-Xl-x7S" secondAttribute="bottom" constant="8" id="vhN-mv-3Pt"/>
                         </constraints>
                     </view>
@@ -1196,8 +1265,6 @@ You have three Yellows.</string>
                         <outlet property="actionView" destination="l44-Zh-vyq" id="MzP-pc-rIm"/>
                         <outlet property="aiButton" destination="lbG-np-QAw" id="ALY-KH-nD1"/>
                         <outlet property="cancelButton" destination="7zX-nu-wT1" id="4fC-1J-C5c"/>
-                        <outlet property="cushionLabel" destination="1Tr-Rf-2Yt" id="BDH-Tw-vWx"/>
-                        <outlet property="cushionView" destination="Hsp-3v-mpd" id="nOf-lT-zSh"/>
                         <outlet property="discardsLabel" destination="OuW-CV-7T5" id="Sn4-er-wq9"/>
                         <outlet property="discardsView" destination="Xd4-RZ-LbZ" id="z5f-aJ-y1K"/>
                         <outlet property="gameSettingsView" destination="9j9-Xl-x7S" id="4XV-CP-dkj"/>

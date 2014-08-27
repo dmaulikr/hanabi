@@ -155,8 +155,7 @@ class SolverElf: NSObject {
     func bestActionForTurn(turn: Turn) -> Action {
 //        let alwaysDiscardElf = AlwaysDiscardElf()
 //        let action = alwaysDiscardElf.bestActionForTurn(turn)
-        let omniscientAI = OmniscientAI()
-        let action = omniscientAI.bestActionForTurn(turn)
+        let action = currentAI.bestActionForTurn(turn)
         return action
     }
     // Data for given turn for given game. If turn end, the data is for the end of the turn (vs start). As we're bundling a lot of data here, this should be used only for reporting and not for solving many games at once.

@@ -22,4 +22,8 @@ class AbstractAI: NSObject {
         return "AbstractAI"
     }
     var type: AIType!
+    // Return the best action for the given turn.
+    func bestActionForTurn(turn: Turn) -> Action {
+        return Action()
+    }
 }
