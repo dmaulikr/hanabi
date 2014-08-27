@@ -31,6 +31,7 @@ class Deck: NSObject {
     // Take top card from the deck and return it. Assumes not empty.
     func drawCard() -> Card {
         let card = cardArray.removeAtIndex(0)
+        card.optionalCardBack = CardBack()
         return card
     }
     // Take top N cards and return them. Assumes won't be empty.

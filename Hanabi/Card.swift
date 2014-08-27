@@ -75,6 +75,7 @@ class Card: NSObject {
         return optionalCard
     }
     var numberInt: Int!
+    var optionalCardBack: CardBack?
     // String representing card (e.g., "B4," "Y1").
     var string: String {
         return "\(color.letterString())\(numberInt)"
@@ -82,6 +83,7 @@ class Card: NSObject {
     init(color: Color, numberInt: Int) {
         self.color = color
         self.numberInt = numberInt
+        super.init()
     }
     // To tell duplicate cards, vs cards with the same reference.
     func isEqualColorAndNumber(card: Card) -> Bool {

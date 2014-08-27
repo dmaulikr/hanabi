@@ -45,10 +45,13 @@ class ScorePile {
     }
     // Whether player knows the given card back is playable.
     func cardBackIsKnownPlayableBool(cardBack: CardBack) -> Bool {
-        
-        // how to do this?
-        // doesn't need to be known to be playable
-        return false
+        // If all remaining options are playable, card is playable.
+        for card in cardBack.optionsCardArray {
+            if !cardIsPlayable(card) {
+                return false
+            }
+        }
+        return true
     }
     // Whether given card is a valid play.
     func cardIsPlayable(card: Card) -> Bool {

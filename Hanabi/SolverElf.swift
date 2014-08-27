@@ -215,7 +215,6 @@ class SolverElf: NSObject {
     // Play the given game to the end. Store game and notify delegate.
     func solveGame(game: Game) {
         do {
-            // later might be game.solveCurrentTurn(), once elves attached to players
             self.solveCurrentTurnForGame(game)
             game.finishCurrentTurn()
         } while !game.isDone && !self.stopSolvingBool
@@ -260,9 +259,6 @@ class SolverElf: NSObject {
     }
     // Determine best action for given turn.
     func solveTurn(turn: Turn) {
-        // should really do something like currentPlayer.bestActionForGameState(startingGameState)
-        // just make sure player doesn't retain the gamestate and create a retain cycle
-        // turn.bestAction() -> sGS.bestAction() -> currentPlayer.bestActionForGameState(SGS: SGS) -> elf.bestActionForGameStateForPlayer(playerNumber, SGS: SGS)
         turn.optionalAction = bestActionForTurn(turn)
     }
     func stopSolving() {
