@@ -9,6 +9,83 @@
 import UIKit
 
 class AbstractGameState: NSObject {
+    // Whether any player, including self, has any group duplicates.
+    var cheatingAnyGroupDuplicatesBool: Bool {
+        for player in playerArray {
+            for card in player.handCardArray {
+                if cardValueIsGroupDuplicateBool(card) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    // Whether any player, including self, has a play or safe discard.
+    var cheatingAnyPlaysOrSafeDiscardsBool: Bool {
+        for player in playerArray {
+            let handCardArray = player.handCardArray
+            for card in handCardArray {
+                if scorePile.cardIsPlayable(card) || scorePile.cardWasAlreadyPlayed(card) || cardValueIsDuplicate(card, handCardArray:handCardArray) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    // Cards the current player shares with the deck.
+    var cheatingCardsAlsoInDeckCardArray: [Card] {
+        var cheatingCardsAlsoInDeckCardArray: [Card] = []
+        for card in currentPlayer.handCardArray {
+            if cardValueIsInDeckBool(card) {
+                cheatingCardsAlsoInDeckCardArray.append(card)
+            }
+        }
+        return cheatingCardsAlsoInDeckCardArray
+    }
+    // Cards the current player shares with other players.
+    var cheatingGroupDuplicatesCardArray: [Card] {
+        var cheatingGroupDuplicatesCardArray: [Card] = []
+        for card in currentPlayer.handCardArray {
+            if cardValueIsGroupDuplicateBool(card) {
+                cheatingGroupDuplicatesCardArray.append(card)
+            }
+        }
+        return cheatingGroupDuplicatesCardArray
+    }
+    // Number of cards in all players hands that can be played. Includes chains. Ignores duplicates.
+    var cheatingNumberOfVisiblePlaysInt: Int {
+        var cheatingNumberOfVisiblePlaysInt = 0;
+        // For each color, go up the unscored values to see how many plays we can make.
+        var int = 1
+        while let color = Card.Color.fromRaw(int) {
+            // While a desired card exists and is in a hand, go up the chain.
+            let topValueInt = scorePile.topValueIntForColor(color)
+            if topValueInt <= 4 {
+                var desiredOptionalCard: Card? = Card(color: color, numberInt: topValueInt + 1)
+                while let desiredCard = desiredOptionalCard {
+                    if cardValueIsInAHandBool(desiredCard) {
+                        cheatingNumberOfVisiblePlaysInt++
+                        desiredOptionalCard = desiredCard.nextValueOptionalCard
+                    } else {
+                        break
+                    }
+                }
+            }
+            int++
+        }
+        return cheatingNumberOfVisiblePlaysInt
+    }
+    // Cards the current player can safely discard: 1) already played, 2) duplicates in hand. Keep card order, because that can provide info.
+    var cheatingSafeDiscardsCardArray: [Card] {
+        var cheatingSafeDiscardsCardArray: [Card] = []
+        let handCardArray = currentPlayer.handCardArray
+        for card in handCardArray {
+            if scorePile.cardWasAlreadyPlayed(card) || cardValueIsDuplicate(card, handCardArray: handCardArray) {
+                cheatingSafeDiscardsCardArray.append(card)
+            }
+        }
+        return cheatingSafeDiscardsCardArray
+    }
     var currentPlayer: Player {
         return playerArray[currentPlayerIndex]
     }
@@ -22,6 +99,50 @@ class AbstractGameState: NSObject {
     // Max number of cards that can be played before the game ends from decking. Once last card is drawn, each player gets one turn. Ignore that the game would end if all 25 points were scored.
     var maxNumberOfPlaysLeftInt: Int {
         return numberOfCardsLeftInt + numberOfPlayersInt - numberOfTurnsPlayedWithEmptyDeckInt
+    }
+    // Return card(s) whose visible chain will take the longest to play. For example, 123 takes 3 turns, 132 takes 5.
+    var mostTurnsForChainCardArray: [Card] {
+        var mostTurnsForChainCardArray: [Card] = []
+        var maxNumberOfTurnsForChainInt = 0
+        // Assume we want cards in only the current player's hand. No duplicates.
+        for card in currentPlayer.noDupsHandCardArray {
+            // Want only playable cards.
+            if scorePile.cardIsPlayable(card) {
+                // Calculate turns for card's visible chain.
+                // Look for next card in chain. If found, note turns needed. Repeat.
+                var numberOfTurnsForChainInt = 1
+                var cardToFind = card
+                var cardWasFound = true
+                var playerWithCard = currentPlayer
+                while cardWasFound {
+                    cardWasFound = false
+                    let cardToFindOptional = cardToFind.nextValueOptionalCard
+                    if cardToFindOptional != nil {
+                        cardToFind = cardToFindOptional!
+                        var playerToSearch = playerAfter(playerWithCard)
+                        var numberOfTurnsForCardInt = 0
+                        // Search each player once, including player with the previous card.
+                        while numberOfTurnsForCardInt < numberOfPlayersInt {
+                            numberOfTurnsForCardInt++
+                            if Card.cardValueIsInArrayBool(cardToFind, cardArray: playerToSearch.handCardArray) {
+                                cardWasFound = true
+                                numberOfTurnsForChainInt += numberOfTurnsForCardInt
+                                break
+                            }
+                            playerToSearch = playerAfter(playerToSearch)
+                        }
+                    }
+                }
+                // Keep if longest so far.
+                if numberOfTurnsForChainInt > maxNumberOfTurnsForChainInt {
+                    maxNumberOfTurnsForChainInt = numberOfTurnsForChainInt
+                    mostTurnsForChainCardArray = [card]
+                } else if numberOfTurnsForChainInt == maxNumberOfTurnsForChainInt {
+                    mostTurnsForChainCardArray.append(card)
+                }
+            }
+        }
+        return mostTurnsForChainCardArray
     }
     // Number of invalid plays up to this point.
     var numberOfBadPlaysInt: Int {
@@ -116,6 +237,15 @@ class AbstractGameState: NSObject {
     override init() {
         scorePile = ScorePile()
         super.init()
+    }
+    // Player who goes after the given player. Rotates in a clockwise circle.
+    func playerAfter(player: Player) -> Player {
+        var index = find(playerArray, player)!
+        index++
+        if index == numberOfPlayersInt {
+            index = 0
+        }
+        return playerArray[index]
     }
     // Attributed string showing cards in hands. Current player is in bold.
     func visibleHandsAttributedString(#showCurrentHandBool: Bool) -> NSAttributedString {

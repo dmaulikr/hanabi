@@ -17,6 +17,7 @@ class AbstractAI: NSObject {
         return "AbstractAI"
     }
     var logModel = (UIApplication.sharedApplication().delegate as AppDelegate).logModel
+    var optionalGame: Game?
     // Table-view-cell-suitable string describing this AI.
     var tableViewCellString: String {
         return "AbstractAI"

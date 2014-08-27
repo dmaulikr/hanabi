@@ -9,47 +9,53 @@
 import UIKit
 
 class Turn: NSObject {
-    // Max plays left at end of turn.
-    var endingMaxPlaysLeftInt: Int {
+    var cheatingAnyGroupDuplicatesBool: Bool {
         if let endingGameState = endingOptionalGameState {
-            return endingGameState.maxNumberOfPlaysLeftInt
+            return endingGameState.cheatingAnyGroupDuplicatesBool
         } else {
-            return startingGameState.maxNumberOfPlaysLeftInt
+            return startingGameState.cheatingAnyGroupDuplicatesBool
         }
     }
-    // Number of bad plays by end of turn.
-    var endingNumberOfBadPlaysInt: Int {
+    var cheatingAnyPlaysOrSafeDiscardsBool: Bool {
         if let endingGameState = endingOptionalGameState {
-            return endingGameState.numberOfBadPlaysInt
+            return endingGameState.cheatingAnyPlaysOrSafeDiscardsBool
         } else {
-            return startingGameState.numberOfBadPlaysInt
+            return startingGameState.cheatingAnyPlaysOrSafeDiscardsBool
         }
     }
-    // Number of clues given by end of turn.
-    var endingNumberOfCluesGivenInt: Int {
+    var cheatingCardsAlsoInDeckCardArray: [Card] {
         if let endingGameState = endingOptionalGameState {
-            return endingGameState.numberOfCluesGivenInt
+            return endingGameState.cheatingCardsAlsoInDeckCardArray
         } else {
-            return startingGameState.numberOfCluesGivenInt
+            return startingGameState.cheatingCardsAlsoInDeckCardArray
         }
     }
-    // Number of discards by end of turn.
-    var endingNumberOfDiscardsInt: Int {
+    var cheatingGroupDuplicatesCardArray: [Card] {
         if let endingGameState = endingOptionalGameState {
-            return endingGameState.numberOfDiscardsInt
+            return endingGameState.cheatingGroupDuplicatesCardArray
         } else {
-            return startingGameState.numberOfDiscardsInt
+            return startingGameState.cheatingGroupDuplicatesCardArray
         }
+    }
+    var cheatingNumberOfVisiblePlaysInt: Int {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.cheatingNumberOfVisiblePlaysInt
+        } else {
+            return startingGameState.cheatingNumberOfVisiblePlaysInt
+        }
+    }
+    var cheatingSafeDiscardsCardArray: [Card] {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.cheatingSafeDiscardsCardArray
+        } else {
+            return startingGameState.cheatingSafeDiscardsCardArray
+        }
+    }
+    var currentPlayer: Player {
+        // Same in starting and ending states.
+        return startingGameState.currentPlayer
     }
     var endingOptionalGameState: EndingGameState?
-    // Score at end of turn.
-    var endingScoreInt: Int {
-        if let endingGameState = endingOptionalGameState {
-            return endingGameState.scoreInt
-        } else {
-            return startingGameState.scoreInt
-        }
-    }
     // Whether the game has ended (not necessarily won).
     var gameIsDone: Bool {
         if let endingGameState = endingOptionalGameState {
@@ -58,8 +64,82 @@ class Turn: NSObject {
             return false
         }
     }
+    // Max plays left at end of turn.
+    var maxPlaysLeftInt: Int {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.maxNumberOfPlaysLeftInt
+        } else {
+            return startingGameState.maxNumberOfPlaysLeftInt
+        }
+    }
+    var mostTurnsForChainCardArray: [Card] {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.mostTurnsForChainCardArray
+        } else {
+            return startingGameState.mostTurnsForChainCardArray
+        }
+    }
+    // Number of bad plays by end of turn.
+    var numberOfBadPlaysInt: Int {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.numberOfBadPlaysInt
+        } else {
+            return startingGameState.numberOfBadPlaysInt
+        }
+    }
+    var numberOfCardsLeftInt: Int {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.numberOfCardsLeftInt
+        } else {
+            return startingGameState.numberOfCardsLeftInt
+        }
+    }
+    // Number of clues given by end of turn.
+    var numberOfCluesGivenInt: Int {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.numberOfCluesGivenInt
+        } else {
+            return startingGameState.numberOfCluesGivenInt
+        }
+    }
+    var numberOfCluesLeftInt: Int {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.numberOfCluesLeftInt
+        } else {
+            return startingGameState.numberOfCluesLeftInt
+        }
+    }
+    // Number of discards by end of turn.
+    var numberOfDiscardsInt: Int {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.numberOfDiscardsInt
+        } else {
+            return startingGameState.numberOfDiscardsInt
+        }
+    }
+    var numberOfPlayersInt: Int {
+        // Same in starting and ending states.
+        return startingGameState.numberOfPlayersInt
+    }
     var optionalAction: Action?
+    
+    // String for the round and subround for this turn. (E.g., in a 3-player game, turn 6 = round "2.3.")
+    var roundSubroundString: String {
+        // Same in starting and ending states.
+        return roundSubroundStringForTurn(turnNumberInt, numberOfPlayersInt: numberOfPlayersInt)
+    }
+    var scoreInt: Int {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.scoreInt
+        } else {
+            return startingGameState.scoreInt
+        }
+    }
     var startingGameState: StartingGameState
+    var turnNumberInt: Int {
+        // Same in starting and ending states.
+        return startingGameState.turnNumberInt
+    }
     // Data for turn. If turn end, the data is for the end of the turn (vs start).
     func data(#turnEndBool: Bool, showCurrentHandBool: Bool) -> (actionString: String, deckString: String, discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {
         var gameState: AbstractGameState = startingGameState

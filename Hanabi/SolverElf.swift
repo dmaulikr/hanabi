@@ -153,8 +153,6 @@ class SolverElf: NSObject {
     }
     // Return the best action for the given turn.
     func bestActionForTurn(turn: Turn) -> Action {
-//        let alwaysDiscardElf = AlwaysDiscardElf()
-//        let action = alwaysDiscardElf.bestActionForTurn(turn)
         let action = currentAI.bestActionForTurn(turn)
         return action
     }
@@ -214,6 +212,7 @@ class SolverElf: NSObject {
     }
     // Play the given game to the end. Store game and notify delegate.
     func solveGame(game: Game) {
+        currentAI.optionalGame = game
         do {
             self.solveCurrentTurnForGame(game)
             game.finishCurrentTurn()

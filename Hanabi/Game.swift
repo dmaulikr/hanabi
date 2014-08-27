@@ -9,10 +9,10 @@ class Game: NSObject {
     var currentTurn: Turn {
         return turnArray.last!
     }
-    // Score at end of last turn.
+    // Score at end of game.
     var finalScoreInt: Int {
         let lastTurn = turnArray.last!
-        return lastTurn.endingScoreInt
+        return lastTurn.scoreInt
     }
     // Whether the game has ended (not necessarily won).
     var isDone: Bool {
@@ -22,22 +22,22 @@ class Game: NSObject {
     // Number of bad plays by end of game.
     var numberOfBadPlaysInt: Int {
         let lastTurn = turnArray.last!
-            return lastTurn.endingNumberOfBadPlaysInt
+        return lastTurn.numberOfBadPlaysInt
     }
     // Number of clues given by end of game.
     var numberOfCluesGivenInt: Int {
         let lastTurn = turnArray.last!
-            return lastTurn.endingNumberOfCluesGivenInt
+        return lastTurn.numberOfCluesGivenInt
     }
     // Number of discards by end of game.
     var numberOfDiscardsInt: Int {
         let lastTurn = turnArray.last!
-            return lastTurn.endingNumberOfDiscardsInt
+        return lastTurn.numberOfDiscardsInt
     }
-    // Max plays left at end of last turn.
+    // Max plays left at end of game.
     var numberOfMaxPlaysLeftInt: Int {
         let lastTurn = turnArray.last!
-        return lastTurn.endingMaxPlaysLeftInt
+        return lastTurn.maxPlaysLeftInt
     }
     var numberOfPlayersInt: Int
     var numberOfTurnsInt: Int {
