@@ -68,7 +68,7 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
         mode = .Planning
-        solverElf.stopSolving()
+        solverElf.stop()
     }
     // Show deck from turn's start in log.
     @IBAction func handleLogDeckButtonTapped() {
@@ -100,8 +100,7 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
     }
     // Log the seed used to create this game.
     func logSeedUsed() {
-        let seedUInt32 = solverElf.seedUInt32ForFirstGame
-        logModel.addLine("Seed: \(seedUInt32)")
+        logModel.addLine("Seed: \(solverElf.seedForFirstGame)")
     }
     override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>) {
         if keyPath == LogTextViewTextKeyPathString {
@@ -155,8 +154,8 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
     }
     // Return number of turns.
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
-        if let numberOfTurnsInt = solverElf.numberOfTurnsOptionalIntForFirstGame {
-            return numberOfTurnsInt
+        if let numTurns = solverElf.numTurnsForFirstGame {
+            return numTurns
         } else {
             return 0
         }

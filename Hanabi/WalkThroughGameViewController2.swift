@@ -76,7 +76,7 @@ class WalkThroughGameViewController2: UIViewController, AITableViewControllerDel
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
         mode = .Planning
-        solverElf.stopSolving()
+        solverElf.stop()
     }
     // Show deck from turn's start in log.
     @IBAction func handleLogDeckButtonTapped() {
@@ -108,8 +108,7 @@ class WalkThroughGameViewController2: UIViewController, AITableViewControllerDel
     }
     // Log the seed used to create this game.
     func logSeedUsed() {
-        let seedUInt32 = solverElf.seedUInt32ForFirstGame
-        logModel.addLine("Seed: \(seedUInt32)")
+        logModel.addLine("Seed: \(solverElf.seedForFirstGame)")
     }
     override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>) {
         if keyPath == LogTextViewTextKeyPathString {
@@ -173,8 +172,8 @@ class WalkThroughGameViewController2: UIViewController, AITableViewControllerDel
     }
     // Return number of turns.
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
-        if let numberOfTurnsInt = solverElf.numberOfTurnsOptionalIntForFirstGame {
-            return numberOfTurnsInt
+        if let numTurns = solverElf.numTurnsForFirstGame {
+            return numTurns
         } else {
             return 0
         }
@@ -204,7 +203,7 @@ class WalkThroughGameViewController2: UIViewController, AITableViewControllerDel
         case .Planning:
             actionView.hidden = true
             aiButton.enabled = true
-            aiButton.setTitle(solverElf.currentAIButtonTitleString, forState: UIControlState.Normal)
+            aiButton.setTitle(solverElf.currentAI.buttonTitleString, forState: UIControlState.Normal)
             cancelButton.enabled = false
             cushionView.hidden = true
             discardsView.hidden = true
@@ -217,7 +216,7 @@ class WalkThroughGameViewController2: UIViewController, AITableViewControllerDel
             visibleHandsView.hidden = true
         case .Solving:
             aiButton.enabled = false
-            aiButton.setTitle(solverElf.currentAIButtonTitleString, forState: UIControlState.Disabled)
+            aiButton.setTitle(solverElf.currentAI.buttonTitleString, forState: UIControlState.Disabled)
             cancelButton.enabled = true
             startButton.enabled = false
             turnNumberOptionalInt = nil
@@ -226,7 +225,7 @@ class WalkThroughGameViewController2: UIViewController, AITableViewControllerDel
         case .Solved:
             actionView.hidden = false
             aiButton.enabled = true
-            aiButton.setTitle(solverElf.currentAIButtonTitleString, forState: UIControlState.Normal)
+            aiButton.setTitle(solverElf.currentAI.buttonTitleString, forState: UIControlState.Normal)
             cancelButton.enabled = false
             cushionView.hidden = false
             discardsView.hidden = false

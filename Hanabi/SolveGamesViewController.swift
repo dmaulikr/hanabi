@@ -37,7 +37,7 @@ class SolveGamesViewController: UIViewController, LogModelDelegate, SolverElfDel
     // Stop calculating.
     @IBAction func handleCancelButtonTapped() {
         mode = .Planning
-        solverElf.stopSolving()
+        solverElf.stop()
     }
     // Play/solve the requested number of games.
     @IBAction func handleStartButtonTapped() {
@@ -63,41 +63,36 @@ class SolveGamesViewController: UIViewController, LogModelDelegate, SolverElfDel
         viewControllerElf.playButtonDownSound()
     }
     func showResults() {
-        var resultsString = "\n"
-        resultsString += "Games: \(solverElf.numberOfGamesPlayedInt)"
-        let averageScoreDouble = round(Double(solverElf.averageScoreFloat), numberOfDecimalsInt: 2)
-        resultsString += "\nScore, avg.: \(averageScoreDouble)"
-        let dataForGamesWon = solverElf.dataForGamesWon
-        let averageMaxPlaysLeftDouble = round(dataForGamesWon.averageMaxPlaysLeftFloat, numberOfDecimalsInt: 1)
-        resultsString += "\nMax plays left in games won, avg.: \(averageMaxPlaysLeftDouble)"
-        let averageCluesGivenInWonGamesDouble = round(dataForGamesWon.averageCluesGivenFloat, numberOfDecimalsInt: 1)
-        let dataForGamesLost = solverElf.dataForGamesLost
-        let percentGamesLostDouble = round(dataForGamesLost.percentFloat, numberOfDecimalsInt: 3)
-        resultsString += "\nGames lost: \(dataForGamesLost.numberInt) (\(percentGamesLostDouble)%)"
-        let averageCluesGivenInLostGamesDouble = round(dataForGamesLost.averageCluesGivenFloat, numberOfDecimalsInt: 1)
-        resultsString += "\nClues given in games won, avg.: \(averageCluesGivenInWonGamesDouble) (lost: \(averageCluesGivenInLostGamesDouble))"
-        let averageNumberOfDiscardsInWonGamesDouble = round(dataForGamesWon.averageNumberOfDiscardsFloat, numberOfDecimalsInt: 1)
-        let averageNumberOfDiscardsInLostGamesDouble = round(dataForGamesLost.averageNumberOfDiscardsFloat, numberOfDecimalsInt: 1)
-        resultsString += "\nDiscards in games won, avg.: \(averageNumberOfDiscardsInWonGamesDouble) (lost: \(averageNumberOfDiscardsInLostGamesDouble))"
-        let averageNumberOfBadPlaysInWonGamesDouble = round(dataForGamesWon.averageNumberOfBadPlaysFloat, numberOfDecimalsInt: 1)
-        let averageNumberOfBadPlaysInLostGamesDouble = round(dataForGamesLost.averageNumberOfBadPlaysFloat, numberOfDecimalsInt: 1)
-        resultsString += "\nBad plays in games won, avg.: \(averageNumberOfBadPlaysInWonGamesDouble) (lost: \(averageNumberOfBadPlaysInLostGamesDouble))"
-        // Show up to 10 seeds.
-        let seedArray = dataForGamesLost.seedArray
-        let numberOfSeedsToShowInt = min(10, seedArray.count)
-        if numberOfSeedsToShowInt > 0 {
-            resultsString += "\nSeeds for games lost (max 10):"
-            for numberInt in 1...numberOfSeedsToShowInt {
-                let index = numberInt - 1
-                resultsString += "\n\(seedArray[index])"
+        var results = "\n"
+        results += "Games: \(solverElf.numGamesPlayed)"
+        let avgScore = round(Double(solverElf.avgScore), decimals: 2)
+        results += "\nScore, avg.: \(avgScore)"
+        let gamesWonStats = solverElf.gamesWonStats
+        let gamesLostStats = solverElf.gamesLostStats
+        let avgMaxPlaysLeft = round(gamesWonStats.avgMaxPlaysLeft, decimals: 1)
+        results += "\nMax plays left in games won, avg.: \(avgMaxPlaysLeft)"
+        let percentGamesLost = round(gamesLostStats.percent, decimals: 3)
+        results += "\nGames lost: \(gamesLostStats.num) (\(percentGamesLost)%)"
+        var roundValues = [gamesWonStats.avgNumCluesGiven, gamesLostStats.avgNumCluesGiven].map( { round($0, decimals: 1) } )
+        results += "\nClues given in games won, avg.: \(roundValues[0]) (lost: \(roundValues[1]))"
+        roundValues = [gamesWonStats.avgNumDiscards, gamesLostStats.avgNumDiscards].map( { round($0, decimals: 1) } )
+        results += "\nDiscards in games won, avg.: \(roundValues[0]) (lost: \(roundValues[1]))"
+        roundValues = [gamesWonStats.avgNumBadPlays, gamesLostStats.avgNumBadPlays].map( { round($0, decimals: 1) } )
+        results += "\nBad plays in games won, avg.: \(roundValues[0]) (lost: \(roundValues[1]))"
+        // Up to 10 seeds for games lost.
+        let seeds = gamesLostStats.seeds
+        let numSeedsToShow = min(10, seeds.count)
+        if numSeedsToShow > 0 {
+            results += "\nSeeds for games lost (max 10):"
+            for index in 0...(numSeedsToShow - 1) {
+                results += "\n\(seeds[index])"
             }
         }
-        let dataForSecondsSpent = solverElf.dataForSecondsSpent
-        let numberOfSecondsSpentDouble = round(dataForSecondsSpent.numberDouble, numberOfDecimalsInt: 3)
-        let averageSecondsSpentDouble = round(dataForSecondsSpent.averageDouble, numberOfDecimalsInt: 3)
-        resultsString += "\nTime spent: \(numberOfSecondsSpentDouble) sec (avg.: \(averageSecondsSpentDouble))"
-        resultsString += "\n"
-        logModel.addLine(resultsString)
+        let secondsSpentStats = solverElf.secondsSpentStats
+        roundValues = [secondsSpentStats.num, secondsSpentStats.avg].map( { round($0, decimals: 3) } )
+        results += "\nTime spent: \(roundValues[0]) sec (avg.: \(roundValues[1]))"
+        results += "\n"
+        logModel.addLine(results)
     }
     func solverElfDidFinishAllGames() {
         mode = .Solved

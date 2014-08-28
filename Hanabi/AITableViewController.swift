@@ -50,7 +50,7 @@ class AITableViewController: UITableViewController {
     }
     override func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section.
-        return solverElf.numberOfAIs
+        return solverElf.numAIs
     }
     override func viewDidLoad() {
         super.viewDidLoad()
