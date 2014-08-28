@@ -18,16 +18,15 @@ class PureInfoAI: AbstractAI {
     override func bestActionForTurn(turn: Turn) -> Action {
         let action = Action()
         // If player knows she has a playable card, play it.
-        let startingGameState = turn.startingGameState
-        let currentPlayer = startingGameState.currentPlayer
+        let currentPlayer = turn.currentPlayer
         let handCardBackArray = currentPlayer.handCardBackArray
         for indexInt in 0...(handCardBackArray.count - 1) {
             let cardBack = handCardBackArray[indexInt]
-            if startingGameState.cardBackIsKnownPlayableBool(cardBack) {
-                action.type = .Play
-                action.targetCardIndexInt = indexInt
-                return action
-            }
+//            if startingGameState.cardBackIsKnownPlayableBool(cardBack) {
+//                action.type = .Play
+//                action.targetCardIndexInt = indexInt
+//                return action
+//            }
         }
         
         // If player knows she has a safe discard, discard it.

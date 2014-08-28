@@ -2,7 +2,7 @@
 //  Created by Geoff Hom on 8/6/14.
 //  Copyright (c) 2014 Geoff Hom. All rights reserved.
 //
-
+// A single game of Hanabi.
 import UIKit
 
 class Game: NSObject {

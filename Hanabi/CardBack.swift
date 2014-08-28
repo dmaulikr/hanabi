@@ -5,7 +5,7 @@
 //  Created by Geoff Hom on 8/26/14.
 //  Copyright (c) 2014 Geoff Hom. All rights reserved.
 //
-// A card whose identity is hidden to some. Includes info on what is known.
+// Info about the identity of a card.
 import UIKit
 
 class CardBack: NSObject {

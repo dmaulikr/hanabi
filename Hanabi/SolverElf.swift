@@ -201,6 +201,35 @@ class SolverElf: NSObject {
     func solveCurrentTurnForGame(game: Game) {
         solveTurn(game.currentTurn)
     }
+    // Play the given game to the end. Store game and notify delegate.
+    func solveGame(game: Game) {
+//        currentAI.optionalGame = game
+        do {
+            // get current turn
+            game.currentTurn
+            // determine best action
+            //currentAI.bestActionForTurn(turn)
+            
+//            let action = currentAI.bestActionForCurrentTurn(game)
+            
+            // do action
+            // game.doActionForCurrentTurn(action)
+            // solverElf is game.del? 
+            // gameDidDoAction() -> currentAI.updateAfterAction(game)
+            //currentAI.bestActionForCurrentTurn
+            // if not done, make next turn
+            // if not done, game.makeNextTurn()
+            solveCurrentTurnForGame(game)
+            game.finishCurrentTurn()
+        } while !game.isDone && !stopSolvingBool
+        self.gameArray.append(game)
+        // Assume delegate wants to be notified on main thread.
+        dispatch_async(dispatch_get_main_queue()) {
+            self.delegate?.solverElfDidFinishAGame?()
+            // Need this line as single-line closures return implicitly.
+            return
+        }
+    }
     // Reset list of solved games. Make a game. Solve it. Use bg thread to not block main.
     func solveGameWithSeed(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
         stopSolvingBool = false
@@ -208,21 +237,6 @@ class SolverElf: NSObject {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             let game = Game(seedOptionalUInt32: seedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
             self.solveGame(game)
-        }
-    }
-    // Play the given game to the end. Store game and notify delegate.
-    func solveGame(game: Game) {
-        currentAI.optionalGame = game
-        do {
-            self.solveCurrentTurnForGame(game)
-            game.finishCurrentTurn()
-        } while !game.isDone && !self.stopSolvingBool
-        self.gameArray.append(game)
-        // Assume delegate wants to be notified on main thread.
-        dispatch_async(dispatch_get_main_queue()) {
-            self.delegate?.solverElfDidFinishAGame?()
-            // Need this line as single-line closures return implicitly.
-            return
         }
     }
     // Reset list of solved games. Make games. Solve them. Games are solved in bg thread to not block main.
