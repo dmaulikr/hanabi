@@ -15,8 +15,9 @@ class PureInfoAI: AbstractAI {
     override var tableViewCellString: String {
         return "Pure Info"
     }
-    override func bestActionForTurn(turn: Turn) -> Action {
+    override func bestAction(#game: Game) -> Action {
         let action = Action()
+        let turn = game.currentTurn
         // If player knows she has a playable card, play it.
         let currentPlayer = turn.currentPlayer
         let handCardBackArray = currentPlayer.handCardBackArray

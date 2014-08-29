@@ -70,10 +70,10 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
         mode = .Planning
         solverElf.stop()
     }
-    // Show deck from turn's start in log.
+    // Log the current turn's deck.
     @IBAction func handleLogDeckButtonTapped() {
-        let dataForTurnForGame = solverElf.dataForTurnForGame(1, turnNumberInt: turnNumberOptionalInt!, turnEndBool: showTurnEndSwitch.on, showCurrentHandBool: showCurrentHandSwitch.on)
-        logModel.addLine("Deck: \(dataForTurnForGame.deckString)")
+        let aTurnData = solverElf.aTurnData(gameNum: 1, turnNum: turnNumberOptionalInt!, turnEnd: showTurnEndSwitch.on, showCurrentHand: showCurrentHandSwitch.on)
+        logModel.addLine("Deck: \(aTurnData.deckDescription)")
     }
     // Update UI.
     @IBAction func handleShowActionSwitchTapped(theSwitch: UISwitch) {
@@ -90,7 +90,7 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
     // Play/solve the requested game.
     @IBAction func handleStartButtonTapped() {
         mode = .Solving
-        solverElf.solveGameWithSeed(userSeedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
+        solverElf.solveGame(seed: userSeedOptionalUInt32, numPlayers: numberOfPlayersInt)
     }
     // Update log view.
     func logModelDidAddText() {
@@ -116,20 +116,20 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
     }
     // Show selected turn for given game.
     func showSelectedTurnForGame(gameNumberInt: Int) {
-        let dataForTurnForGame = solverElf.dataForTurnForGame(1, turnNumberInt: turnNumberOptionalInt!, turnEndBool: showTurnEndSwitch.on, showCurrentHandBool: showCurrentHandSwitch.on)
-        cushionLabel.text = "Plays needed: \(dataForTurnForGame.numberOfPointsNeededInt)" +
-        "\nPlays left, max: \(dataForTurnForGame.maxNumberOfPlaysLeftInt)"
-        discardsLabel.text = "Discards: \(dataForTurnForGame.discardsString)"
+        let aTurnData = solverElf.aTurnData(gameNum: 1, turnNum: turnNumberOptionalInt!, turnEnd: showTurnEndSwitch.on, showCurrentHand: showCurrentHandSwitch.on)
+        cushionLabel.text = "Plays needed: \(aTurnData.numPointsNeeded)" +
+        "\nPlays left, max: \(aTurnData.maxNumPlaysLeft)"
+        discardsLabel.text = "Discards: \(aTurnData.discardsDescription)"
         scoreLabel.text = "Score: BGRWY" +
-            "\n       \(dataForTurnForGame.scoreString)" +
-            "\nClues left: \(dataForTurnForGame.numberOfCluesLeftInt)" +
-            "\nStrikes left: \(dataForTurnForGame.numberOfStrikesLeftInt)" +
-        "\nCards left: \(dataForTurnForGame.numberOfCardsLeftInt)"
-        var vHMutableAttributedString = NSMutableAttributedString(string:"Visible hands:")
-        vHMutableAttributedString.appendAttributedString(dataForTurnForGame.visibleHandsAttributedString)
-        visibleHandsLabel.attributedText = vHMutableAttributedString
+            "\n       \(aTurnData.scoreDescription)" +
+            "\nClues left: \(aTurnData.numCluesLeft)" +
+            "\nStrikes left: \(aTurnData.numStrikesLeft)" +
+        "\nCards left: \(aTurnData.numCardsLeft)"
+        var visibleHandsDescription = NSMutableAttributedString(string:"Visible hands:")
+        visibleHandsDescription.appendAttributedString(aTurnData.visibleHandsDescription)
+        visibleHandsLabel.attributedText = visibleHandsDescription
         if showActionSwitch.on {
-            actionLabel.text = dataForTurnForGame.actionString
+            actionLabel.text = aTurnData.actionDescription
         } else {
             actionLabel.text = ""
         }
@@ -148,7 +148,7 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         let tableViewCell = tableView.dequeueReusableCellWithIdentifier("TurnCell") as UITableViewCell
         let turnNumberInt = indexPath.row + 1
-        let roundSubroundString = solverElf.roundSubroundStringForTurnForFirstGame(turnNumberInt)
+        let roundSubroundString = solverElf.firstGameSubroundDescription(turnNum: turnNumberInt)
         tableViewCell.textLabel.text = "Round \(roundSubroundString)"
         return tableViewCell
     }

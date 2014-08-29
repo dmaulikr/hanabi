@@ -42,7 +42,7 @@ class SolveGamesViewController: UIViewController, LogModelDelegate, SolverElfDel
     // Play/solve the requested number of games.
     @IBAction func handleStartButtonTapped() {
         mode = .Solving
-        solverElf.solveGames(numberOfGamesInt, numberOfPlayersInt: 3)
+        solverElf.solveGames(numberOfGamesInt, numPlayers: 3)
     }
     // Update log view.
     func logModelDidAddText() {

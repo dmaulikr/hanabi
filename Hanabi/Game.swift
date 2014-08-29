@@ -73,14 +73,11 @@ class Game: NSObject {
         let visibleHandsAttributedString = data.visibleHandsAttributedString
         return (actionString, deckString, discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsAttributedString)
     }
-    // Perform current action. If game not done, make next turn.
-    func finishCurrentTurn() {
+    // Do given action for current turn.
+    func doAction(action: Action) {
         let turn = currentTurn
+        turn.optionalAction = action
         turn.performAction()
-        if !isDone {
-            let nextTurn = Turn(previousTurn: turn)
-            turnArray.append(nextTurn)
-        }
     }
     // Make deck. Shuffle. Make first turn.
     init(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
@@ -99,5 +96,9 @@ class Game: NSObject {
         }
         let turn = Turn(deck: deck, playerArray: playerArray)
         turnArray.append(turn)
+    }
+    func makeNextTurn() {
+        let nextTurn = Turn(previousTurn: currentTurn)
+        turnArray.append(nextTurn)
     }
 }

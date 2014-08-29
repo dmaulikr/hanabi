@@ -17,14 +17,16 @@ class AbstractAI: NSObject {
         return "AbstractAI"
     }
     var logModel = (UIApplication.sharedApplication().delegate as AppDelegate).logModel
-    var optionalGame: Game?
     // Table-view-cell-suitable string describing this AI.
     var tableViewCellString: String {
         return "AbstractAI"
     }
     var type: AIType!
-    // Return the best action for the given turn.
-    func bestActionForTurn(turn: Turn) -> Action {
+    // Best action for current turn.
+    func bestAction(#game: Game) -> Action {
         return Action()
+    }
+    // The turn's action has been done. The game will have updated only the basic game state. If there's something the AI needs to update, do that here. (E.g., how each player interprets the turn.)
+    func updateAfterAction(#game: Game) {
     }
 }

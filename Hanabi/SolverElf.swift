@@ -28,9 +28,9 @@ class SolverElf: NSObject {
         get {
             let aiRawValue = NSUserDefaults.standardUserDefaults().integerForKey(AITypeUserDefaultsKeyString)
             if let aiType = AIType.fromRaw(aiRawValue) {
-                return aiForType(aiType)
+                return ai(type: aiType)
             } else {
-                return aiForType(AIType.Omniscient)
+                return ai(type: AIType.Omniscient)
             }
         }
         set(newAI) {
@@ -101,56 +101,24 @@ class SolverElf: NSObject {
     }
     // Whether to stop solving. Can be either one or multiple games.
     private var stopSolving = false
-    
-    // WILO
-    // AI for the given number. AIs are in an undefined order.
-    func aiForNumberInt(numberInt: Int) -> AbstractAI {
-        let indexInt = numberInt - 1
-        return ais[indexInt]
+    // AI for the given number, starting at 1. AIs are in an undefined order.
+    func ai(#num: Int) -> AbstractAI {
+        let index = num - 1
+        return ais[index]
     }
     // AI for the given AI type. If type not found, return first value.
-    func aiForType(aiType: AIType) -> AbstractAI {
+    func ai(#type: AIType) -> AbstractAI {
         for ai in ais {
-            if ai.type == aiType {
+            if ai.type == type {
                 return ai
             }
         }
-        println("Warning: AI type not found: \(aiType.toRaw()).")
+        println("Warning: AI type not found: \(type.toRaw()).")
         return ais[0]
     }
-    
-    // Return the best action for the given turn.
-    func bestActionForTurn(turn: Turn) -> Action {
-        let action = currentAI.bestActionForTurn(turn)
-        return action
-    }
-    // Data for given turn for given game. If turn end, the data is for the end of the turn (vs start). As we're bundling a lot of data here, this should be used only for reporting and not for solving many games at once.
-    func dataForTurnForGame(gameNumberInt: Int, turnNumberInt: Int, turnEndBool: Bool, showCurrentHandBool: Bool) -> (actionString: String, deckString: String, discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {
-        let index = gameNumberInt - 1
-        let game = games[index]
-        // Could add this if needed.
-        // var gameNumberInt: Int
-        let dataForTurn = game.dataForTurn(turnNumberInt, turnEndBool: turnEndBool, showCurrentHandBool: showCurrentHandBool)
-        let actionString = dataForTurn.actionString
-        let deckString = dataForTurn.deckString
-        let discardsString = dataForTurn.discardsString
-        let maxNumberOfPlaysLeftInt = dataForTurn.maxNumberOfPlaysLeftInt
-        let numberOfCardsLeftInt = dataForTurn.numberOfCardsLeftInt
-        let numberOfCluesLeftInt = dataForTurn.numberOfCluesLeftInt
-        let numberOfPointsNeededInt = dataForTurn.numberOfPointsNeededInt
-        let numberOfStrikesLeftInt = dataForTurn.numberOfStrikesLeftInt
-        let scoreString = dataForTurn.scoreString
-        let visibleHandsAttributedString = dataForTurn.visibleHandsAttributedString
-        return (actionString, deckString, discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreString, visibleHandsAttributedString)
-    }
-    override init() {
-        super.init()
-        ais.append(OmniscientAI())
-        ais.append(PureInfoAI())
-    }
-    // Order number for the given AI. First number is 1. If AI not found, return 1.
-    func numberIntForAI(ai: AbstractAI) -> Int {
-        for index in 0...ais.count {
+    // The order number for the given AI. First number is 1. If AI not found, return 1.
+    func aiNum(#ai: AbstractAI) -> Int {
+        for index in 0...(ais.count - 1) {
             let ai2 = ais[index]
             if ai2 == ai {
                 return index + 1
@@ -158,39 +126,46 @@ class SolverElf: NSObject {
         }
         return 1
     }
-    // String for the round and subround for the given turn. (E.g., in a 3-player game, turn 4 = round 2.1.)
-    func roundSubroundStringForTurnForFirstGame(turnNumberInt: Int) -> String {
-        let game = games.first!
-        let numberOfPlayersInt = game.numberOfPlayersInt
-        let string = roundSubroundStringForTurn(turnNumberInt, numberOfPlayersInt: numberOfPlayersInt)
-        return string
+    // Data for given turn for given game. If turn end, the data is for the end of the turn (vs start). As we're bundling a lot of data here, this should be used only for reporting and not for solving many games at once.
+    func aTurnData(#gameNum: Int, turnNum: Int, turnEnd: Bool, showCurrentHand: Bool) -> (actionDescription: String, deckDescription: String, discardsDescription: String, maxNumPlaysLeft: Int, numCardsLeft: Int, numCluesLeft: Int, numPointsNeeded: Int, numStrikesLeft: Int, scoreDescription: String, visibleHandsDescription: NSAttributedString) {
+        let index = gameNum - 1
+        let game = games[index]
+        let aTurnData = game.dataForTurn(turnNum, turnEndBool: turnEnd, showCurrentHandBool: showCurrentHand)
+        let actionDescription = aTurnData.actionString
+        let deckDescription = aTurnData.deckString
+        let discardsDescription = aTurnData.discardsString
+        let maxNumPlaysLeft = aTurnData.maxNumberOfPlaysLeftInt
+        let numCardsLeft = aTurnData.numberOfCardsLeftInt
+        let numCluesLeft = aTurnData.numberOfCluesLeftInt
+        let numPointsNeeded = aTurnData.numberOfPointsNeededInt
+        let numStrikesLeft = aTurnData.numberOfStrikesLeftInt
+        let scoreDescription = aTurnData.scoreString
+        let visibleHandsDescription = aTurnData.visibleHandsAttributedString
+        return (actionDescription, deckDescription, discardsDescription, maxNumPlaysLeft, numCardsLeft, numCluesLeft, numPointsNeeded, numStrikesLeft, scoreDescription, visibleHandsDescription)
     }
-    // Determine best action for current turn. Do it.
-    func solveCurrentTurnForGame(game: Game) {
-        solveTurn(game.currentTurn)
+    // Description for given turn's subround. (E.g., in a 3-player game, turn 6 = round 2.3.)
+    func firstGameSubroundDescription(#turnNum: Int) -> String {
+        let game = games.first!
+        let numPlayers = game.numberOfPlayersInt
+        let description = roundSubroundStringForTurn(turnNum, numberOfPlayersInt: numPlayers)
+        return description
+    }
+    override init() {
+        super.init()
+        ais.append(OmniscientAI())
+        ais.append(PureInfoAI())
     }
     // Play the given game to the end. Store game and notify delegate.
-    func solveGame(game: Game) {
-//        currentAI.optionalGame = game
+    private func solveGame(game: Game) {
         do {
-            // get current turn
-            game.currentTurn
-            // determine best action
-            //currentAI.bestActionForTurn(turn)
-            
-//            let action = currentAI.bestActionForCurrentTurn(game)
-            
-            // do action
-            // game.doActionForCurrentTurn(action)
-            // solverElf is game.del? 
-            // gameDidDoAction() -> currentAI.updateAfterAction(game)
-            //currentAI.bestActionForCurrentTurn
-            // if not done, make next turn
-            // if not done, game.makeNextTurn()
-            solveCurrentTurnForGame(game)
-            game.finishCurrentTurn()
+            let action = currentAI.bestAction(game: game)
+            game.doAction(action)
+            currentAI.updateAfterAction(game: game)
+            if !game.isDone {
+                game.makeNextTurn()
+            }
         } while !game.isDone && !stopSolving
-        self.games.append(game)
+        games.append(game)
         // Assume delegate wants to be notified on main thread.
         dispatch_async(dispatch_get_main_queue()) {
             self.delegate?.solverElfDidFinishAGame?()
@@ -198,50 +173,49 @@ class SolverElf: NSObject {
             return
         }
     }
-    // Reset list of solved games. Make a game. Solve it. Use bg thread to not block main.
-    func solveGameWithSeed(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
+    // Make and solve one game, based on the given seed.
+    func solveGame(#seed: UInt32?, numPlayers: Int) {
+        // Reset list of solved games. Make a game. Solve it. Use bg thread to not block main.
         stopSolving = false
         games = []
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            let game = Game(seedOptionalUInt32: seedOptionalUInt32, numberOfPlayersInt: numberOfPlayersInt)
+            let game = Game(seedOptionalUInt32: seed, numberOfPlayersInt: numPlayers)
             self.solveGame(game)
         }
     }
-    // Reset list of solved games. Make games. Solve them. Games are solved in bg thread to not block main.
-    func solveGames(numberOfGames: Int, numberOfPlayersInt: Int) {
+    // Make and solve multiple games.
+    func solveGames(numGames: Int, numPlayers: Int) {
+        // Reset list of solved games. Make games. Solve them. Games are solved in bg thread to not block main.
         stopSolving = false
         numSecondsSpent = 0.0
         games = []
         // Track time spent.
-        let startDate = NSDate()
+        let startTime = NSDate()
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            var numberOfSecondsToWaitToLogDouble: Double = 1.0
-            for gameNumberInt in 1...numberOfGames {
+            var numSecondsToWaitToLog: Double = 1.0
+            for _ in 1...numGames {
                 if self.stopSolving {
                     break
                 }
                 // Give feedback in increasing intervals.
-                let tempDate = NSDate()
-                let numberOfSecondsSoFarDouble = tempDate.timeIntervalSinceDate(startDate)
-                if numberOfSecondsSoFarDouble > numberOfSecondsToWaitToLogDouble {
-                    numberOfSecondsToWaitToLogDouble = numberOfSecondsToWaitToLogDouble * 3.0
-                    self.log.addLine("Games so far: \(self.numGamesPlayed). Next update: \(Int(numberOfSecondsToWaitToLogDouble)) seconds.")
+                let now = NSDate()
+                let numSecondsSoFar = now.timeIntervalSinceDate(startTime)
+                if numSecondsSoFar > numSecondsToWaitToLog {
+                    numSecondsToWaitToLog *= 3.0
+                    self.log.addLine("Games done: \(self.numGamesPlayed). Next update: \(round(numSecondsToWaitToLog - numSecondsSoFar, decimals: 1)) seconds.")
                 }
-                let game = Game(seedOptionalUInt32: nil, numberOfPlayersInt: numberOfPlayersInt)
+                let game = Game(seedOptionalUInt32: nil, numberOfPlayersInt: numPlayers)
                 self.solveGame(game)
             }
             // Assume delegate wants to be notified on main thread.
             dispatch_async(dispatch_get_main_queue()) {
-                let endDate = NSDate()
-                self.numSecondsSpent = endDate.timeIntervalSinceDate(startDate)
+                let endTime = NSDate()
+                self.numSecondsSpent = endTime.timeIntervalSinceDate(startTime)
                 self.delegate?.solverElfDidFinishAllGames?()
             }
         }
     }
-    // Determine best action for given turn.
-    func solveTurn(turn: Turn) {
-        turn.optionalAction = bestActionForTurn(turn)
-    }
+    // Tells Solver Elf to stop solving.
     func stop() {
         stopSolving = true
     }
