@@ -36,7 +36,7 @@ class Player: NSObject {
         }
         return noDupsHandCardArray
     }
-    override func copy() -> AnyObject! {
+    override func copy() -> AnyObject {
         var player = Player()
         player.handCardArray = handCardArray
         player.nameString = nameString

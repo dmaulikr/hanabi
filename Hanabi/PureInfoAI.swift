@@ -9,10 +9,7 @@
 import UIKit
 
 class PureInfoAI: AbstractAI {
-    override var buttonTitleString: String {
-        return "Pure Info"
-    }
-    override var tableViewCellString: String {
+    override var name: String {
         return "Pure Info"
     }
     override func bestAction(#game: Game) -> Action {

@@ -140,20 +140,20 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
         mode = .Solved
     }
     // Note selected turn. Update UI.
-    func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         turnNumberOptionalInt = indexPath.row + 1
         updateUIBasedOnMode()
     }
     // Each cell is "Round A.B," where A is the round and B is the player number. E.g., "Round 1.1."
-    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let tableViewCell = tableView.dequeueReusableCellWithIdentifier("TurnCell") as UITableViewCell
         let turnNumberInt = indexPath.row + 1
         let roundSubroundString = solverElf.firstGameSubroundDescription(turnNum: turnNumberInt)
-        tableViewCell.textLabel.text = "Round \(roundSubroundString)"
+        tableViewCell.textLabel!.text = "Round \(roundSubroundString)"
         return tableViewCell
     }
     // Return number of turns.
-    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let numTurns = solverElf.numTurnsForFirstGame {
             return numTurns
         } else {

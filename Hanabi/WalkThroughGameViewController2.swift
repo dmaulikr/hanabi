@@ -122,7 +122,7 @@ class WalkThroughGameViewController2: UIViewController, AITableViewControllerDel
     @IBAction func playButtonDownSound() {
         viewControllerElf.playButtonDownSound()
     }
-    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if segue.identifier == "ShowAISelector" {
             // Retain popover controller, to dismiss later.
             currentOptionalPopoverController = (segue as UIStoryboardPopoverSegue).popoverController
@@ -163,15 +163,15 @@ class WalkThroughGameViewController2: UIViewController, AITableViewControllerDel
         updateUIBasedOnMode()
     }
     // Each cell is "Round A.B," where A is the round and B is the player number. E.g., "Round 1.1."
-    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let tableViewCell = tableView.dequeueReusableCellWithIdentifier("TurnCell") as UITableViewCell
         let turnNumberInt = indexPath.row + 1
         let roundSubroundString = solverElf.firstGameSubroundDescription(turnNum: turnNumberInt)
-        tableViewCell.textLabel.text = "Round \(roundSubroundString)"
+        tableViewCell.textLabel!.text = "Round \(roundSubroundString)"
         return tableViewCell;
     }
     // Return number of turns.
-    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let numTurns = solverElf.numTurnsForFirstGame {
             return numTurns
         } else {
@@ -203,7 +203,7 @@ class WalkThroughGameViewController2: UIViewController, AITableViewControllerDel
         case .Planning:
             actionView.hidden = true
             aiButton.enabled = true
-            aiButton.setTitle(solverElf.currentAI.buttonTitleString, forState: UIControlState.Normal)
+            aiButton.setTitle(solverElf.currentAI.name, forState: UIControlState.Normal)
             cancelButton.enabled = false
             cushionView.hidden = true
             discardsView.hidden = true
@@ -216,7 +216,7 @@ class WalkThroughGameViewController2: UIViewController, AITableViewControllerDel
             visibleHandsView.hidden = true
         case .Solving:
             aiButton.enabled = false
-            aiButton.setTitle(solverElf.currentAI.buttonTitleString, forState: UIControlState.Disabled)
+            aiButton.setTitle(solverElf.currentAI.name, forState: UIControlState.Disabled)
             cancelButton.enabled = true
             startButton.enabled = false
             turnNumberOptionalInt = nil
@@ -225,7 +225,7 @@ class WalkThroughGameViewController2: UIViewController, AITableViewControllerDel
         case .Solved:
             actionView.hidden = false
             aiButton.enabled = true
-            aiButton.setTitle(solverElf.currentAI.buttonTitleString, forState: UIControlState.Normal)
+            aiButton.setTitle(solverElf.currentAI.name, forState: UIControlState.Normal)
             cancelButton.enabled = false
             cushionView.hidden = false
             discardsView.hidden = false

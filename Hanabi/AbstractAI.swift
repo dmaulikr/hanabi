@@ -12,15 +12,10 @@ enum AIType: Int {
     case Omniscient = 1, PureInfo
 }
 class AbstractAI: NSObject {
-    // Button-suitable string describing this AI.
-    var buttonTitleString: String {
-        return "AbstractAI"
+    var name: String {
+        return "Abstract AI"
     }
-    var logModel = (UIApplication.sharedApplication().delegate as AppDelegate).logModel
-    // Table-view-cell-suitable string describing this AI.
-    var tableViewCellString: String {
-        return "AbstractAI"
-    }
+    var log = (UIApplication.sharedApplication().delegate as AppDelegate).logModel
     var type: AIType!
     // Best action for current turn.
     func bestAction(#game: Game) -> Action {

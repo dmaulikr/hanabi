@@ -13,16 +13,16 @@ protocol AITableViewControllerDelegate {
 class AITableViewController: UITableViewController {
     var delegate: AITableViewControllerDelegate?
     var solverElf: SolverElf!
-    override func numberOfSectionsInTableView(tableView: UITableView!) -> Int {
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // Return the number of sections.
         return 1
     }
-    override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let tableViewCell = tableView.dequeueReusableCellWithIdentifier("AICell", forIndexPath: indexPath) as UITableViewCell
         let aiNum = indexPath.row + 1
         let ai = solverElf.ai(num: aiNum)
-        let aiTableViewCellString = ai.tableViewCellString
-        tableViewCell.textLabel.text = "\(aiTableViewCellString)"
+        let aiTableViewCellString = ai.name
+        tableViewCell.textLabel!.text = "\(aiTableViewCellString)"
         // If currently selected AI, add checkmark.
         var tableViewCellAccessoryType: UITableViewCellAccessoryType
         if ai == solverElf.currentAI {
@@ -34,21 +34,21 @@ class AITableViewController: UITableViewController {
         return tableViewCell
     }
     // Set checkmark. Set current AI.
-    override func tableView(tableView: UITableView!, didSelectRowAtIndexPath indexPath: NSIndexPath!) {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         // Remove checkmark from the previously selected cell.
         let aiNumberInt = solverElf.aiNum(ai: solverElf.currentAI)
         let previouslySelectedRowIndexPath = NSIndexPath(forRow: aiNumberInt - 1, inSection: 0)
         let tableViewCell = tableView.cellForRowAtIndexPath(previouslySelectedRowIndexPath)
-        tableViewCell.accessoryType = UITableViewCellAccessoryType.None
+        tableViewCell!.accessoryType = UITableViewCellAccessoryType.None
         // Show checkmark on the selected cell.
         let selectedTableViewCell = tableView.cellForRowAtIndexPath(indexPath)
-        selectedTableViewCell.accessoryType = UITableViewCellAccessoryType.Checkmark
+        selectedTableViewCell!.accessoryType = UITableViewCellAccessoryType.Checkmark
         // Set current AI.
         let newAINum = indexPath.row + 1
         solverElf.currentAI = solverElf.ai(num: newAINum)
         delegate?.aiTableViewControllerDidSelectAI()
     }
-    override func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section.
         return solverElf.numAIs
     }

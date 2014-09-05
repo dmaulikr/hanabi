@@ -10,10 +10,7 @@ import UIKit
 
 // Looks at own hand. (Cheats.)
 class OmniscientAI: AbstractAI {
-    override var buttonTitleString: String {
-        return "Omniscient"
-    }
-    override var tableViewCellString: String {
+    override var name: String {
         return "Omniscient"
     }
     override func bestAction(#game: Game) -> Action {
@@ -75,7 +72,7 @@ class OmniscientAI: AbstractAI {
                     // If player has a card that's still in the deck, discard highest.
                     let cheatingCardsAlsoInDeckCardArray = turn.cheatingCardsAlsoInDeckCardArray
                     if !cheatingCardsAlsoInDeckCardArray.isEmpty {
-                        logModel.addLine("Semi-rare? No one has a play, safe discard or group duplicate.(Or no clues left.) Seed: \(game.seedUInt32). Round \(turn.roundSubroundString).")
+                        log.addLine("Semi-rare? No one has a play, safe discard or group duplicate.(Or no clues left.) Seed: \(game.seedUInt32). Round \(turn.roundSubroundString).")
                         action.type = .Discard
                         var theDiscardCard = cheatingCardsAlsoInDeckCardArray.first!
                         var maxNumberInt = theDiscardCard.numberInt
@@ -87,7 +84,7 @@ class OmniscientAI: AbstractAI {
                         }
                         action.targetCardIndexInt = Card.indexOptionalIntOfCardValueInArray(theDiscardCard, cardArray: currentPlayerHandCardArray)!
                     } else {
-                        logModel.addLine("Rare warning: Discarding unique? Seed: \(game.seedUInt32). Round \(turn.roundSubroundString).")
+                        log.addLine("Rare warning: Discarding unique? Seed: \(game.seedUInt32). Round \(turn.roundSubroundString).")
                         action.type = .Discard
                         action.targetCardIndexInt = 0
                     }

@@ -22,7 +22,7 @@ class Deck: NSObject {
     var string: String {
         return Card.stringForArray(cardArray)
     }
-    override func copy() -> AnyObject! {
+    override func copy() -> AnyObject {
         var deck = Deck()
         deck.cardArray = cardArray
         deck.seedUInt32 = seedUInt32
