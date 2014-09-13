@@ -24,7 +24,7 @@ class EndingGameState: AbstractGameState {
     func drawCard() {
         if !deck.isEmpty {
             let newCard = deck.drawCard()
-            currentPlayer.handCardArray.append(newCard)
+            currentPlayer.hand.append(newCard)
         }
     }
     // Ending state = starting state + results of action.
@@ -57,8 +57,8 @@ class EndingGameState: AbstractGameState {
         case .Play:
 //            println("play a card")
             // Remove card from hand. Play it. If okay, increase score. Else, lose strike and put in discard pile. Draw card.
-            let playCard = currentPlayer.handCardArray.removeAtIndex(action.targetCardIndexInt)
-            if scorePile.cardIsPlayable(playCard) {
+            let playCard = currentPlayer.hand.removeAtIndex(action.targetCardIndex)
+            if scorePile.canScore(playCard) {
                 scorePile.addCard(playCard)
             } else {
                 numberOfStrikesLeftInt--
@@ -69,7 +69,7 @@ class EndingGameState: AbstractGameState {
             // If clues not less than max, trigger an assertion. (AI shouldn't have chosen this, and player shouldn't have been able to.)
             assert(numberOfCluesLeftInt < 8, "Error: tried to discard with max clue tokens.")
             // Remove card from hand. Put in discard pile. Gain clue token. Draw card.
-            let discardCard = currentPlayer.handCardArray.removeAtIndex(action.targetCardIndexInt)
+            let discardCard = currentPlayer.hand.removeAtIndex(action.targetCardIndex)
             discardsCardArray.append(discardCard)
             numberOfCluesLeftInt++
             drawCard()

@@ -33,7 +33,7 @@ class StartingGameState: AbstractGameState {
             numberOfCardsPerPlayerInt = 3
         }
         for player in playerArray {
-            player.handCardArray = deck.drawCards(numberOfCardsPerPlayerInt)
+            player.hand = deck.drawCards(numberOfCardsPerPlayerInt)
         }
     }
     // Make new, deal hands to given players.
@@ -70,8 +70,8 @@ class StartingGameState: AbstractGameState {
     // String describing the given action and its result.
     func stringForAction(action: Action) -> String {
         var resultString = "\(currentPlayer.nameString)"
-        let index = action.targetCardIndexInt
-        let card = currentPlayer.handCardArray[index]
+        let index = action.targetCardIndex
+        let card = currentPlayer.hand[index]
         // Card position and abbreviation.
         let cardPositionString = "card \(index + 1): \(card.string)"
         switch action.type {
@@ -85,7 +85,7 @@ class StartingGameState: AbstractGameState {
         case .Play:
             resultString += " plays \(cardPositionString)."
             // If invalid play, mention that.
-            if !scorePile.cardIsPlayable(card) {
+            if !scorePile.canScore(card) {
                 resultString += " Invalid play. Strike."
             }
             if numberOfCardsLeftInt >= 1 {

@@ -17,7 +17,7 @@ class CardBack: NSObject {
                 let optionsInt = optionsArray[indexInt]
                 if optionsInt >= 1 {
                     let numberInt = indexInt + 1
-                    let card = Card(color: color, numberInt: numberInt)
+                    let card = Card(color: color, num: numberInt)
                     optionsCardArray.append(card)
                 }
             }

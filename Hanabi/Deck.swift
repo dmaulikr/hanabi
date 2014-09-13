@@ -50,18 +50,18 @@ class Deck: NSObject {
         for int in 1...5 {
             if let color = Card.Color.fromRaw(int) {
                 for _ in 1...3 {
-                    card = Card(color: color, numberInt: 1)
+                    card = Card(color: color, num: 1)
                     cardArray.append(card)
                 }
                 for _ in 1...2 {
-                    card = Card(color: color, numberInt: 2)
+                    card = Card(color: color, num: 2)
                     cardArray.append(card)
-                    card = Card(color: color, numberInt: 3)
+                    card = Card(color: color, num: 3)
                     cardArray.append(card)
-                    card = Card(color: color, numberInt: 4)
+                    card = Card(color: color, num: 4)
                     cardArray.append(card)
                 }
-                card = Card(color: color, numberInt: 5)
+                card = Card(color: color, num: 5)
                 cardArray.append(card)
             }
         }

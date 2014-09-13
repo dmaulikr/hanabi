@@ -32,23 +32,43 @@ class Card: NSObject {
         }
     }
     // Whether given card is in given array, value-wise.
-    class func cardValueIsInArrayBool(card: Card, cardArray: [Card]) -> Bool {
-        for card2 in cardArray {
-            if card2.isEqualColorAndNumber(card) {
-                return true
-            }
-        }
-        return false
+    // deprecate; use card.isInArray()
+//    class func cardValueIsInArrayBool(card: Card, cardArray: [Card]) -> Bool {
+//        for card2 in cardArray {
+//            if card2.isEqualColorAndNumber(card) {
+//                return true
+//            }
+//        }
+//        return false
+//    }
+    // The color for the given int. If invalid, return nil.
+    class func color(#int: Int) -> Color? {
+        return Color.fromRaw(int)
     }
     // Index of the given card in the given array, value-wise. Returns first match.
-    class func indexOptionalIntOfCardValueInArray(card: Card, cardArray: [Card]) -> Int? {
-        for indexInt in 0...(cardArray.count - 1) {
-            let card2 = cardArray[indexInt]
-            if card2.isEqualColorAndNumber(card) {
-                return indexInt
+//    class func indexOptionalIntOfCardValueInArray(card: Card, cardArray: [Card]) -> Int? {
+//        for indexInt in 0...(cardArray.count - 1) {
+//            let card2 = cardArray[indexInt]
+//            if card2.isEqualColorAndNumber(card) {
+//                return indexInt
+//            }
+//        }
+//        return nil
+//    }
+    // Lowest of given cards.
+    class func lowest(cards: [Card]) -> [Card] {
+        var lowestCards: [Card] = []
+        var min = 6
+        for card in cards {
+            let num = card.num
+            if num < min {
+                min = num
+                lowestCards = [card]
+            } else if num == min {
+                lowestCards.append(card)
             }
         }
-        return nil
+        return lowestCards
     }
     // String showing cards in the given array.
     class func stringForArray(cardArray: [Card]) -> String {
@@ -69,24 +89,53 @@ class Card: NSObject {
     // The card next in sequence. (Max value is 5.)
     var nextValueOptionalCard: Card? {
         var optionalCard: Card?
-        if numberInt <= 5 {
-            optionalCard = Card(color: color, numberInt: numberInt + 1)
+        if num <= 5 {
+            optionalCard = Card(color: color, num: num + 1)
         }
         return optionalCard
     }
-    var numberInt: Int!
+    var num: Int!
     var optionalCardBack: CardBack?
     // String representing card (e.g., "B4," "Y1").
     var string: String {
-        return "\(color.letterString())\(numberInt)"
+        return "\(color.letterString())\(num)"
     }
-    init(color: Color, numberInt: Int) {
+    init(color: Color, num: Int) {
         self.color = color
-        self.numberInt = numberInt
+        self.num = num
         super.init()
     }
-    // To tell duplicate cards, vs cards with the same reference.
-    func isEqualColorAndNumber(card: Card) -> Bool {
-        return (card.color == self.color) && (card.numberInt == self.numberInt)
+    // Index of this card in given cards. Check by value. If not found, return nil.
+    func indexIn(cards: [Card]) -> Int? {
+        for index in 0...(cards.count - 1) {
+            let card = cards[index]
+            if self.isSameAs(card) {
+                return index
+            }
+        }
+        return nil
+    }
+    // Whether this card is in given cards. Check by value.
+    func isIn(cards: [Card]) -> Bool {
+        for card in cards {
+            if self.isSameAs(card) {
+                return true
+            }
+        }
+        return false
+    }
+    // Whether this card is same, by value, as given card. I.e., same color and number.
+    func isSameAs(card: Card) -> Bool {
+        return (card.color == self.color) && (card.num == self.num)
+    }
+    // Whether this card is in given cards at least twice. Check by value.
+    func isTwiceIn(cards: [Card]) -> Bool {
+        var count = 0
+        for card in cards {
+            if self.isSameAs(card) {
+                ++count
+            }
+        }
+        return count >= 2
     }
 }

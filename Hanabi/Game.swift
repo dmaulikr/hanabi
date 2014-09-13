@@ -4,8 +4,14 @@
 //
 // A single game of Hanabi.
 import UIKit
-
+let MaxClues = 8
 class Game: NSObject {
+    var currentPlayer: Player {
+        return currentTurn.currentPlayer
+    }
+    var currentSubroundString: String {
+        return currentTurn.roundSubroundString
+    }
     var currentTurn: Turn {
         return turnArray.last!
     }
@@ -23,6 +29,12 @@ class Game: NSObject {
     var numberOfBadPlaysInt: Int {
         let lastTurn = turnArray.last!
         return lastTurn.numberOfBadPlaysInt
+    }
+    var numCardsLeft: Int {
+        return currentTurn.numCardsLeft
+    }
+    var numCluesLeft: Int {
+        return currentTurn.numCluesLeft
     }
     // Number of clues given by end of game.
     var numberOfCluesGivenInt: Int {
@@ -42,6 +54,12 @@ class Game: NSObject {
     var numberOfPlayersInt: Int
     var numberOfTurnsInt: Int {
         return turnArray.count
+    }
+    var players: [Player] {
+        return currentTurn.players
+    }
+    var scorePile: ScorePile {
+        return currentTurn.scorePile
     }
     // Seed used to shuffle deck.
     var seedUInt32: UInt32!

@@ -37,20 +37,6 @@ class Turn: NSObject {
             return startingGameState.cheatingGroupDuplicatesCardArray
         }
     }
-    var cheatingNumberOfVisiblePlaysInt: Int {
-        if let endingGameState = endingOptionalGameState {
-            return endingGameState.cheatingNumberOfVisiblePlaysInt
-        } else {
-            return startingGameState.cheatingNumberOfVisiblePlaysInt
-        }
-    }
-    var cheatingSafeDiscardsCardArray: [Card] {
-        if let endingGameState = endingOptionalGameState {
-            return endingGameState.cheatingSafeDiscardsCardArray
-        } else {
-            return startingGameState.cheatingSafeDiscardsCardArray
-        }
-    }
     var currentPlayer: Player {
         // Same in starting and ending states.
         return startingGameState.currentPlayer
@@ -72,13 +58,13 @@ class Turn: NSObject {
             return startingGameState.maxNumberOfPlaysLeftInt
         }
     }
-    var mostTurnsForChainCardArray: [Card] {
-        if let endingGameState = endingOptionalGameState {
-            return endingGameState.mostTurnsForChainCardArray
-        } else {
-            return startingGameState.mostTurnsForChainCardArray
-        }
-    }
+//    var mostTurnsForChainCardArray: [Card] {
+//        if let endingGameState = endingOptionalGameState {
+//            return endingGameState.mostTurnsForChainCardArray
+//        } else {
+//            return startingGameState.mostTurnsForChainCardArray
+//        }
+//    }
     // Number of bad plays by end of turn.
     var numberOfBadPlaysInt: Int {
         if let endingGameState = endingOptionalGameState {
@@ -87,7 +73,7 @@ class Turn: NSObject {
             return startingGameState.numberOfBadPlaysInt
         }
     }
-    var numberOfCardsLeftInt: Int {
+    var numCardsLeft: Int {
         if let endingGameState = endingOptionalGameState {
             return endingGameState.numberOfCardsLeftInt
         } else {
@@ -102,7 +88,7 @@ class Turn: NSObject {
             return startingGameState.numberOfCluesGivenInt
         }
     }
-    var numberOfCluesLeftInt: Int {
+    var numCluesLeft: Int {
         if let endingGameState = endingOptionalGameState {
             return endingGameState.numberOfCluesLeftInt
         } else {
@@ -122,7 +108,13 @@ class Turn: NSObject {
         return startingGameState.numberOfPlayersInt
     }
     var optionalAction: Action?
-    
+    var players: [Player] {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.playerArray
+        } else {
+            return startingGameState.playerArray
+        }
+    }
     // String for the round and subround for this turn. (E.g., in a 3-player game, turn 6 = round "2.3.")
     var roundSubroundString: String {
         // Same in starting and ending states.
@@ -133,6 +125,13 @@ class Turn: NSObject {
             return endingGameState.scoreInt
         } else {
             return startingGameState.scoreInt
+        }
+    }
+    var scorePile: ScorePile {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.scorePile
+        } else {
+            return startingGameState.scorePile
         }
     }
     var startingGameState: StartingGameState

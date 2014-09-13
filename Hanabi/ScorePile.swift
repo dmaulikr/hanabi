@@ -41,41 +41,33 @@ class ScorePile {
     var topDictionary: [Card.Color: Int] = [:]
     // Add given card to score pile. Assume playable.
     func addCard(card: Card) {
-        topDictionary[card.color] = card.numberInt
+        topDictionary[card.color] = card.num
+    }
+    // Whether given card is a valid play.
+    func canScore(card: Card) -> Bool {
+        // It's playable if the card's number is 1 more than its color's current score.
+        let currentValue = topDictionary[card.color]
+        return card.num == currentValue! + 1
     }
     // Whether player knows the given card back is playable.
     func cardBackIsKnownPlayableBool(cardBack: CardBack) -> Bool {
         // If all remaining options are playable, card is playable.
         for card in cardBack.optionsCardArray {
-            if !cardIsPlayable(card) {
+            if !canScore(card) {
                 return false
             }
         }
         return true
     }
-    // Whether given card is a valid play.
-    func cardIsPlayable(card: Card) -> Bool {
-        // It's playable if the card's number is 1 more than its color's current score.
-        let currentValueOptionalInt = topDictionary[card.color]
-        if card.numberInt == currentValueOptionalInt! + 1 {
-            return true
-        } else {
-            return false
-        }
-    }
-    // Whether given card has already been scored.
-    func cardWasAlreadyPlayed(card: Card) -> Bool {
-        let scoreForColorInt = topDictionary[card.color]!
-        if card.numberInt <= scoreForColorInt {
-            return true
-        } else {
-            return false
-        }
-    }
     func copy() -> ScorePile {
         var scorePile = ScorePile()
         scorePile.topDictionary = topDictionary
         return scorePile
+    }
+    // Whether given card has been scored.
+    func has(card: Card) -> Bool {
+        let colorScore = topDictionary[card.color]!
+        return card.num <= colorScore
     }
     init() {
         // Start with 0 cards scored.
@@ -85,8 +77,8 @@ class ScorePile {
             int++
         }
     }
-    // The top scored value for the given color.
-    func topValueIntForColor(color: Card.Color) -> Int {
+    // The highest-scored value for the given color.
+    func value(#color: Card.Color) -> Int {
         return topDictionary[color]!
     }
 }
