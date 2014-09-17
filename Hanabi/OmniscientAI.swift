@@ -18,16 +18,18 @@ class OmniscientAI: AbstractAI {
         // Try in order:
         // Play: lowest card.
         // Avoid decking: If in danger of decking, give clue.
-        // Rule stops discard: If max clues then can't discard, so give clue.
+        // Can't discard: If max clues then can't discard, so give clue.
         // Safe discard: Already-played card or in-hand duplicate.
         
         // Stall 1: If another can play or discard safely, then give clue.
-        // Discard group duplicate: If player should discard group duplicate, then discard.
-        // Stall 2: If another should discard group duplicate, then give clue.
-        
-        // Discard card that's still in deck.
-        // Discard unique card.
+        // Non-1 group duplicates. If any:
+          // Discard: If player is in worst position, discard.
+          // Stall 2: Else another should discard, so give clue.
+    
+        // Discard card that's still in deck. (Dangerous if remaining card(s) at end of deck.)
+        // Discard unique unscored card. (Can't win.)
         let subroundString = "Round \(game.currentSubroundString)"
+        let players = game.players
         let player = game.currentPlayer
         let hand = player.hand
         let scorePile = game.scorePile
@@ -39,36 +41,33 @@ class OmniscientAI: AbstractAI {
             // Play lowest possible card. If tie, play first.
             let lowestCard = Card.lowest(playableCards).first!
             action.targetCardIndex = lowestCard.indexIn(hand)!
-        } else if mayDeck(game: game) && numCluesLeft > 0 {
+        } else if canClue(game: game) && mayDeck(game: game) {
 //            println("\(subroundString): Avoid decking: Clue.")
             action.type = .Clue
-        } else if numCluesLeft == MaxClues {
-//            println("\(subroundString): Max clues: Clue.")
+        } else if !canDiscard(game: game) {
+//            println("\(subroundString): Can't discard (max clues?): Clue.")
             action.type = .Clue
-        } else if player.hasSafeDiscard(scorePile: scorePile) {
+        } else if canDiscard(game: game) && player.canDiscardSafely(scorePile: scorePile) {
 //            println("\(subroundString): Safe discard.")
             action.type = .Discard
-            let safeDiscards = player.safeDiscards(scorePile: scorePile)
-            let card = safeDiscards.first!
+            let discardsSafe = player.discardsSafe(scorePile: scorePile)
+            let card = discardsSafe.first!
             action.targetCardIndex = card.indexIn(hand)!
-        }
-        // } else if ??? {
-        // WILO
-        // reworked algorithm a bit; need to do Stall 1 above
-        
-//        } else {
-//
-//            } else {
-//                let cheatingGroupDuplicatesCardArray = turn.cheatingGroupDuplicatesCardArray
-//                if !cheatingGroupDuplicatesCardArray.isEmpty {
-//                    //                    println("Round \(roundSubroundString): Group discard.")
-//                    action.type = .Discard
-//                    let theDiscardCard = cheatingGroupDuplicatesCardArray.first!
-//                    action.targetCardIndexInt = Card.indexOptionalIntOfCardValueInArray(theDiscardCard, cardArray: currentHand)!
-//                } else if (turn.cheatingAnyPlaysOrSafeDiscardsBool || turn.cheatingAnyGroupDuplicatesBool) && (numCluesLeft > 0) {
-//                    //                    println("Round \(roundSubroundString): Another can play/discard. Give clue.")
-//                    action.type = .Clue
-//                } else {
+        } else if canClue(game: game) && Player.anotherCanPlayOn(scorePile, players: players, currentPlayer: player) || Player.anotherCanDiscardSafely(scorePile: scorePile, players: players, currentPlayer: player) {
+            // println("\(subroundString): Another can play or discard safely: Clue.")
+            action.type = .Clue
+        } else if player.hasNon1GroupDuplicate(players: players) {
+            if canDiscard(game: game) && player.shouldDiscardNon1GroupDuplicate(players: players) {
+//                println("\(subroundString): Should discard non-1 group duplicate: Discard.")
+                action.type = .Discard
+                let card = player.non1GroupDuplicateToDiscard(players: players)!
+                action.targetCardIndex = card.indexIn(hand)!
+            } else if canClue(game: game) {
+                // println("\(subroundString): Another should discard non-1 group duplicate: Clue.")
+                action.type = .Clue
+            }
+        } // WILO
+        // else if canDiscard(game: game) && ?? player.canDiscardDeckCard(deck?)
 //                    // If player has a card that's still in the deck, discard highest.
 //                    let cheatingCardsAlsoInDeckCardArray = turn.cheatingCardsAlsoInDeckCardArray
 //                    if !cheatingCardsAlsoInDeckCardArray.isEmpty {
@@ -174,6 +173,16 @@ class OmniscientAI: AbstractAI {
 //        return action
 //    }
     
+    // Whether current player can give a clue.
+    func canClue(#game: Game) -> Bool {
+        let numCluesLeft = game.numCluesLeft
+        return numCluesLeft > 0
+    }
+    // Whether current player can discard.
+    func canDiscard(#game: Game) -> Bool {
+        let numCluesLeft = game.numCluesLeft
+        return numCluesLeft < MaxClues
+    }
     override init() {
         super.init()
         type = AIType.Omniscient

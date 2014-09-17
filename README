@@ -4,28 +4,36 @@ This is a Hanabi solver. It allows one to explore the game space of Hanabi.
 
 Hanabi: http://boardgamegeek.com/boardgame/98778/hanabi
 
-How to build: This is an iPad app, written mostly in Swift, targeted for iOS 7.1+. As of this writing, to build you'll need the latest Xcode beta.
+To run, use Xcode 6. (This Hanabi solver is an iPad app, mostly in Swift, targeted for iOS 7.1+.)
 
-What users can currently do: The app has two modes: 1) solve games, 2) walk through a single game. The former is to see how an AI does overall. The latter is to explore a specific game/deal of Hanabi. The latter is reproducible via seeds.
+What you can do:
+--Simulate many games to get statistics.
+--Walk through a single game to see how the AI plays it.
+--Single games are reproducible via seeds.
 
-What you can't do yet but I agree it's a good idea:
---Select AIs other than one that cheats. =)
+What you can't do, yet:
 --Enter a custom deck/deal to analyze.
---Select an AI that mimics (good) human play.
 --Change number of players in the game.
+--Select AIs other than one that cheats. =)
+--Select an AI that mimics (good) human play.
 
 AIs:
---Omniscient: Cheats (knowledge of own hand). Loses ~3% of games.
+• Omniscient: Cheats (knowledge of own hand).
+  • Games lost: ~3%.
+  • Time: ?
 --Pure Info: (in progress) ??
 --AlwaysDiscardElf: (may not work anymore) Discards every turn. Was for testing.
 
-Speed optimization:
---None yet. Low priority.
+Other plans:
+• Refactor code. (In progress.)
+• Faster games?
 
-Understanding the code:
-While the source code is available here, this is currently a project just for myself. If you still wish to use the code and something isn't clear, you can ask me.
-I'm a self-taught coder, and I want to get better. I apologize if the code is hard to follow. Constructive criticism is appreciated. As of right now (0.1.1 (build 2)), I'm in the middle of adopting a new coding convention (non-Hungarian). Also, I'm still building up a lot of the features and UI. So there will be a lot of changes for the foreseeable future.
+Code structure:
+• SolverElf simulates/manages the games. For each turn, she asks an AI what to do.
+
+This is on GitHub as a personal backup, though I don't mind sharing. If you want to understand the code and it's not clear, please ask. I'm a self-taught coder, and I want to get better.
 
 More on Hanabi:
-Google.
-(personal thoughts)
+• Google it.
+• Geoff Hom's personal thoughts:
+  • ?

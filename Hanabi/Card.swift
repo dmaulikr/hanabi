@@ -87,12 +87,12 @@ class Card: NSObject {
     }
     var color: Color
     // The card next in sequence. (Max value is 5.)
-    var nextValueOptionalCard: Card? {
-        var optionalCard: Card?
+    var next: Card? {
+        var card: Card?
         if num <= 5 {
-            optionalCard = Card(color: color, num: num + 1)
+            card = Card(color: color, num: num + 1)
         }
-        return optionalCard
+        return card
     }
     var num: Int!
     var optionalCardBack: CardBack?
