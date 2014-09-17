@@ -10,48 +10,48 @@ import UIKit
 
 class AbstractGameState: NSObject {
     // Whether any player, including self, has any group duplicates.
-    var cheatingAnyGroupDuplicatesBool: Bool {
-        for player in playerArray {
-            for card in player.hand {
-                if cardValueIsGroupDuplicateBool(card) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
+//    var cheatingAnyGroupDuplicatesBool: Bool {
+//        for player in playerArray {
+//            for card in player.hand {
+//                if cardValueIsGroupDuplicateBool(card) {
+//                    return true
+//                }
+//            }
+//        }
+//        return false
+//    }
     // Whether any player, including self, has a play or safe discard.
-    var cheatingAnyPlaysOrSafeDiscardsBool: Bool {
-        for player in playerArray {
-            let handCardArray = player.hand
-            for card in handCardArray {
-                if scorePile.canScore(card) || scorePile.has(card) || cardValueIsDuplicate(card, handCardArray:handCardArray) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
+//    var cheatingAnyPlaysOrSafeDiscardsBool: Bool {
+//        for player in playerArray {
+//            let handCardArray = player.hand
+//            for card in handCardArray {
+//                if scorePile.canScore(card) || scorePile.has(card) || cardValueIsDuplicate(card, handCardArray:handCardArray) {
+//                    return true
+//                }
+//            }
+//        }
+//        return false
+//    }
     // Cards the current player shares with the deck.
-    var cheatingCardsAlsoInDeckCardArray: [Card] {
-        var cheatingCardsAlsoInDeckCardArray: [Card] = []
-        for card in currentPlayer.hand {
-            if cardValueIsInDeckBool(card) {
-                cheatingCardsAlsoInDeckCardArray.append(card)
-            }
-        }
-        return cheatingCardsAlsoInDeckCardArray
-    }
+//    var cheatingCardsAlsoInDeckCardArray: [Card] {
+//        var cheatingCardsAlsoInDeckCardArray: [Card] = []
+//        for card in currentPlayer.hand {
+//            if cardValueIsInDeckBool(card) {
+//                cheatingCardsAlsoInDeckCardArray.append(card)
+//            }
+//        }
+//        return cheatingCardsAlsoInDeckCardArray
+//    }
     // Cards the current player shares with other players.
-    var cheatingGroupDuplicatesCardArray: [Card] {
-        var cheatingGroupDuplicatesCardArray: [Card] = []
-        for card in currentPlayer.hand {
-            if cardValueIsGroupDuplicateBool(card) {
-                cheatingGroupDuplicatesCardArray.append(card)
-            }
-        }
-        return cheatingGroupDuplicatesCardArray
-    }
+//    var cheatingGroupDuplicatesCardArray: [Card] {
+//        var cheatingGroupDuplicatesCardArray: [Card] = []
+//        for card in currentPlayer.hand {
+//            if cardValueIsGroupDuplicateBool(card) {
+//                cheatingGroupDuplicatesCardArray.append(card)
+//            }
+//        }
+//        return cheatingGroupDuplicatesCardArray
+//    }
     var currentPlayer: Player {
         return playerArray[currentPlayerIndex]
     }
@@ -152,19 +152,19 @@ class AbstractGameState: NSObject {
     }
     // Return whether the given card appears at least twice in the given hand.
     // deprecate; use isTwiceIn() instead
-    func cardValueIsDuplicate(card: Card, handCardArray: [Card]) -> Bool {
-        var numberOfTimesSeenInt = 0
-        for card2 in handCardArray {
-            if card2.isSameAs(card) {
-                ++numberOfTimesSeenInt
-            }
-        }
-        if numberOfTimesSeenInt >= 2 {
-            return true
-        } else {
-            return false
-        }
-    }
+//    func cardValueIsDuplicate(card: Card, handCardArray: [Card]) -> Bool {
+//        var numberOfTimesSeenInt = 0
+//        for card2 in handCardArray {
+//            if card2.isSameAs(card) {
+//                ++numberOfTimesSeenInt
+//            }
+//        }
+//        if numberOfTimesSeenInt >= 2 {
+//            return true
+//        } else {
+//            return false
+//        }
+//    }
     // Whether the given card appears at least twice among all hands. (Cheating?)
     func cardValueIsGroupDuplicateBool(card: Card) -> Bool {
         var numberOfTimesSeenInt = 0
@@ -183,9 +183,9 @@ class AbstractGameState: NSObject {
     }
     // Whether the given card is in the current deck.
     // deprecate; use card.isIn()
-    func cardValueIsInDeckBool(card: Card) -> Bool {
-        return card.isIn(deck.cardArray)
-    }
+//    func cardValueIsInDeckBool(card: Card) -> Bool {
+//        return card.isIn(deck.cards)
+//    }
     // Useful data describing game state.
     func data(#showCurrentHandBool: Bool) -> (discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {
         let scoreInt = scorePile.currentInt

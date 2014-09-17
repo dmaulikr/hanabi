@@ -93,7 +93,16 @@ class Player: NSObject {
         }
         return noDupsHandCardArray
     }
-    // Whether given card can be discarded safely. I.e., was already played or duplicate is in hand.
+    // Whether at least one card in hand is also in deck.
+    func canDiscardDeckCard(#deck: Deck) -> Bool {
+        for card in hand {
+            if card.isIn(deck.cards) {
+                return true
+            }
+        }
+        return false
+    }
+    // Whether card can be discarded safely. I.e., was already played or duplicate is in hand.
     private func canDiscardSafely(card: Card, scorePile: ScorePile) -> Bool {
         return scorePile.has(card) || card.isTwiceIn(hand)
     }
@@ -114,6 +123,16 @@ class Player: NSObject {
             }
         }
         return false
+    }
+    // Cards also in deck.
+    func cardsAlsoIn(deck: Deck) -> [Card] {
+        var cards: [Card] = []
+        for card in hand {
+            if card.isIn(deck.cards) {
+                cards.append(card)
+            }
+        }
+        return cards
     }
     override func copy() -> AnyObject {
         var player = Player()
@@ -151,18 +170,8 @@ class Player: NSObject {
         }
         return false
     }
-    // The group duplicate this player should discard. If none, return nil.
-    func non1GroupDuplicateToDiscard(#players: [Player]) -> Card? {
-        let groupDuplicates = non1GroupDuplicates(players: players)
-        for card in groupDuplicates {
-            if shouldDiscardNon1GroupDuplicate(card: card, players: players) {
-                return card
-            }
-        }
-        return nil
-    }
     // Cards also in another player's hand. Ignore 1s. (Context: Determine who should discard group 2/3/4s.)
-    private func non1GroupDuplicates(#players: [Player]) -> [Card] {
+    func non1GroupDuplicates(#players: [Player]) -> [Card] {
         var groupDuplicates: [Card] = []
         for card in hand {
             if isNon1GroupDuplicate(card: card, players: players) {
@@ -180,64 +189,5 @@ class Player: NSObject {
             }
         }
         return playableCards
-    }
-    // Whether given group duplicate should be discarded by this player (vs. another player).
-    func shouldDiscardNon1GroupDuplicate(#card: Card, players: [Player]) -> Bool {
-        // Get value of next card. If no one has that, might as well discard now.
-        let nextCard = card.next!
-        var found = false
-        for player in players {
-            if nextCard.isIn(player.hand) {
-                found = true
-            }
-        }
-        if !found {
-            return true
-        }
-        // For both players with card, get # turns to play next card. (Multiple players may have next card.) Player who needs more turns should discard. If tie, might as well discard now.
-        // Count after current player.
-        let numPlayers = players.count
-        var startIndex = (find(players, self)! + 1) % numPlayers
-        var currentPlayerCount = 0
-        for index in 0...numPlayers - 1 {
-            let realIndex = (startIndex + index) % numPlayers
-            let player = players[realIndex]
-            ++currentPlayerCount
-            if nextCard.isIn(player.hand) {
-                break
-            }
-        }
-        // Find other player with card.
-        // Count after other player with card.
-        var otherPlayer: Player!
-        for index in 0...numPlayers - 1 {
-            let realIndex = (startIndex + index) % numPlayers
-            let player = players[realIndex]
-            if card.isIn(player.hand) {
-                otherPlayer = player
-                break
-            }
-        }
-        startIndex = (find(players, otherPlayer)! + 1) % numPlayers
-        var otherPlayerCount = 0
-        for index in 0...numPlayers - 1 {
-            let realIndex = (startIndex + index) % numPlayers
-            let player = players[realIndex]
-            ++otherPlayerCount
-            if nextCard.isIn(player.hand) {
-                break
-            }
-        }
-        return currentPlayerCount >= otherPlayerCount
-    }
-    // Whether player should discard at least one group duplicate (vs. another player discarding it).
-    func shouldDiscardNon1GroupDuplicate(#players: [Player]) -> Bool {
-        let groupDuplicates = non1GroupDuplicates(players: players)
-        for card in groupDuplicates {
-            if shouldDiscardNon1GroupDuplicate(card: card, players: players) {
-                return true
-            }
-        }
-        return false
     }
 }

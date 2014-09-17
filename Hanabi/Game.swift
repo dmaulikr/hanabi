@@ -6,6 +6,14 @@
 import UIKit
 let MaxClues = 8
 class Game: NSObject {
+    // Whether current player can give a clue.
+    var canClue: Bool {
+        return numCluesLeft > 0
+    }
+    // Whether current player can discard.
+    var canDiscard: Bool {
+        return numCluesLeft < MaxClues
+    }
     var currentPlayer: Player {
         return currentTurn.currentPlayer
     }
@@ -14,6 +22,9 @@ class Game: NSObject {
     }
     var currentTurn: Turn {
         return turnArray.last!
+    }
+    var deck: Deck {
+        return currentTurn.deck
     }
     // Score at end of game.
     var finalScoreInt: Int {

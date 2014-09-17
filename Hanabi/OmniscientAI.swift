@@ -19,7 +19,7 @@ class OmniscientAI: AbstractAI {
         // Play: lowest card.
         // Avoid decking: If in danger of decking, give clue.
         // Can't discard: If max clues then can't discard, so give clue.
-        // Safe discard: Already-played card or in-hand duplicate.
+        // Discard safely: Already-played card or in-hand duplicate.
         
         // Stall 1: If another can play or discard safely, then give clue.
         // Non-1 group duplicates. If any:
@@ -29,11 +29,13 @@ class OmniscientAI: AbstractAI {
         // Discard card that's still in deck. (Dangerous if remaining card(s) at end of deck.)
         // Discard unique unscored card. (Can't win.)
         let subroundString = "Round \(game.currentSubroundString)"
-        let players = game.players
         let player = game.currentPlayer
-        let hand = player.hand
         let scorePile = game.scorePile
-        let numCluesLeft = game.numCluesLeft
+        let hand = player.hand
+        let canClue = game.canClue
+        let canDiscard = game.canDiscard
+        let players = game.players
+        let deck = game.deck
         if player.canPlayOn(scorePile) {
 //            println("\(subroundString): Play.")
             action.type = .Play
@@ -41,55 +43,43 @@ class OmniscientAI: AbstractAI {
             // Play lowest possible card. If tie, play first.
             let lowestCard = Card.lowest(playableCards).first!
             action.targetCardIndex = lowestCard.indexIn(hand)!
-        } else if canClue(game: game) && mayDeck(game: game) {
+        } else if canClue && mayDeck(game: game) {
 //            println("\(subroundString): Avoid decking: Clue.")
             action.type = .Clue
-        } else if !canDiscard(game: game) {
+        } else if !canDiscard {
 //            println("\(subroundString): Can't discard (max clues?): Clue.")
             action.type = .Clue
-        } else if canDiscard(game: game) && player.canDiscardSafely(scorePile: scorePile) {
-//            println("\(subroundString): Safe discard.")
+        } else if canDiscard && player.canDiscardSafely(scorePile: scorePile) {
+//            println("\(subroundString): Discard safely.")
             action.type = .Discard
             let discardsSafe = player.discardsSafe(scorePile: scorePile)
             let card = discardsSafe.first!
             action.targetCardIndex = card.indexIn(hand)!
-        } else if canClue(game: game) && Player.anotherCanPlayOn(scorePile, players: players, currentPlayer: player) || Player.anotherCanDiscardSafely(scorePile: scorePile, players: players, currentPlayer: player) {
+        } else if canClue && Player.anotherCanPlayOn(scorePile, players: players, currentPlayer: player) || Player.anotherCanDiscardSafely(scorePile: scorePile, players: players, currentPlayer: player) {
             // println("\(subroundString): Another can play or discard safely: Clue.")
             action.type = .Clue
         } else if player.hasNon1GroupDuplicate(players: players) {
-            if canDiscard(game: game) && player.shouldDiscardNon1GroupDuplicate(players: players) {
+            if canDiscard && playerShouldDiscardNon1GroupDuplicate(player, players: players) {
 //                println("\(subroundString): Should discard non-1 group duplicate: Discard.")
                 action.type = .Discard
-                let card = player.non1GroupDuplicateToDiscard(players: players)!
+                let card = playerNon1GroupDuplicateToDiscard(player, players: players)!
                 action.targetCardIndex = card.indexIn(hand)!
-            } else if canClue(game: game) {
+            } else if canClue {
                 // println("\(subroundString): Another should discard non-1 group duplicate: Clue.")
                 action.type = .Clue
             }
-        } // WILO
-        // else if canDiscard(game: game) && ?? player.canDiscardDeckCard(deck?)
-//                    // If player has a card that's still in the deck, discard highest.
-//                    let cheatingCardsAlsoInDeckCardArray = turn.cheatingCardsAlsoInDeckCardArray
-//                    if !cheatingCardsAlsoInDeckCardArray.isEmpty {
-//                        log.addLine("Semi-rare? No one has a play, safe discard or group duplicate.(Or no clues left.) Seed: \(game.seedUInt32). Round \(turn.roundSubroundString).")
-//                        action.type = .Discard
-//                        var theDiscardCard = cheatingCardsAlsoInDeckCardArray.first!
-//                        var maxNumberInt = theDiscardCard.numberInt
-//                        for card in cheatingCardsAlsoInDeckCardArray {
-//                            if card.numberInt > maxNumberInt {
-//                                maxNumberInt = card.numberInt
-//                                theDiscardCard = card
-//                            }
-//                        }
-//                        action.targetCardIndexInt = Card.indexOptionalIntOfCardValueInArray(theDiscardCard, cardArray: currentHand)!
-//                    } else {
-//                        log.addLine("Rare warning: Discarding unique? Seed: \(game.seedUInt32). Round \(turn.roundSubroundString).")
-//                        action.type = .Discard
-//                        action.targetCardIndexInt = 0
-//                    }
-//                }
-//            }
-//        }
+        } else if canDiscard && player.canDiscardDeckCard(deck: deck) {
+            // println("\(subroundString): Discard deck card.")
+            log.addLine("\(subroundString): Discarding deck card. No one has a play, safe discard or group duplicate. (Or no clues left.) Seed: \(game.seedUInt32).")
+            action.type = .Discard
+            let card = playerDeckCardToDiscard(player, deck: deck)
+            action.targetCardIndex = card.indexIn(hand)!
+        } else if canDiscard {
+            // println("\(subroundString): Discard unique.")
+            log.addLine("\(subroundString): Discarding unique. Shouldn't happen with Omni AI. Seed: \(game.seedUInt32).")
+            action.type = .Discard
+            action.targetCardIndex = 0
+        }
         return action
     }
     
@@ -173,16 +163,6 @@ class OmniscientAI: AbstractAI {
 //        return action
 //    }
     
-    // Whether current player can give a clue.
-    func canClue(#game: Game) -> Bool {
-        let numCluesLeft = game.numCluesLeft
-        return numCluesLeft > 0
-    }
-    // Whether current player can discard.
-    func canDiscard(#game: Game) -> Bool {
-        let numCluesLeft = game.numCluesLeft
-        return numCluesLeft < MaxClues
-    }
     override init() {
         super.init()
         type = AIType.Omniscient
@@ -209,5 +189,89 @@ class OmniscientAI: AbstractAI {
         let scorePile = game.scorePile
         let numVisiblePlays = Player.numVisiblePlays(players: players, scorePile: scorePile)
         return numCardsLeft > 0 && numVisiblePlays >= numCardsLeft
+    }
+    // Of player's cards also in the deck, the card to discard. Assumes at least one such card.
+    private func playerDeckCardToDiscard(player: Player, deck: Deck) -> Card {
+        // Discard highest. Why? Discarding a deck card is an issue if the remaining card is near the end of the deck. Then there's less/no time to play the cards above it. We'll minimize the impact by discarding the highest card.
+        let cardsAlsoInDeck = player.cardsAlsoIn(deck)
+        var discardCard = cardsAlsoInDeck.first!
+        var maxNum = discardCard.num
+        for card in cardsAlsoInDeck {
+            let num = card.num
+            if num > maxNum {
+                maxNum = num
+                discardCard = card
+            }
+        }
+        return discardCard
+    }
+    // The group duplicate the player should discard. If none, return nil.
+    private func playerNon1GroupDuplicateToDiscard(player: Player, players: [Player]) -> Card? {
+        let groupDuplicates = player.non1GroupDuplicates(players: players)
+        for card in groupDuplicates {
+            if playerShouldDiscardNon1GroupDuplicate(player, card: card, players: players) {
+                return card
+            }
+        }
+        return nil
+    }
+    // Whether card should be discarded by player (vs. another player).
+    private func playerShouldDiscardNon1GroupDuplicate(player: Player, card: Card, players: [Player]) -> Bool {
+        // Get value of next card. If no one has that, might as well discard now.
+        let nextCard = card.next!
+        var found = false
+        for player in players {
+            if nextCard.isIn(player.hand) {
+                found = true
+            }
+        }
+        if !found {
+            return true
+        }
+        // For both players with card, get # turns to play next card. (Multiple players may have next card.) Player who needs more turns should discard. If tie, might as well discard now.
+        // Count after current player.
+        let numPlayers = players.count
+        var startIndex = (find(players, player)! + 1) % numPlayers
+        var currentPlayerCount = 0
+        for index in 0...numPlayers - 1 {
+            let realIndex = (startIndex + index) % numPlayers
+            let aPlayer = players[realIndex]
+            ++currentPlayerCount
+            if nextCard.isIn(aPlayer.hand) {
+                break
+            }
+        }
+        // Find other player with card.
+        // Count after other player with card.
+        var otherPlayer: Player!
+        for index in 0...numPlayers - 1 {
+            let realIndex = (startIndex + index) % numPlayers
+            let aPlayer = players[realIndex]
+            if card.isIn(aPlayer.hand) {
+                otherPlayer = aPlayer
+                break
+            }
+        }
+        startIndex = (find(players, otherPlayer)! + 1) % numPlayers
+        var otherPlayerCount = 0
+        for index in 0...numPlayers - 1 {
+            let realIndex = (startIndex + index) % numPlayers
+            let aPlayer = players[realIndex]
+            ++otherPlayerCount
+            if nextCard.isIn(aPlayer.hand) {
+                break
+            }
+        }
+        return currentPlayerCount >= otherPlayerCount
+    }
+    // Whether given player should discard at least one group duplicate (vs. another player discarding it).
+    private func playerShouldDiscardNon1GroupDuplicate(player: Player, players: [Player]) -> Bool {
+        let groupDuplicates = player.non1GroupDuplicates(players: players)
+        for card in groupDuplicates {
+            if playerShouldDiscardNon1GroupDuplicate(player, card: card, players: players) {
+                return true
+            }
+        }
+        return false
     }
 }

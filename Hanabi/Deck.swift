@@ -9,28 +9,28 @@
 import UIKit
 
 class Deck: NSObject {
-    var cardArray: [Card] = []
+    var cards: [Card] = []
     var isEmpty: Bool {
-        return cardArray.isEmpty
+        return cards.isEmpty
     }
     var numberOfCardsLeftInt: Int {
-        return cardArray.count
+        return cards.count
     }
     // Number for srandom(). Determines card order.
     var seedUInt32: UInt32!
     // String showing cards in deck.
     var string: String {
-        return Card.stringForArray(cardArray)
+        return Card.stringForArray(cards)
     }
     override func copy() -> AnyObject {
         var deck = Deck()
-        deck.cardArray = cardArray
+        deck.cards = cards
         deck.seedUInt32 = seedUInt32
         return deck
     }
     // Take top card from the deck and return it. Assumes not empty.
     func drawCard() -> Card {
-        let card = cardArray.removeAtIndex(0)
+        let card = cards.removeAtIndex(0)
         card.optionalCardBack = CardBack()
         return card
     }
@@ -51,18 +51,18 @@ class Deck: NSObject {
             if let color = Card.Color.fromRaw(int) {
                 for _ in 1...3 {
                     card = Card(color: color, num: 1)
-                    cardArray.append(card)
+                    cards.append(card)
                 }
                 for _ in 1...2 {
                     card = Card(color: color, num: 2)
-                    cardArray.append(card)
+                    cards.append(card)
                     card = Card(color: color, num: 3)
-                    cardArray.append(card)
+                    cards.append(card)
                     card = Card(color: color, num: 4)
-                    cardArray.append(card)
+                    cards.append(card)
                 }
                 card = Card(color: color, num: 5)
-                cardArray.append(card)
+                cards.append(card)
             }
         }
     }
@@ -79,11 +79,11 @@ class Deck: NSObject {
         srandom(seedUInt32)
         var tempCardArray: [Card] = []
         // Number of cards in deck will decrease each time.
-        for pullTurnInt in 1...cardArray.count {
-            let indexInt = random() % cardArray.count
-            let card = cardArray.removeAtIndex(indexInt)
+        for pullTurnInt in 1...cards.count {
+            let indexInt = random() % cards.count
+            let card = cards.removeAtIndex(indexInt)
             tempCardArray.append(card)
         }
-        cardArray = tempCardArray
+        cards = tempCardArray
     }
 }

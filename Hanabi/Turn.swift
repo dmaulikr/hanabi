@@ -9,37 +9,44 @@
 import UIKit
 
 class Turn: NSObject {
-    var cheatingAnyGroupDuplicatesBool: Bool {
-        if let endingGameState = endingOptionalGameState {
-            return endingGameState.cheatingAnyGroupDuplicatesBool
-        } else {
-            return startingGameState.cheatingAnyGroupDuplicatesBool
-        }
-    }
-    var cheatingAnyPlaysOrSafeDiscardsBool: Bool {
-        if let endingGameState = endingOptionalGameState {
-            return endingGameState.cheatingAnyPlaysOrSafeDiscardsBool
-        } else {
-            return startingGameState.cheatingAnyPlaysOrSafeDiscardsBool
-        }
-    }
-    var cheatingCardsAlsoInDeckCardArray: [Card] {
-        if let endingGameState = endingOptionalGameState {
-            return endingGameState.cheatingCardsAlsoInDeckCardArray
-        } else {
-            return startingGameState.cheatingCardsAlsoInDeckCardArray
-        }
-    }
-    var cheatingGroupDuplicatesCardArray: [Card] {
-        if let endingGameState = endingOptionalGameState {
-            return endingGameState.cheatingGroupDuplicatesCardArray
-        } else {
-            return startingGameState.cheatingGroupDuplicatesCardArray
-        }
-    }
+//    var cheatingAnyGroupDuplicatesBool: Bool {
+//        if let endingGameState = endingOptionalGameState {
+//            return endingGameState.cheatingAnyGroupDuplicatesBool
+//        } else {
+//            return startingGameState.cheatingAnyGroupDuplicatesBool
+//        }
+//    }
+//    var cheatingAnyPlaysOrSafeDiscardsBool: Bool {
+//        if let endingGameState = endingOptionalGameState {
+//            return endingGameState.cheatingAnyPlaysOrSafeDiscardsBool
+//        } else {
+//            return startingGameState.cheatingAnyPlaysOrSafeDiscardsBool
+//        }
+//    }
+//    var cheatingCardsAlsoInDeckCardArray: [Card] {
+//        if let endingGameState = endingOptionalGameState {
+//            return endingGameState.cheatingCardsAlsoInDeckCardArray
+//        } else {
+//            return startingGameState.cheatingCardsAlsoInDeckCardArray
+//        }
+//    }
+//    var cheatingGroupDuplicatesCardArray: [Card] {
+//        if let endingGameState = endingOptionalGameState {
+//            return endingGameState.cheatingGroupDuplicatesCardArray
+//        } else {
+//            return startingGameState.cheatingGroupDuplicatesCardArray
+//        }
+//    }
     var currentPlayer: Player {
         // Same in starting and ending states.
         return startingGameState.currentPlayer
+    }
+    var deck: Deck {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.deck
+        } else {
+            return startingGameState.deck
+        }
     }
     var endingOptionalGameState: EndingGameState?
     // Whether the game has ended (not necessarily won).
