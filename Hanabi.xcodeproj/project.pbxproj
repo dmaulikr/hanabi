@@ -40,6 +40,7 @@
 		93D43004198F9E82006A28D9 /* tap.aif in Resources */ = {isa = PBXBuildFile; fileRef = 93D43002198F9D8A006A28D9 /* tap.aif */; };
 		93D91E53199ABF6E00685BF1 /* StartingGameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D91E52199ABF6E00685BF1 /* StartingGameState.swift */; };
 		93D91E55199ABFA800685BF1 /* EndingGameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D91E54199ABFA800685BF1 /* EndingGameState.swift */; };
+		93EDA92F19CA9C9700D03277 /* AIPerformance.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 93EDA92E19CA9C9700D03277 /* AIPerformance.rtf */; };
 		93F653BB1990272A00198AB6 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F653BA1990272A00198AB6 /* MainMenuViewController.swift */; };
 		93F653BD1990447400198AB6 /* ViewControllerElf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F653BC1990447300198AB6 /* ViewControllerElf.swift */; };
 		93F653BF1990CAE800198AB6 /* SolverElf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93F653BE1990CAE800198AB6 /* SolverElf.swift */; };
@@ -98,6 +99,7 @@
 		93D43002198F9D8A006A28D9 /* tap.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = tap.aif; sourceTree = "<group>"; };
 		93D91E52199ABF6E00685BF1 /* StartingGameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartingGameState.swift; sourceTree = "<group>"; };
 		93D91E54199ABFA800685BF1 /* EndingGameState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndingGameState.swift; sourceTree = "<group>"; };
+		93EDA92E19CA9C9700D03277 /* AIPerformance.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; path = AIPerformance.rtf; sourceTree = "<group>"; };
 		93F653BA1990272A00198AB6 /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
 		93F653BC1990447300198AB6 /* ViewControllerElf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewControllerElf.swift; sourceTree = "<group>"; };
 		93F653BE1990CAE800198AB6 /* SolverElf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SolverElf.swift; sourceTree = "<group>"; };
@@ -187,6 +189,7 @@
 		93D42FD2198F7A59006A28D9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				93EDA92E19CA9C9700D03277 /* AIPerformance.rtf */,
 				93D42FF4198F7E7E006A28D9 /* AppStoreInfo.rtf */,
 				93D42FD3198F7A59006A28D9 /* Info.plist */,
 				935932DC19AE3982009AC4EF /* README */,
@@ -301,6 +304,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				935932DD19AE3982009AC4EF /* README in Resources */,
+				93EDA92F19CA9C9700D03277 /* AIPerformance.rtf in Resources */,
 				93D42FF5198F7E7E006A28D9 /* AppStoreInfo.rtf in Resources */,
 				93D42FDD198F7A59006A28D9 /* Main.storyboard in Resources */,
 				93D42FDF198F7A59006A28D9 /* Images.xcassets in Resources */,

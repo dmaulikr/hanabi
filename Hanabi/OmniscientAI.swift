@@ -23,7 +23,7 @@ class OmniscientAI: AbstractAI {
         
         // Stall 1: If another can play or discard safely, then give clue.
         // Non-1 group duplicates. If any:
-          // Discard: If player is in worst position, discard.
+          // Discard: If player is in worst position (or can't give clue), then discard.
           // Stall 2: Else another should discard, so give clue.
     
         // Discard card that's still in deck. (Dangerous if remaining card(s) at end of deck.)
@@ -55,30 +55,32 @@ class OmniscientAI: AbstractAI {
             let discardsSafe = player.discardsSafe(scorePile: scorePile)
             let card = discardsSafe.first!
             action.targetCardIndex = card.indexIn(hand)!
-        } else if canClue && Player.anotherCanPlayOn(scorePile, players: players, currentPlayer: player) || Player.anotherCanDiscardSafely(scorePile: scorePile, players: players, currentPlayer: player) {
-            // println("\(subroundString): Another can play or discard safely: Clue.")
+        } else if canClue && (Player.anotherCanPlayOn(scorePile, players: players, currentPlayer: player) || Player.anotherCanDiscardSafely(scorePile: scorePile, players: players, currentPlayer: player)) {
+//             println("\(subroundString): Another can play or discard safely: Clue.")
             action.type = .Clue
         } else if player.hasNon1GroupDuplicate(players: players) {
-            if canDiscard && playerShouldDiscardNon1GroupDuplicate(player, players: players) {
-//                println("\(subroundString): Should discard non-1 group duplicate: Discard.")
+            if (canDiscard && playerShouldDiscardNon1GroupDuplicate(player, players: players)) || !canClue {
+                println("\(subroundString): Should discard non-1 group duplicate: Discard.")
                 action.type = .Discard
-                let card = playerNon1GroupDuplicateToDiscard(player, players: players)!
+                let card = playerNon1GroupDuplicateToDiscard(player, players: players, canClue: canClue)!
                 action.targetCardIndex = card.indexIn(hand)!
             } else if canClue {
-                // println("\(subroundString): Another should discard non-1 group duplicate: Clue.")
+                 println("\(subroundString): Another should discard non-1 group duplicate: Clue.")
                 action.type = .Clue
             }
         } else if canDiscard && player.canDiscardDeckCard(deck: deck) {
-            // println("\(subroundString): Discard deck card.")
+            println("\(subroundString): Discard deck card.")
             log.addLine("\(subroundString): Discarding deck card. No one has a play, safe discard or group duplicate. (Or no clues left.) Seed: \(game.seedUInt32).")
             action.type = .Discard
             let card = playerDeckCardToDiscard(player, deck: deck)
             action.targetCardIndex = card.indexIn(hand)!
         } else if canDiscard {
-            // println("\(subroundString): Discard unique.")
+            println("\(subroundString): Discard unique.")
             log.addLine("\(subroundString): Discarding unique. Shouldn't happen with Omni AI. Seed: \(game.seedUInt32).")
             action.type = .Discard
             action.targetCardIndex = 0
+        } else {
+            println("\(subroundString): Ran out of options!")
         }
         return action
     }
@@ -182,13 +184,15 @@ class OmniscientAI: AbstractAI {
         // use old system, then note seeds that lose and try to improve (and keep seeds/decks recorded here)
         
         // simple system: N visible plays, ≤N cards in deck (want 2:2 -> 2:1 -> 2:0 -> 1:0 -> win)
-        // next system had N ≥ # cards left - 1 (want 2:3 -> 1:2 -> 1:1 -> 1:0 -> win)
+        // next system had N + 1 ≥ # cards left (want 2:3 -> 1:2 -> 1:1 -> 1:0 -> win)
         
         let numCardsLeft = game.numCardsLeft
         let players = game.players
         let scorePile = game.scorePile
         let numVisiblePlays = Player.numVisiblePlays(players: players, scorePile: scorePile)
-        return numCardsLeft > 0 && numVisiblePlays >= numCardsLeft
+        let threshold = 0
+        let mayDeck = numCardsLeft > 0 && numVisiblePlays + threshold >= numCardsLeft
+        return mayDeck
     }
     // Of player's cards also in the deck, the card to discard. Assumes at least one such card.
     private func playerDeckCardToDiscard(player: Player, deck: Deck) -> Card {
@@ -205,13 +209,17 @@ class OmniscientAI: AbstractAI {
         }
         return discardCard
     }
-    // The group duplicate the player should discard. If none, return nil.
-    private func playerNon1GroupDuplicateToDiscard(player: Player, players: [Player]) -> Card? {
+    // The group duplicate the player should discard. If can't clue, forced to discard. If none, return nil.
+    private func playerNon1GroupDuplicateToDiscard(player: Player, players: [Player], canClue: Bool) -> Card? {
         let groupDuplicates = player.non1GroupDuplicates(players: players)
         for card in groupDuplicates {
             if playerShouldDiscardNon1GroupDuplicate(player, card: card, players: players) {
                 return card
             }
+        }
+        // If no clues left, player should discard since she can't clue.
+        if !canClue {
+            return groupDuplicates.first
         }
         return nil
     }

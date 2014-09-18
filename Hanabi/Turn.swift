@@ -90,16 +90,16 @@ class Turn: NSObject {
     // Number of clues given by end of turn.
     var numberOfCluesGivenInt: Int {
         if let endingGameState = endingOptionalGameState {
-            return endingGameState.numberOfCluesGivenInt
+            return endingGameState.numCluesGiven
         } else {
-            return startingGameState.numberOfCluesGivenInt
+            return startingGameState.numCluesGiven
         }
     }
     var numCluesLeft: Int {
         if let endingGameState = endingOptionalGameState {
-            return endingGameState.numberOfCluesLeftInt
+            return endingGameState.numCluesLeft
         } else {
-            return startingGameState.numberOfCluesLeftInt
+            return startingGameState.numCluesLeft
         }
     }
     // Number of discards by end of turn.
@@ -125,7 +125,7 @@ class Turn: NSObject {
     // String for the round and subround for this turn. (E.g., in a 3-player game, turn 6 = round "2.3.")
     var roundSubroundString: String {
         // Same in starting and ending states.
-        return roundSubroundStringForTurn(turnNumberInt, numberOfPlayersInt: numberOfPlayersInt)
+        return roundSubroundStringForTurn(turnNum, numberOfPlayersInt: numberOfPlayersInt)
     }
     var scoreInt: Int {
         if let endingGameState = endingOptionalGameState {
@@ -142,9 +142,9 @@ class Turn: NSObject {
         }
     }
     var startingGameState: StartingGameState
-    var turnNumberInt: Int {
+    var turnNum: Int {
         // Same in starting and ending states.
-        return startingGameState.turnNumberInt
+        return startingGameState.turnNum
     }
     // Data for turn. If turn end, the data is for the end of the turn (vs start).
     func data(#turnEndBool: Bool, showCurrentHandBool: Bool) -> (actionString: String, deckString: String, discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {

@@ -11,31 +11,31 @@ class ScorePile {
     // Current score = sum for each color.
     var currentInt: Int {
         var currentInt = 0
-            for (color, score) in topDictionary {
-                currentInt += score
-            }
-            return currentInt
+        for (color, score) in topDictionary {
+            currentInt += score
+        }
+        return currentInt
     }
     // String showing the score for each color, in order.
     var string: String {
         // Score is kept in a dictionary, which does not guarantee order. We'll put each color's score in an array, then join the elements.
         var stringArray = [String](count: 5, repeatedValue: "")
-            for (color, score) in topDictionary {
-                switch color {
-                case .Blue:
-                    stringArray[0] = String(score)
-                case .Green:
-                    stringArray[1] = String(score)
-                case .Red:
-                    stringArray[2] = String(score)
-                case .White:
-                    stringArray[3] = String(score)
-                case .Yellow:
-                    stringArray[4] = String(score)
-                }
+        for (color, score) in topDictionary {
+            switch color {
+            case .Blue:
+                stringArray[0] = String(score)
+            case .Green:
+                stringArray[1] = String(score)
+            case .Red:
+                stringArray[2] = String(score)
+            case .White:
+                stringArray[3] = String(score)
+            case .Yellow:
+                stringArray[4] = String(score)
             }
-            let scoreString = "".join(stringArray)
-            return scoreString
+        }
+        let scoreString = "".join(stringArray)
+        return scoreString
     }
     // The value on top of each color pile.
     var topDictionary: [Card.Color: Int] = [:]

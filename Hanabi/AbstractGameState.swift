@@ -9,49 +9,12 @@
 import UIKit
 
 class AbstractGameState: NSObject {
-    // Whether any player, including self, has any group duplicates.
-//    var cheatingAnyGroupDuplicatesBool: Bool {
-//        for player in playerArray {
-//            for card in player.hand {
-//                if cardValueIsGroupDuplicateBool(card) {
-//                    return true
-//                }
-//            }
-//        }
-//        return false
-//    }
-    // Whether any player, including self, has a play or safe discard.
-//    var cheatingAnyPlaysOrSafeDiscardsBool: Bool {
-//        for player in playerArray {
-//            let handCardArray = player.hand
-//            for card in handCardArray {
-//                if scorePile.canScore(card) || scorePile.has(card) || cardValueIsDuplicate(card, handCardArray:handCardArray) {
-//                    return true
-//                }
-//            }
-//        }
-//        return false
-//    }
-    // Cards the current player shares with the deck.
-//    var cheatingCardsAlsoInDeckCardArray: [Card] {
-//        var cheatingCardsAlsoInDeckCardArray: [Card] = []
-//        for card in currentPlayer.hand {
-//            if cardValueIsInDeckBool(card) {
-//                cheatingCardsAlsoInDeckCardArray.append(card)
-//            }
-//        }
-//        return cheatingCardsAlsoInDeckCardArray
-//    }
-    // Cards the current player shares with other players.
-//    var cheatingGroupDuplicatesCardArray: [Card] {
-//        var cheatingGroupDuplicatesCardArray: [Card] = []
-//        for card in currentPlayer.hand {
-//            if cardValueIsGroupDuplicateBool(card) {
-//                cheatingGroupDuplicatesCardArray.append(card)
-//            }
-//        }
-//        return cheatingGroupDuplicatesCardArray
-//    }
+    class var numCluesAtStart: Int {
+        return 8
+    }
+    class var numberOfStrikesAtStartInt: Int {
+        return 3
+    }
     var currentPlayer: Player {
         return playerArray[currentPlayerIndex]
     }
@@ -118,16 +81,9 @@ class AbstractGameState: NSObject {
     var numberOfCardsLeftInt: Int {
         return deck.numberOfCardsLeftInt
     }
-    class var numberOfCluesAtStartInt: Int {
-        return 8
-    }
-    // Number of clues given up to this point. Equals clues started with + clues gained - clues left. Clues gained = number of discards.
-    var numberOfCluesGivenInt: Int {
-        let numberOfCluesGainedInt = numberOfDiscardsInt
-        let numberOfCluesGivenInt = AbstractGameState.numberOfCluesAtStartInt + numberOfCluesGainedInt - numberOfCluesLeftInt
-        return numberOfCluesGivenInt
-    }
-    var numberOfCluesLeftInt = numberOfCluesAtStartInt
+    // Could compute instead of track, but tricky: need number of clues gained, but if max clues when color finished, no clue gained.
+    var numCluesGiven = 0
+    var numCluesLeft = numCluesAtStart
     // Number of cards discarded. Equals number of cards in discard pile - number of bad plays.
     var numberOfDiscardsInt: Int {
         return discardsCardArray.count - numberOfBadPlaysInt
@@ -139,9 +95,6 @@ class AbstractGameState: NSObject {
     var numberOfPointsNeededInt: Int {
         return 25 - scorePile.currentInt
     }
-    class var numberOfStrikesAtStartInt: Int {
-        return 3
-    }
     var numberOfStrikesLeftInt = numberOfStrikesAtStartInt
     // Number of turns played after the deck became empty. To determine game end.
     var numberOfTurnsPlayedWithEmptyDeckInt = 0
@@ -150,21 +103,7 @@ class AbstractGameState: NSObject {
     var scoreInt: Int {
         return scorePile.currentInt
     }
-    // Return whether the given card appears at least twice in the given hand.
-    // deprecate; use isTwiceIn() instead
-//    func cardValueIsDuplicate(card: Card, handCardArray: [Card]) -> Bool {
-//        var numberOfTimesSeenInt = 0
-//        for card2 in handCardArray {
-//            if card2.isSameAs(card) {
-//                ++numberOfTimesSeenInt
-//            }
-//        }
-//        if numberOfTimesSeenInt >= 2 {
-//            return true
-//        } else {
-//            return false
-//        }
-//    }
+    var turnNum = 1
     // Whether the given card appears at least twice among all hands. (Cheating?)
     func cardValueIsGroupDuplicateBool(card: Card) -> Bool {
         var numberOfTimesSeenInt = 0
@@ -181,17 +120,12 @@ class AbstractGameState: NSObject {
             return false
         }
     }
-    // Whether the given card is in the current deck.
-    // deprecate; use card.isIn()
-//    func cardValueIsInDeckBool(card: Card) -> Bool {
-//        return card.isIn(deck.cards)
-//    }
     // Useful data describing game state.
     func data(#showCurrentHandBool: Bool) -> (discardsString: String, maxNumberOfPlaysLeftInt: Int, numberOfCardsLeftInt: Int, numberOfCluesLeftInt: Int, numberOfPointsNeededInt: Int, numberOfStrikesLeftInt: Int, scoreInt: Int, scoreString: String, visibleHandsAttributedString: NSAttributedString) {
         let scoreInt = scorePile.currentInt
         let scoreString = scorePile.string
         let vHAttributedString = visibleHandsAttributedString(showCurrentHandBool: showCurrentHandBool)
-        return (discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numberOfCluesLeftInt, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreInt, scoreString, vHAttributedString)
+        return (discardsString, maxNumberOfPlaysLeftInt, numberOfCardsLeftInt, numCluesLeft, numberOfPointsNeededInt, numberOfStrikesLeftInt, scoreInt, scoreString, vHAttributedString)
     }
     override init() {
         scorePile = ScorePile()

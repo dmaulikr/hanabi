@@ -14,10 +14,10 @@ class AlwaysDiscardElf: NSObject {
     func bestActionForTurn(turn: Turn) -> Action {
         let action = Action()
         // If can discard, do it. Else, give clue.
-        let numberOfCluesLeftInt = turn.startingGameState.numberOfCluesLeftInt
-        if numberOfCluesLeftInt < 8 {
+        let numCluesLeft = turn.startingGameState.numCluesLeft
+        if numCluesLeft < 8 {
             action.type = .Discard
-        } else if numberOfCluesLeftInt > 0 {
+        } else if numCluesLeft > 0 {
             action.type = .Clue
         }
         return action

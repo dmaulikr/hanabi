@@ -9,13 +9,6 @@
 import UIKit
 
 class StartingGameState: AbstractGameState {
-    var turnNumberInt: Int {
-        // Turn number can be calculated from game state. Turns played = good plays + bad plays + discards + clues given.
-        var turnNumberInt = 0
-        let numberOfGoodPlaysInt = scorePile.currentInt
-        // Turn number = turns played + 1.
-        return numberOfGoodPlaysInt + numberOfBadPlaysInt + numberOfDiscardsInt + numberOfCluesGivenInt + 1
-    }
     // Whether player knows the given card back is playable.
     func cardBackIsKnownPlayableBool(cardBack: CardBack) -> Bool {
         return scorePile.cardBackIsKnownPlayableBool(cardBack)
@@ -44,19 +37,21 @@ class StartingGameState: AbstractGameState {
         currentPlayerIndex = 0
         dealHands()
     }
-    // Make from previous game state. Just change current player.
+    // Make from previous game state. Just change current player and increase turn number.
     init(endingGameState: EndingGameState) {
         super.init()
         currentPlayerIndex = endingGameState.currentPlayerIndex
         deck = endingGameState.deck.copy() as Deck
         discardsCardArray = endingGameState.discardsCardArray
-        numberOfCluesLeftInt = endingGameState.numberOfCluesLeftInt
+        numCluesGiven = endingGameState.numCluesGiven
+        numCluesLeft = endingGameState.numCluesLeft
         numberOfStrikesLeftInt = endingGameState.numberOfStrikesLeftInt
         numberOfTurnsPlayedWithEmptyDeckInt = endingGameState.numberOfTurnsPlayedWithEmptyDeckInt
         for player in endingGameState.playerArray {
             playerArray.append(player.copy() as Player)
         }
         scorePile = endingGameState.scorePile.copy()
+        turnNum = endingGameState.turnNum + 1
         moveToNextPlayer()
     }
     // Change current player to next player.
@@ -66,7 +61,6 @@ class StartingGameState: AbstractGameState {
             currentPlayerIndex = 0
         }
     }
-    
     // String describing the given action and its result.
     func stringForAction(action: Action) -> String {
         var resultString = "\(currentPlayer.nameString)"

@@ -33,13 +33,15 @@ class EndingGameState: AbstractGameState {
         currentPlayerIndex = startingGameState.currentPlayerIndex
         deck = startingGameState.deck.copy() as Deck
         discardsCardArray = startingGameState.discardsCardArray
-        numberOfCluesLeftInt = startingGameState.numberOfCluesLeftInt
+        numCluesGiven = startingGameState.numCluesGiven
+        numCluesLeft = startingGameState.numCluesLeft
         numberOfStrikesLeftInt = startingGameState.numberOfStrikesLeftInt
         numberOfTurnsPlayedWithEmptyDeckInt = startingGameState.numberOfTurnsPlayedWithEmptyDeckInt
         for player in startingGameState.playerArray {
             playerArray.append(player.copy() as Player)
         }
         scorePile = startingGameState.scorePile.copy()
+        turnNum = startingGameState.turnNum
         performAction(action)
     }
     // Determine state resulting from given action.
@@ -52,26 +54,31 @@ class EndingGameState: AbstractGameState {
         case .Clue:
 //            println("give a clue")
             // If clues not left, trigger an assertion. (AI shouldn't have chosen this, and player shouldn't have been able to.)
-            assert(numberOfCluesLeftInt > 0, "Error: tried to give clue with 0 clue tokens.")
-            numberOfCluesLeftInt--
+            assert(numCluesLeft > 0, "Error: tried to give clue with 0 clue tokens.")
+            --numCluesLeft
+            ++numCluesGiven
         case .Play:
 //            println("play a card")
             // Remove card from hand. Play it. If okay, increase score. Else, lose strike and put in discard pile. Draw card.
-            let playCard = currentPlayer.hand.removeAtIndex(action.targetCardIndex)
-            if scorePile.canScore(playCard) {
-                scorePile.addCard(playCard)
+            let card = currentPlayer.hand.removeAtIndex(action.targetCardIndex)
+            if scorePile.canScore(card) {
+                scorePile.addCard(card)
+                // If a 5 and not max clues, gain a clue.
+                if card.num == 5 && numCluesLeft < 8 {
+                    ++numCluesLeft
+                }
             } else {
-                numberOfStrikesLeftInt--
-                discardsCardArray.append(playCard)
+                --numberOfStrikesLeftInt
+                discardsCardArray.append(card)
             }
             drawCard()
         case .Discard:
             // If clues not less than max, trigger an assertion. (AI shouldn't have chosen this, and player shouldn't have been able to.)
-            assert(numberOfCluesLeftInt < 8, "Error: tried to discard with max clue tokens.")
+            assert(numCluesLeft < 8, "Error: tried to discard with max clue tokens.")
             // Remove card from hand. Put in discard pile. Gain clue token. Draw card.
             let discardCard = currentPlayer.hand.removeAtIndex(action.targetCardIndex)
             discardsCardArray.append(discardCard)
-            numberOfCluesLeftInt++
+            ++numCluesLeft
             drawCard()
         }
     }

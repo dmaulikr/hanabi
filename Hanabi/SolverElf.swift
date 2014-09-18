@@ -157,6 +157,7 @@ class SolverElf: NSObject {
     }
     // Play the given game to the end. Store game and notify delegate.
     private func solveGame(game: Game) {
+//        log.addLine("Seed: \(game.seedUInt32).")
         do {
             let action = currentAI.bestAction(game: game)
             game.doAction(action)
