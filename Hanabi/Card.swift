@@ -89,7 +89,7 @@ class Card: NSObject {
     // The card next in sequence. (Max value is 5.)
     var next: Card? {
         var card: Card?
-        if num <= 5 {
+        if num < 5 {
             card = Card(color: color, num: num + 1)
         }
         return card
@@ -99,6 +99,14 @@ class Card: NSObject {
     // String representing card (e.g., "B4," "Y1").
     var string: String {
         return "\(color.letterString())\(num)"
+    }
+    // Previous card in sequence. (Min value is 1.)
+    var previous: Card? {
+        var card: Card?
+        if num > 1 {
+            card = Card(color: color, num: num - 1)
+        }
+        return card
     }
     init(color: Color, num: Int) {
         self.color = color

@@ -57,14 +57,15 @@ class Game: NSObject {
         let lastTurn = turnArray.last!
         return lastTurn.numberOfDiscardsInt
     }
-    // Max plays left at end of game.
-    var numberOfMaxPlaysLeftInt: Int {
-        let lastTurn = turnArray.last!
-        return lastTurn.maxPlaysLeftInt
+    var maxPlaysLeft: Int {
+        return currentTurn.maxPlaysLeftInt
     }
-    var numberOfPlayersInt: Int
+    var numPlayers: Int
     var numberOfTurnsInt: Int {
         return turnArray.count
+    }
+    var pointsNeeded: Int {
+        return currentTurn.pointsNeeded
     }
     var players: [Player] {
         return currentTurn.players
@@ -110,7 +111,7 @@ class Game: NSObject {
     }
     // Make deck. Shuffle. Make first turn.
     init(seedOptionalUInt32: UInt32?, numberOfPlayersInt: Int) {
-        self.numberOfPlayersInt = numberOfPlayersInt
+        self.numPlayers = numberOfPlayersInt
         super.init()
         var deck = Deck()
         deck.shuffleWithSeed(seedOptionalUInt32)

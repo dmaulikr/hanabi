@@ -79,7 +79,7 @@ class AbstractGameState: NSObject {
     }
     // Number of cards in the deck.
     var numberOfCardsLeftInt: Int {
-        return deck.numberOfCardsLeftInt
+        return deck.numCardsLeft
     }
     // Could compute instead of track, but tricky: need number of clues gained, but if max clues when color finished, no clue gained.
     var numCluesGiven = 0

@@ -117,7 +117,7 @@ class WalkThroughGameViewController: UIViewController, LogModelDelegate, SolverE
     // Show selected turn for given game.
     func showSelectedTurnForGame(gameNumberInt: Int) {
         let aTurnData = solverElf.aTurnData(gameNum: 1, turnNum: turnNumberOptionalInt!, turnEnd: showTurnEndSwitch.on, showCurrentHand: showCurrentHandSwitch.on)
-        cushionLabel.text = "Plays needed: \(aTurnData.numPointsNeeded)" +
+        cushionLabel.text = "Points needed: \(aTurnData.numPointsNeeded)" +
         "\nPlays left, max: \(aTurnData.maxNumPlaysLeft)"
         discardsLabel.text = "Discards: \(aTurnData.discardsDescription)"
         scoreLabel.text = "Score: BGRWY" +

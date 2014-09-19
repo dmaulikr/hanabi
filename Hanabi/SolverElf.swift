@@ -61,7 +61,7 @@ class SolverElf: NSObject {
     var gamesWonStats: (avgNumCluesGiven: Float, avgMaxPlaysLeft: Float, avgNumBadPlays: Float, avgNumDiscards: Float) {
         let avgNumCluesGiven = avgXInYs(ys: gamesWon, xInY: { $0.numberOfCluesGivenInt } )
         // Average number of "max plays left" in games that were won.
-        let avgMaxPlaysLeft = avgXInYs(ys: gamesWon, xInY: { $0.numberOfMaxPlaysLeftInt } )
+        let avgMaxPlaysLeft = avgXInYs(ys: gamesWon, xInY: { $0.maxPlaysLeft } )
         let avgNumBadPlays = avgXInYs(ys: gamesWon, xInY: { $0.numberOfBadPlaysInt } )
         let avgNumDiscards = avgXInYs(ys: gamesWon, xInY: { $0.numberOfDiscardsInt } )
         return (avgNumCluesGiven, avgMaxPlaysLeft, avgNumBadPlays, avgNumDiscards)
@@ -146,7 +146,7 @@ class SolverElf: NSObject {
     // Description for given turn's subround. (E.g., in a 3-player game, turn 6 = round 2.3.)
     func firstGameSubroundDescription(#turnNum: Int) -> String {
         let game = games.first!
-        let numPlayers = game.numberOfPlayersInt
+        let numPlayers = game.numPlayers
         let description = roundSubroundStringForTurn(turnNum, numberOfPlayersInt: numPlayers)
         return description
     }

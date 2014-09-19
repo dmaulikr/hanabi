@@ -13,7 +13,7 @@ class Deck: NSObject {
     var isEmpty: Bool {
         return cards.isEmpty
     }
-    var numberOfCardsLeftInt: Int {
+    var numCardsLeft: Int {
         return cards.count
     }
     // Number for srandom(). Determines card order.

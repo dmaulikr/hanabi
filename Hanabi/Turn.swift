@@ -122,6 +122,13 @@ class Turn: NSObject {
             return startingGameState.playerArray
         }
     }
+    var pointsNeeded: Int {
+        if let endingGameState = endingOptionalGameState {
+            return endingGameState.numberOfPointsNeededInt
+        } else {
+            return startingGameState.numberOfPointsNeededInt
+        }
+    }
     // String for the round and subround for this turn. (E.g., in a 3-player game, turn 6 = round "2.3.")
     var roundSubroundString: String {
         // Same in starting and ending states.

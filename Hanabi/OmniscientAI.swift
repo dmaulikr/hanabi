@@ -13,18 +13,46 @@ class OmniscientAI: AbstractAI {
     override var name: String {
         return "Omniscient"
     }
+    // Whether another player should play before player. E.g., having more playables and deck is low.
+    func anotherShouldPlayFirst(#game: Game) -> Bool {
+        // hide until next version
+        return false
+        
+        // On last round, each may play only one card. If a player has more than that, should play them earlier.
+        let currentPlayer = game.currentPlayer
+        let scorePile = game.scorePile
+        let plays = currentPlayer.playablesOn(scorePile)
+        if plays.count == 1 {
+            // If others have extra visible plays (> 1 play per player) and total >= # deck cards, then another should play first.
+            let players = game.players
+            let numExtraVisiblePlays = Player.numExtraVisiblePlays(players: players, scorePile: scorePile)
+            let deck = game.deck
+            if numExtraVisiblePlays >= deck.numCardsLeft {
+                // Another should play first, if enough clues to reach.
+                // Note: numTurnsFromPlayerToOneWithExtraVisiblePlays() assumes current player doesn't play first, which is intended here.
+                if let numCluesNeeded = Player.numTurnsFromPlayerToOneWithExtraVisiblePlays(currentPlayer, players: players, scorePile: scorePile) {
+                    if game.numCluesLeft >= numCluesNeeded {
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
     override func bestAction(#game: Game) -> Action {
         let action = Action()
         // Try in order:
-        // Play: lowest card.
-        // Avoid decking: If in danger of decking, give clue.
+        // Playables. If any:
+          // Stall: If another should play first (uneven playables distribution), give clue.
+          // Play: Else, play lowest card.
+        // Stall: If visible plays and in danger of decking, give clue.
         // Can't discard: If max clues then can't discard, so give clue.
         // Discard safely: Already-played card or in-hand duplicate.
         
-        // Stall 1: If another can play or discard safely, then give clue.
+        // Stall: If another can play or discard safely, then give clue.
         // Non-1 group duplicates. If any:
           // Discard: If player is in worst position (or can't give clue), then discard.
-          // Stall 2: Else another should discard, so give clue.
+          // Stall: Else another should discard, so give clue.
     
         // Discard card that's still in deck. (Dangerous if remaining card(s) at end of deck.)
         // Discard unique unscored card. (Can't win.)
@@ -33,17 +61,24 @@ class OmniscientAI: AbstractAI {
         let scorePile = game.scorePile
         let hand = player.hand
         let canClue = game.canClue
-        let canDiscard = game.canDiscard
         let players = game.players
+        let numVisiblePlays = Player.numVisiblePlays(players: players, scorePile: scorePile)
+        let canDiscard = game.canDiscard
         let deck = game.deck
         if player.canPlayOn(scorePile) {
-//            println("\(subroundString): Play.")
-            action.type = .Play
-            let playableCards = player.playablesOn(scorePile)
-            // Play lowest possible card. If tie, play first.
-            let lowestCard = Card.lowest(playableCards).first!
-            action.targetCardIndex = lowestCard.indexIn(hand)!
-        } else if canClue && mayDeck(game: game) {
+            if canClue && anotherShouldPlayFirst(game: game) {
+                println("\(subroundString): Uneven playables. Stall via clue.")
+                action.type = .Clue
+            } else {
+//              println("\(subroundString): Play.")
+                action.type = .Play
+                let playableCards = player.playablesOn(scorePile)
+                // Play lowest possible card. If tie, play first.
+                let lowestCard = Card.lowest(playableCards).first!
+                action.targetCardIndex = lowestCard.indexIn(hand)!
+            }
+            
+        } else if canClue && numVisiblePlays > 0 && mayDeck(game: game) {
 //            println("\(subroundString): Avoid decking: Clue.")
             action.type = .Clue
         } else if !canDiscard {
@@ -172,27 +207,23 @@ class OmniscientAI: AbstractAI {
     // Whether the deck may run out before winning.
     private func mayDeck(#game: Game) -> Bool {
         /* N.B.: A card is drawn after each play/discard, but not for clues. After the last card is drawn, each player gets a turn. If the deck is stacked against the players, they may not have enough time to win. Instead of playing/discarding normally, one may want to give a clue. This gives time for another player to play. It can also cause a different player to draw a playable card.
-        so the questions are: when should we pay attention to who might draw a card? when should we pay attention to giving clues instead of safe discards? do we ever have to deal with both?
-        who should draw a card: if all cards in deck are playable, may matter; for the cards that remain, does it matter who draws them? 
-        the problem is that playing a card draws a card, so if player A should play but B should draw the card, it's too late; earlier, player B should've drawn player A's card; or B can discard to draw, and then player A can play
-        we could just simulate all possibilities and see how it stacks up: current player either clues or plays/discards (play trumps discard), so there's only two options each time; and if play/discard, can draw 1 of X cards in deck; once last card is drawn, only the plays matter
-        X playable cards in hand. Y playable cards in deck. Will take at least Z turns to play. (Depends on who picks up which card.) Have max W turns remaining. (Depends on clues.)
-        Q cards that need to be played (playable is 123, not 5; but the 5 may be in hand and needs to be played eventually)
-        Tough situations and how to handle:
-        1) Cards in deck unplayable, but N playable cards in hands. Last card is 5.
         */
-        // use old system, then note seeds that lose and try to improve (and keep seeds/decks recorded here)
-        
-        // simple system: N visible plays, ≤N cards in deck (want 2:2 -> 2:1 -> 2:0 -> 1:0 -> win)
-        // next system had N + 1 ≥ # cards left (want 2:3 -> 1:2 -> 1:1 -> 1:0 -> win)
-        
+        // On last turn, can play 1 to N points (N = num players). Guaranteed only 1. So if # points needed + N - 1 >= # max plays left, may deck.
+        // If # visible plays >= # deck cards, may deck.
+        let pointsNeeded = game.pointsNeeded
+        let maxPlaysLeft = game.maxPlaysLeft
+        if pointsNeeded + game.numPlayers - 1 >= maxPlaysLeft {
+            return true
+        }
         let numCardsLeft = game.numCardsLeft
         let players = game.players
         let scorePile = game.scorePile
         let numVisiblePlays = Player.numVisiblePlays(players: players, scorePile: scorePile)
         let threshold = 0
-        let mayDeck = numCardsLeft > 0 && numVisiblePlays + threshold >= numCardsLeft
-        return mayDeck
+        if numCardsLeft > 0 && (numVisiblePlays + threshold >= numCardsLeft) {
+            return true
+        }
+        return false
     }
     // Of player's cards also in the deck, the card to discard. Assumes at least one such card.
     private func playerDeckCardToDiscard(player: Player, deck: Deck) -> Card {
@@ -225,52 +256,51 @@ class OmniscientAI: AbstractAI {
     }
     // Whether card should be discarded by player (vs. another player).
     private func playerShouldDiscardNon1GroupDuplicate(player: Player, card: Card, players: [Player]) -> Bool {
-        // Get value of next card. If no one has that, might as well discard now.
-        let nextCard = card.next!
-        var found = false
-        for player in players {
-            if nextCard.isIn(player.hand) {
-                found = true
-            }
-        }
-        if !found {
-            return true
-        }
-        // For both players with card, get # turns to play next card. (Multiple players may have next card.) Player who needs more turns should discard. If tie, might as well discard now.
-        // Count after current player.
-        let numPlayers = players.count
-        var startIndex = (find(players, player)! + 1) % numPlayers
-        var currentPlayerCount = 0
-        for index in 0...numPlayers - 1 {
-            let realIndex = (startIndex + index) % numPlayers
-            let aPlayer = players[realIndex]
-            ++currentPlayerCount
-            if nextCard.isIn(aPlayer.hand) {
-                break
-            }
-        }
-        // Find other player with card.
-        // Count after other player with card.
+        // Find player with duplicate.
         var otherPlayer: Player!
-        for index in 0...numPlayers - 1 {
-            let realIndex = (startIndex + index) % numPlayers
-            let aPlayer = players[realIndex]
-            if card.isIn(aPlayer.hand) {
+        for aPlayer in players {
+            if aPlayer != player && card.isIn(aPlayer.hand) {
                 otherPlayer = aPlayer
                 break
             }
         }
-        startIndex = (find(players, otherPlayer)! + 1) % numPlayers
-        var otherPlayerCount = 0
-        for index in 0...numPlayers - 1 {
-            let realIndex = (startIndex + index) % numPlayers
-            let aPlayer = players[realIndex]
-            ++otherPlayerCount
+        // Look for next card. If found, get # turns from both players to card. If given player needs fewer turns, don't discard.
+        // Note that multiple players may have next card.
+        let nextCard = card.next!
+        var nextCardFound = false
+        for aPlayer in players {
             if nextCard.isIn(aPlayer.hand) {
+                nextCardFound = true
                 break
             }
         }
-        return currentPlayerCount >= otherPlayerCount
+        if nextCardFound {
+            let givenPlayerCount = Player.numTurnsFromPlayerToCard(player, card: nextCard, players: players)
+            let otherPlayerCount = Player.numTurnsFromPlayerToCard(otherPlayer, card: nextCard, players: players)
+            if givenPlayerCount < otherPlayerCount {
+                return false
+            }
+        } else {
+            // Look for previous card. If found, get # turns from card to both players. If given player needs fewer turns, don't discard.
+            // Note that multiple players may have previous card.
+            let previousCard = card.previous!
+            var previousCardFound = false
+            for aPlayer in players {
+                if previousCard.isIn(aPlayer.hand) {
+                    previousCardFound = true
+                    break
+                }
+            }
+            if previousCardFound {
+                let givenPlayerCount = Player.numTurnsFromCardToPlayer(previousCard, player: player, players: players)
+                let otherPlayerCount = Player.numTurnsFromCardToPlayer(previousCard, player: otherPlayer, players: players)
+                if givenPlayerCount < otherPlayerCount {
+                    return false
+                }
+            }
+        }
+        // Default: discard.
+        return true
     }
     // Whether given player should discard at least one group duplicate (vs. another player discarding it).
     private func playerShouldDiscardNon1GroupDuplicate(player: Player, players: [Player]) -> Bool {
