@@ -15,9 +15,6 @@ class OmniscientAI: AbstractAI {
     }
     // Whether another player should play before player. E.g., having more playables and deck is low.
     func anotherShouldPlayFirst(#game: Game) -> Bool {
-        // hide until next version
-        return false
-        
         // On last round, each may play only one card. If a player has more than that, should play them earlier.
         let currentPlayer = game.currentPlayer
         let scorePile = game.scorePile
@@ -77,7 +74,6 @@ class OmniscientAI: AbstractAI {
                 let lowestCard = Card.lowest(playableCards).first!
                 action.targetCardIndex = lowestCard.indexIn(hand)!
             }
-            
         } else if canClue && numVisiblePlays > 0 && mayDeck(game: game) {
 //            println("\(subroundString): Avoid decking: Clue.")
             action.type = .Clue

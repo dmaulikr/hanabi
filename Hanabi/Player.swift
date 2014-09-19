@@ -64,25 +64,28 @@ class Player: NSObject {
                 let numPlayersWithCard = playersWithCard.count
                 if numPlayersWithCard == 0 {
                     break
-                } else if numPlayersWithCard == 1 {
-                    let player = playersWithCard.first!
-                    playersNumVisiblePlays[player] = playersNumVisiblePlays[player]! + 1
                 } else {
-                    // Assign to first player with 0 plays, else first player.
-                    // Note: Possible that two players have 0 plays at this point, but one player will get a play later. So this isn't exact.
-                    var playerToAssign = playersWithCard.first!
-//                    var numPlayersWithNoPlays = 0
-                    for player in playersWithCard {
-                        if playersNumVisiblePlays[player] == 0 {
-//                            ++numPlayersWithNoPlays
-                            playerToAssign = player
-                            playersNumVisiblePlays[playerToAssign] = playersNumVisiblePlays[playerToAssign]! + 1
-                            break
+                    ++value
+                    if numPlayersWithCard == 1 {
+                        let player = playersWithCard.first!
+                        playersNumVisiblePlays[player] = playersNumVisiblePlays[player]! + 1
+                    } else {
+                        // Assign to first player with 0 plays, else first player.
+                        // Note: Possible that two players have 0 plays at this point, but one player will get a play later. So this isn't exact.
+                        var playerToAssign = playersWithCard.first!
+    //                    var numPlayersWithNoPlays = 0
+                        for player in playersWithCard {
+                            if playersNumVisiblePlays[player] == 0 {
+    //                            ++numPlayersWithNoPlays
+                                playerToAssign = player
+                                playersNumVisiblePlays[playerToAssign] = playersNumVisiblePlays[playerToAssign]! + 1
+                                break
+                            }
                         }
-                    }
 //                    if numPlayersWithNoPlays >= 2 {
 //                        log
 //                    }
+                    }
                 }
             }
             ++colorInt
