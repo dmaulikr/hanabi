@@ -16,4 +16,7 @@ class Action: NSObject {
     var type: Type = .Clue
     // Index of card in player's hand to play/discard.
     var targetCardIndex = 0
+    init(_ type: Type) {
+        self.type = type
+    }
 }

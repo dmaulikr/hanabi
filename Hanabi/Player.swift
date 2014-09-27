@@ -9,21 +9,19 @@
 import UIKit
 
 class Player: NSObject {
-    // Whether another player has at least one card that can be discarded safely.
-    class func anotherCanDiscardSafely(#scorePile: ScorePile, players: [Player], currentPlayer: Player) -> Bool {
+    // Whether another player has at least one.
+    class func anotherHasDiscardThatWillNotIncreaseTurnsToWin(#scorePile: ScorePile, players: [Player], currentPlayer: Player) -> Bool {
         for player in players {
             if player != currentPlayer {
-                for card in player.hand {
-                    if player.canDiscardSafely(card, scorePile: scorePile) {
-                        return true
-                    }
+                if player.hasDiscardThatWillNotIncreaseTurnsToWin(scorePile: scorePile) {
+                    return true
                 }
             }
         }
         return false
     }
-    // Whether another player has at least one card that can score now.
-    class func anotherCanPlayOn(scorePile: ScorePile, players: [Player], currentPlayer: Player) -> Bool {
+    // Whether another player has at least one.
+    class func anotherHasPlayOn(scorePile: ScorePile, players: [Player], currentPlayer: Player) -> Bool {
         for player in players {
             if player != currentPlayer {
                 for card in player.hand {
@@ -45,10 +43,10 @@ class Player: NSObject {
         }
         return false
     }
-    // Number of playable cards in players' hands > 1 per player. Includes chains. Duplicates counted once, preferably for a player with no plays.
+    // Number of plays and chains in players' hands > 1 per player. Duplicates counted once, preferably for a player with no plays.
     // Note: This is implemented not exactly but is deterministic. In particular, a duplicate may be counted as an extra play when it could be assigned a player with no plays. (E.g., while counting, a duplicate may be held by two players with no plays, then later the assigned player is assigned another play.) Depending on how the cards are played, the minimum number could be slightly less.
-    class func numExtraVisiblePlays(#players: [Player], scorePile: ScorePile) -> Int {
-        var numExtraVisiblePlays = 0
+    class func numExtraPlaysAndChainsOn(scorePile: ScorePile, players: [Player]) -> Int {
+        var numExtraPlaysAndChains = 0
         // For each color, go up the unscored values to see how many plays we can make. Note which player has card. If multiple players, assign to player with 0 plays, else earliest player.
         var playersNumVisiblePlays: [Player: Int] = [:]
         for player in players {
@@ -93,10 +91,10 @@ class Player: NSObject {
         // Count extras.
         for (player, numVisiblePlays) in playersNumVisiblePlays {
             if numVisiblePlays > 1 {
-                numExtraVisiblePlays += numVisiblePlays - 1
+                numExtraPlaysAndChains += numVisiblePlays - 1
             }
         }
-        return numExtraVisiblePlays
+        return numExtraPlaysAndChains
     }
     // Min number of turns from any player having card to given player. (Min 1.) Assumes card exists.
     class func numTurnsFromCardToPlayer(card: Card, player: Player, players: [Player]) -> Int {
@@ -133,8 +131,8 @@ class Player: NSObject {
         }
         return numTurns
     }
-    // Number of turns from player to first player with extra visible play. In this case, an extra visible play means that player can play now (even if given player doesn't) and has >= 2 plays (if given player plays eventually). If no such player, return nil.
-    class func numTurnsFromPlayerToOneWithExtraVisiblePlays(player: Player, players: [Player], scorePile: ScorePile) -> Int? {
+    // Number of turns from player to first player with extra play/chain. In this case, an extra play means that player can play now (even if given player doesn't) and has >= 2 plays/chains (if given player plays eventually). If no such player, return nil.
+    class func numTurnsFromPlayerToOneWithExtraPlaysAndChains(player: Player, players: [Player], scorePile: ScorePile) -> Int? {
         var numTurns: Int? = 0
         let numPlayers = players.count
         // Start after player, then make index valid.
@@ -145,14 +143,14 @@ class Player: NSObject {
             let realIndex = (startIndex + index) % numPlayers
             let aPlayer = players[realIndex]
             numTurns = numTurns! + 1
-            if aPlayer.canPlayOn(scorePile) && aPlayer.numVisiblePlays(players: players, scorePile: scorePile) >= 2 {
+            if aPlayer.hasPlayOn(scorePile) && aPlayer.numPlaysAndChainsOn(scorePile, players: players) >= 2 {
                 return numTurns
             }
         }
         return nil
     }
-    // Number of playable cards in players' hands. Includes chains. Counts duplicates once.
-    class func numVisiblePlays(#players: [Player], scorePile: ScorePile) -> Int {
+    // Number of plays and chains in players' hands. Counts duplicates once.
+    class func numPlaysAndChainsOn(scorePile: ScorePile, players: [Player]) -> Int {
         var numVisiblePlays = 0
         // For each color, go up the unscored values to see how many plays we can make.
         var colorInt = 1
@@ -171,6 +169,25 @@ class Player: NSObject {
             ++colorInt
         }
         return numVisiblePlays
+    }
+    // Whether players other than current player share at least one non-1.
+    class func othersShareNon1(#players: [Player], currentPlayer: Player) -> Bool {
+        // Check other players' cards for who else has them.
+        for player in players {
+            if player != currentPlayer {
+                for card in player.hand {
+                    let playersWithCard = Player.playersWithCard(card, players: players)
+                    if playersWithCard.count >= 2 {
+                        for player2 in playersWithCard {
+                            if player2 != player && player2 != currentPlayer {
+                                return true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false
     }
     // If multiple, return first.
     class func playerWithCard(card: Card, players: [Player]) -> Player? {
@@ -219,6 +236,22 @@ class Player: NSObject {
         }
         return noDupsHandCardArray
     }
+    // Action to discard a card that will not increase number of turns to win.
+    func actionDiscardThatWillNotIncreaseTurnsToWin(#scorePile: ScorePile) -> Action {
+        let action = Action(.Discard)
+        let card = discardsThatWillNotIncreaseTurnsToWin(scorePile: scorePile).first!
+        action.targetCardIndex = card.indexIn(hand)!
+        return action
+    }
+    // Action to play her lowest scorable card.
+    func actionLowestPlay(#scorePile: ScorePile) -> Action {
+        let action = Action(.Play)
+        let playableCards = playsOn(scorePile)
+        // Lowest scorable card. If tie, play first.
+        let lowestCard = Card.lowest(playableCards).first!
+        action.targetCardIndex = lowestCard.indexIn(hand)!
+        return action
+    }
     // Whether at least one card in hand is also in deck.
     func canDiscardDeckCard(#deck: Deck) -> Bool {
         for card in hand {
@@ -228,24 +261,13 @@ class Player: NSObject {
         }
         return false
     }
-    // Whether card can be discarded safely. I.e., was already played or duplicate is in hand.
-    private func canDiscardSafely(card: Card, scorePile: ScorePile) -> Bool {
-        return scorePile.has(card) || card.isTwiceIn(hand)
-    }
-    // Whether at least one card can be discarded safely.
-    func canDiscardSafely(#scorePile: ScorePile) -> Bool {
-        for card in hand {
-            if canDiscardSafely(card, scorePile: scorePile) {
-                return true
-            }
-        }
-        return false
-    }
-    // Whether at least one card can score now.
-    func canPlayOn(scorePile: ScorePile) -> Bool {
-        for card in hand {
-            if scorePile.canScore(card) {
-                return true
+    // Whether card is also in another's hand. Ignore 1s. (Context: Determine who should discard group 2/3/4s.)
+    private func cardIsSharedNon1(card: Card, players: [Player]) -> Bool {
+        if card.isIn(hand) && card.num != 1 {
+            for otherPlayer in players {
+                if otherPlayer != self && card.isIn(otherPlayer.hand) {
+                    return true
+                }
             }
         }
         return false
@@ -266,49 +288,74 @@ class Player: NSObject {
         player.nameString = nameString
         return player
     }
-    // Cards that can be discarded safely.
-    func discardsSafe(#scorePile: ScorePile) -> [Card] {
-        var discardsSafe: [Card] = []
+    // Whether discarding this card (vs. another) *may* increase the number of turns needed to win. E.g., card is shared non-1.
+    private func discardMayIncreaseTurnsToWin(#card: Card, players: [Player]) -> Bool {
+        return cardIsSharedNon1(card, players: players)
+    }
+    // Whether discarding this card (vs. another) will *not* increase the number of turns needed to win. E.g., card was already scored, card is in the same hand at least twice.
+    private func discardWillNotIncreaseTurnsToWin(#card: Card, scorePile: ScorePile) -> Bool {
+        return scorePile.has(card) || card.isTwiceIn(hand)
+    }
+    // Cards that, if discarded, may increase number of turns to win.
+    func discardsThatMayIncreaseTurnsToWin(#players: [Player]) -> [Card] {
+        var discards: [Card] = []
         for card in hand {
-            if canDiscardSafely(card, scorePile: scorePile) {
-                discardsSafe.append(card)
+            if discardMayIncreaseTurnsToWin(card: card, players: players) {
+                discards.append(card)
             }
         }
-        return discardsSafe
+        return discards
     }
-    // Whether at least one card is also in another player's hand. Ignore 1s. (Context: Determine who should discard group 2/3/4s.)
-    func hasNon1GroupDuplicate(#players: [Player]) -> Bool {
+    // Cards that, if discarded, won't increase number of turns to win.
+    private func discardsThatWillNotIncreaseTurnsToWin(#scorePile: ScorePile) -> [Card] {
+        var discards: [Card] = []
         for card in hand {
-            if isNon1GroupDuplicate(card: card, players: players) {
+            if discardWillNotIncreaseTurnsToWin(card: card, scorePile: scorePile) {
+                discards.append(card)
+            }
+        }
+        return discards
+    }
+    // Whether at least one card can score now.
+    func hasPlayOn(scorePile: ScorePile) -> Bool {
+        for card in hand {
+            if scorePile.canScore(card) {
                 return true
             }
         }
         return false
     }
-    // Whether given card is in this and another's hand. Ignore 1s. (Context: Determine who should discard group 2/3/4s.)
-    private func isNon1GroupDuplicate(#card: Card, players: [Player]) -> Bool {
-        if card.isIn(hand) && card.num != 1 {
-            for otherPlayer in players {
-                if otherPlayer != self && card.isIn(otherPlayer.hand) {
-                    return true
-                }
+    // Whether she has a discard that may fundamentally increase the number of turns needed to win.
+    func hasDiscardThatMayIncreaseTurnsToWin(#players: [Player]) -> Bool {
+        for card in hand {
+            if discardMayIncreaseTurnsToWin(card: card, players: players) {
+                return true
             }
         }
         return false
     }
-    // Cards also in another player's hand. Ignore 1s. (Context: Determine who should discard group 2/3/4s.)
-    func non1GroupDuplicates(#players: [Player]) -> [Card] {
+    // Whether she has a discard that won't fundamentally increase the number of turns needed to win.
+    func hasDiscardThatWillNotIncreaseTurnsToWin(#scorePile: ScorePile) -> Bool {
+        for card in hand {
+            if discardWillNotIncreaseTurnsToWin(card: card, scorePile: scorePile) {
+                return true
+            }
+        }
+        return false
+    }
+    // Cards also in other player's hands. Ignore 1s. (Context: Determine who should discard group 2/3/4s.)
+    func sharedNon1s(#players: [Player]) -> [Card] {
         var groupDuplicates: [Card] = []
         for card in hand {
-            if isNon1GroupDuplicate(card: card, players: players) {
+            if cardIsSharedNon1(card, players: players) {
                 groupDuplicates.append(card)
             }
         }
         return groupDuplicates
     }
-    // Number of playable cards in hand. Includes chains from self and other players. Counts duplicates once.
-    func numVisiblePlays(#players: [Player], scorePile: ScorePile) -> Int {
-        var numVisiblePlays = 0
+    // Number of plays and chains cards in hand. Includes chains from self and other players. Counts duplicates once.
+    func numPlaysAndChainsOn(scorePile: ScorePile, players: [Player]) -> Int {
+        var numPlaysAndChains = 0
         // For each color, go up the unscored values to see if players have card. If this player has card, count that.
         var colorInt = 1
         while let color = Card.color(int: colorInt) {
@@ -318,7 +365,7 @@ class Player: NSObject {
                 let card = Card(color: color, num: value)
                 if Player.cardIsInAHand(card, players: players) {
                     if card.isIn(hand) {
-                        ++numVisiblePlays
+                        ++numPlaysAndChains
                     }
                     ++value
                 } else {
@@ -327,16 +374,17 @@ class Player: NSObject {
             }
             ++colorInt
         }
-        return numVisiblePlays
+        return numPlaysAndChains
     }
     // Cards that can score now.
-    func playablesOn(scorePile: ScorePile) -> [Card] {
-        var playableCards: [Card] = []
+    func playsOn(scorePile: ScorePile) -> [Card] {
+        var plays: [Card] = []
         for card in hand {
             if scorePile.canScore(card) {
-                playableCards.append(card)
+                plays.append(card)
             }
         }
-        return playableCards
+        return plays
     }
+    
 }

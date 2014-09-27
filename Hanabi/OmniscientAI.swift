@@ -13,21 +13,22 @@ class OmniscientAI: AbstractAI {
     override var name: String {
         return "Omniscient"
     }
-    // Whether another player should play before player. E.g., having more playables and deck is low.
+    // Whether another player should play before player. E.g., having more plays and chains and deck is low.
     func anotherShouldPlayFirst(#game: Game) -> Bool {
-        // On last round, each may play only one card. If a player has more than that, should play them earlier.
+        // On last round, each may play only one card. If a player has more plays and chains than that, should play them earlier.
         let currentPlayer = game.currentPlayer
         let scorePile = game.scorePile
-        let plays = currentPlayer.playablesOn(scorePile)
-        if plays.count == 1 {
-            // If others have extra visible plays (> 1 play per player) and total >= # deck cards, then another should play first.
+        let players = game.players
+        let numPlaysAndChains = currentPlayer.numPlaysAndChainsOn(scorePile, players: players)
+        if numPlaysAndChains == 1 {
+            // If others have extra plays and chains (> 1 play per player) and total >= # deck cards, then another should play first.
             let players = game.players
-            let numExtraVisiblePlays = Player.numExtraVisiblePlays(players: players, scorePile: scorePile)
+            let numAllExtraPlaysAndChains = Player.numExtraPlaysAndChainsOn(scorePile, players: players)
             let deck = game.deck
-            if numExtraVisiblePlays >= deck.numCardsLeft {
+            if numAllExtraPlaysAndChains >= deck.numCardsLeft {
                 // Another should play first, if enough clues to reach.
-                // Note: numTurnsFromPlayerToOneWithExtraVisiblePlays() assumes current player doesn't play first, which is intended here.
-                if let numCluesNeeded = Player.numTurnsFromPlayerToOneWithExtraVisiblePlays(currentPlayer, players: players, scorePile: scorePile) {
+                // Note: numTurnsFromPlayerToOneWithExtraPlaysAndChains() assumes current player doesn't play first, which is intended here.
+                if let numCluesNeeded = Player.numTurnsFromPlayerToOneWithExtraPlaysAndChains(currentPlayer, players: players, scorePile: scorePile) {
                     if game.numCluesLeft >= numCluesNeeded {
                         return true
                     }
@@ -36,21 +37,122 @@ class OmniscientAI: AbstractAI {
         }
         return false
     }
+/* Best action depends how close the game is. E.g., if one can play, she normally should. But if that would trigger the last round and someone still has two cards to play, she may want to clue instead. A key metric is # of deck cards left vs # points needed.
+Algorithm order:
+• (Clue) Why: Can't play; can't discard (max clues). Must give clue.
+• Check if enough deck cards to discard safely. Yes:
+  • (Play) Play lowest.
+  • (Discard) Type: Doesn't increase number of turns to win. (Scored cards, or 2+ copies in hand.)
+  • (Clue) Why: Another has play, or has discard that does not increase number of turns to win.
+  • Check if player has discard that may increase number of turns to win. (Shared non-1s.)
+    • (Discard) Type: Her discard probably doesn't increase number of turns to win. (Shared non-1.)
+// depre    • (Clue) Why: Other player's discard gives better setup.
+  • (Clue) Avoid unsafe discard: If other players share non-1.
+  • (Discard) Deck card: highest.
+  • (Discard) Unique unscored card. (Can't win.)
+• No:
+// log round this first happens; it'll stay this way
+// • (Clue) Avoid play?: do another metric check here? make sure it's a subset of this situation
+  • (Play) Play lowest.
+// while the above is a repeat and could be factored out, it'll probably be refined next
+  • (Clue) Avoid discard: If another has play.
+// log discards; means things are getting worse
+  • (Discard) Safe: Scored cards, or 2+ copies in hand.
+  • (Discard) Safe but maybe bad position: Shared non-1.
+  • (Discard) Deck card: highest.
+  • (Discard) Unique unscored card. (Can't win.) */
     override func bestAction(#game: Game) -> Action {
-        let action = Action()
-        // Try in order:
+        var action: Action
+        let canClue = game.canClue
+        let canDiscard = game.canDiscard
+        let player = game.currentPlayer
+        let players = game.players
+        let scorePile = game.scorePile
+        let subroundString = "Round \(game.currentSubroundString)"
+        let anotherHasPlay = Player.anotherHasPlayOn(scorePile, players: players, currentPlayer: player)
+        let anotherHasDiscardThatWillNotIncreaseTurnsToWin = Player.anotherHasDiscardThatWillNotIncreaseTurnsToWin(scorePile: scorePile, players: players, currentPlayer: player)
+        let hasDiscardThatMayIncreaseTurnsToWin = player.hasDiscardThatMayIncreaseTurnsToWin(players: players)
+        let hasDiscardThatWillNotIncreaseTurnsToWin = player.hasDiscardThatWillNotIncreaseTurnsToWin(scorePile: scorePile)
+        let hasPlay = player.hasPlayOn(scorePile)
+        if !hasPlay && !canDiscard {
+//            println("\(subroundString): (Clue) Why: Can't play; can't discard (max clues). Must give clue.")
+            action = Action(.Clue)
+        } else if haveExtraDeckCards(game: game) {
+            if hasPlay {
+//              println("\(subroundString): (Play) Play lowest.")
+                action = player.actionLowestPlay(scorePile: scorePile)
+            } else if hasDiscardThatWillNotIncreaseTurnsToWin {
+//            println("\(subroundString): (Discard) Type: Doesn't increase number of turns to win. (Scored cards, or 2+ copies in hand.)")
+                action = player.actionDiscardThatWillNotIncreaseTurnsToWin(scorePile: scorePile)
+            } else if canClue && (anotherHasPlay || anotherHasDiscardThatWillNotIncreaseTurnsToWin) {
+//             println("\(subroundString): (Clue) Why: Another has play, or has discard that does not increase number of turns to win.")
+                action = Action(.Clue)
+            // WILO
+            // need better explanation in names for why this is here and separate. it is separate from above because we're not sure discarding won't increase number of turns to win; however, it's separate from below because we do know discarding won't affect our ability to win in terms of having the card available; because of that, the AI is choosing here to either discard now or clue, not to discard a more dangerous card
+            // so the name has to convey that discarding this card (either here or another player) is better than discarding another card; and that discarding here may increase # of turns to win
+            // if we weren't giving the clue option, it'd be a similar structure (this may incr # turns to win, but we're discarding anyway); actually to keep this simple, we can do that now and just comment that we can add the clue option if deemed worth it
+            } else if hasDiscardThatMayIncreaseTurnsToWin {
+//                println("\(subroundString): Has discard that may increase number of turns to win.")
+                let discardsThatMayIncreaseTurnsToWin = player.discardsThatMayIncreaseTurnsToWin(players: players)
+                for card in discardsThatMayIncreaseTurnsToWin {
+                    // implement this; can replace playerShouldDiscardNon1GroupDuplicate()
+                    if !player.discardProbablyIncreasesTurnsToWin(card: card, players: players) {
+//                        println("\(subroundString): (Discard) Type: Her discard probably doesn't increase number of turns to win. (Shared non-1.)")
+                        //                    action = player.actionDiscard(card)
+                        break
+                    }
+                }
+                // remember canClue check: if there's
+//                println("\(subroundString): (Clue) Why: Her discard probably increases number of turns to win. Other player's doesn't. (Shared non-1.)")
+                action = Action(.Clue)
+            } else if canClue && Player.othersShareNon1(players: players, currentPlayer: player) {
+                println("\(subroundString): Others share non-1: Clue.")
+                action.type = .Clue
+            } else if hasDeckCard {
+                //
+            } else {
+                println("\(subroundString): Discard unique.")
+                log.addLine("\(subroundString): Discarding unique. Shouldn't happen with Omni AI. Seed: \(game.seedUInt32).")
+                action.type = .Discard
+                action.targetCardIndex = 0
+            }
+        } else {
+            if hasPlay {
+//              println("\(subroundString): Play.")
+                action.type = .Play
+                //
+            } else if canClue && anotherHasPlay {
+//             println("\(subroundString): Another has play: Clue.")
+                action.type = .Clue
+            } else if hasSafeDiscard {
+//            println("\(subroundString): Safe discard.")
+                action.type = .Discard
+                //
+            } else if sharesNon1 {
+                //
+            } else if hasDeckCard {
+                
+            } else {
+                println("\(subroundString): Discard unique.")
+                log.addLine("\(subroundString): Discarding unique. Shouldn't happen with Omni AI. Seed: \(game.seedUInt32).")
+                action.type = .Discard
+                action.targetCardIndex = 0
+            }
+        }
+        return action
+        
+/* old alg; keep until new one works as good
         // Playables. If any:
           // Stall: If another should play first (uneven playables distribution), give clue.
           // Play: Else, play lowest card.
         // Stall: If visible plays and in danger of decking, give clue.
         // Can't discard: If max clues then can't discard, so give clue.
         // Discard safely: Already-played card or in-hand duplicate.
-        
         // Stall: If another can play or discard safely, then give clue.
-        // Non-1 group duplicates. If any:
+        // Player has non-1 group duplicate:
           // Discard: If player is in worst position (or can't give clue), then discard.
           // Stall: Else another should discard, so give clue.
-    
+        // Stall: Other players have non-1 group duplicate, so give clue.
         // Discard card that's still in deck. (Dangerous if remaining card(s) at end of deck.)
         // Discard unique unscored card. (Can't win.)
         let subroundString = "Round \(game.currentSubroundString)"
@@ -69,7 +171,7 @@ class OmniscientAI: AbstractAI {
             } else {
 //              println("\(subroundString): Play.")
                 action.type = .Play
-                let playableCards = player.playablesOn(scorePile)
+                let playableCards = player.playsOn(scorePile)
                 // Play lowest possible card. If tie, play first.
                 let lowestCard = Card.lowest(playableCards).first!
                 action.targetCardIndex = lowestCard.indexIn(hand)!
@@ -99,9 +201,12 @@ class OmniscientAI: AbstractAI {
                  println("\(subroundString): Another should discard non-1 group duplicate: Clue.")
                 action.type = .Clue
             }
+        } else if canClue && Player.othersHaveNon1GroupDuplicate(players: players, currentPlayer: player) {
+            println("\(subroundString): Others share non-1 group duplicate: Clue.")
+            action.type = .Clue
         } else if canDiscard && player.canDiscardDeckCard(deck: deck) {
             println("\(subroundString): Discard deck card.")
-            log.addLine("\(subroundString): Discarding deck card. No one has a play, safe discard or group duplicate. (Or no clues left.) Seed: \(game.seedUInt32).")
+            log.addLine("\(subroundString): Discarding deck card. Seed: \(game.seedUInt32).")
             action.type = .Discard
             let card = playerDeckCardToDiscard(player, deck: deck)
             action.targetCardIndex = card.indexIn(hand)!
@@ -114,88 +219,18 @@ class OmniscientAI: AbstractAI {
             println("\(subroundString): Ran out of options!")
         }
         return action
+*/
     }
-    
-    // last working version. keep until new version up and comparable stats
-//    override func bestActionForTurn(turn: Turn) -> Action {
-//        let action = Action()
-////        println("Round \(turn.roundSubroundString).")
-//        let currentPlayerHandCardArray = turn.currentPlayer.handCardArray
-//        let numberOfCardsLeftInt = turn.numberOfCardsLeftInt
-//        let numberOfCluesLeftInt = turn.numberOfCluesLeftInt
-//        let cheatingNumberOfVisiblePlaysInt = turn.cheatingNumberOfVisiblePlaysInt
-//        // If can play, do. Play cards whose sequence will take the longest. (E.g., 132 before 123.)
-//        let mostTurnsForChainCardArray = turn.mostTurnsForChainCardArray
-//        if !mostTurnsForChainCardArray.isEmpty {
-////            println("Play. (Round \(turn.roundSubroundString))")
-//            action.type = .Play
-//            // If multiple options, choose first card with lowest number.
-//            var thePlayCard: Card = mostTurnsForChainCardArray.first!
-//            var minCardNumberInt = 6
-//            for card in mostTurnsForChainCardArray {
-//                if card.numberInt < minCardNumberInt {
-//                    minCardNumberInt = card.numberInt
-//                    thePlayCard = card
-//                }
-//            }
-//            action.targetCardIndexInt = Card.indexOptionalIntOfCardValueInArray(thePlayCard, cardArray: currentPlayerHandCardArray)!
-//        // If the number of visible plays >= number of cards - 1 in the deck, give a clue. (To avoid decking.)
-//        } else if (cheatingNumberOfVisiblePlaysInt > 0) && (cheatingNumberOfVisiblePlaysInt >= numberOfCardsLeftInt - 1) && (numberOfCluesLeftInt > 0) {
-////            println("avoiding decking; (Round \(turn.roundSubroundString))")
-//            action.type = .Clue
-//        // If max clues, can't discard, so give a clue.
-//        } else if numberOfCluesLeftInt == 8 {
-////            println("Max clues: give clue. (Round \(turn.roundSubroundString))")
-//            action.type = .Clue
-//        } else {
-//            // Do one of the following, in priority order:
-//            // If player has a safe discard, do.
-//            // If player has a group duplicate, discard. 
-//            // If anyone else can play, discard safely or discard group duplicate, then give clue. 
-//            // If player has a card that's still in the deck, discard. 
-//            // Discard a unique card.
-//            let cheatingSafeDiscardsCardArray = turn.cheatingSafeDiscardsCardArray
-//            if !cheatingSafeDiscardsCardArray.isEmpty {
-////                println("Round \(roundSubroundString): Safe discard.")
-//                action.type = .Discard
-//                let theDiscardCard = cheatingSafeDiscardsCardArray.first!
-//                action.targetCardIndexInt = Card.indexOptionalIntOfCardValueInArray(theDiscardCard, cardArray: currentPlayerHandCardArray)!
-//            } else {
-//                let cheatingGroupDuplicatesCardArray = turn.cheatingGroupDuplicatesCardArray
-//                if !cheatingGroupDuplicatesCardArray.isEmpty {
-////                    println("Round \(roundSubroundString): Group discard.")
-//                    action.type = .Discard
-//                    let theDiscardCard = cheatingGroupDuplicatesCardArray.first!
-//                    action.targetCardIndexInt = Card.indexOptionalIntOfCardValueInArray(theDiscardCard, cardArray: currentPlayerHandCardArray)!
-//                } else if (turn.cheatingAnyPlaysOrSafeDiscardsBool || turn.cheatingAnyGroupDuplicatesBool) && (numberOfCluesLeftInt > 0) {
-////                    println("Round \(roundSubroundString): Another can play/discard. Give clue.")
-//                    action.type = .Clue
-//                } else {
-//                    // If player has a card that's still in the deck, discard highest.
-//                    let cheatingCardsAlsoInDeckCardArray = turn.cheatingCardsAlsoInDeckCardArray
-//                    if !cheatingCardsAlsoInDeckCardArray.isEmpty {
-//                        logModel.addLine("Semi-rare? No one has a play, safe discard or group duplicate.(Or no clues left.) Seed: \(optionalGame?.seedUInt32). Round \(turn.roundSubroundString).")
-//                        action.type = .Discard
-//                        var theDiscardCard = cheatingCardsAlsoInDeckCardArray.first!
-//                        var maxNumberInt = theDiscardCard.numberInt
-//                        for card in cheatingCardsAlsoInDeckCardArray {
-//                            if card.numberInt > maxNumberInt {
-//                                maxNumberInt = card.numberInt
-//                                theDiscardCard = card
-//                            }
-//                        }
-//                        action.targetCardIndexInt = Card.indexOptionalIntOfCardValueInArray(theDiscardCard, cardArray: currentPlayerHandCardArray)!
-//                    } else {
-//                        logModel.addLine("Rare warning: Discarding unique? Seed: \(optionalGame?.seedUInt32). Round \(turn.roundSubroundString).")
-//                        action.type = .Discard
-//                        action.targetCardIndexInt = 0
-//                    }
-//                }
-//            }
-//        }
-//        return action
-//    }
-    
+    // Whether there are enough deck cards to discard and still have time to win.
+    // To win, we still need X points. Each point requires 1 deck card so we don't run out of turns. The last round also gives some room. Extra deck cards means we can still discard and win.
+    private func haveExtraDeckCards(#game: Game) -> Bool {
+        // After the last card is drawn, each player gets 1 action. So, we can gain up to P points (P = # Players). However, if the remaining points are not in order or are distributed unevenly, we can gain as few as 1 point. (Assuming the remaining points are held when the last card is drawn, at least 1 card will always be playable.)
+        let numDeckCardsLeft = game.numCardsLeft
+        let pointsInLastRound = 1
+        let pointsNeeded = game.pointsNeeded
+        // E.g., 3 cards left, need 3 points.
+        return numDeckCardsLeft + pointsInLastRound > pointsNeeded
+    }
     override init() {
         super.init()
         type = AIType.Omniscient
