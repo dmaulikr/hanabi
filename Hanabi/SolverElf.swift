@@ -152,7 +152,7 @@ class SolverElf: NSObject {
     }
     override init() {
         super.init()
-        ais.append(OmniscientAI())
+        ais.append(OpenHandAI())
         ais.append(PureInfoAI())
     }
     // Play the given game to the end. Store game and notify delegate.

@@ -170,8 +170,8 @@ class Player: NSObject {
         }
         return numVisiblePlays
     }
-    // Whether players other than current player share at least one non-1.
-    class func othersShareNon1(#players: [Player], currentPlayer: Player) -> Bool {
+    // Whether players other than current player have at least one shared non-1.
+    class func othersHaveSharedNon1(#players: [Player], currentPlayer: Player) -> Bool {
         // Check other players' cards for who else has them.
         for player in players {
             if player != currentPlayer {
@@ -264,22 +264,13 @@ class Player: NSObject {
         return action
     }
     // Action to play her lowest scorable card.
-    func actionLowestPlay(#scorePile: ScorePile) -> Action {
+    func actionPlayLowest(#scorePile: ScorePile) -> Action {
         let action = Action(.Play)
         let playableCards = playsOn(scorePile)
         // Lowest scorable card. If tie, play first.
         let lowestCard = Card.lowest(playableCards).first!
         action.targetCardIndex = lowestCard.indexIn(hand)!
         return action
-    }
-    // Whether at least one card in hand is also in deck.
-    func canDiscardDeckCard(#deck: Deck) -> Bool {
-        for card in hand {
-            if card.isIn(deck.cards) {
-                return true
-            }
-        }
-        return false
     }
     // Whether card is also in another's hand. Ignore 1s. (Context: Determine who should discard group 2/3/4s.)
     private func cardIsSharedNon1(card: Card, players: [Player]) -> Bool {

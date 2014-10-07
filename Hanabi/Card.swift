@@ -31,31 +31,26 @@ class Card: NSObject {
             return aLetterString
         }
     }
-    // Whether given card is in given array, value-wise.
-    // deprecate; use card.isInArray()
-//    class func cardValueIsInArrayBool(card: Card, cardArray: [Card]) -> Bool {
-//        for card2 in cardArray {
-//            if card2.isEqualColorAndNumber(card) {
-//                return true
-//            }
-//        }
-//        return false
-//    }
     // The color for the given int. If invalid, return nil.
     class func color(#int: Int) -> Color? {
         return Color.fromRaw(int)
     }
-    // Index of the given card in the given array, value-wise. Returns first match.
-//    class func indexOptionalIntOfCardValueInArray(card: Card, cardArray: [Card]) -> Int? {
-//        for indexInt in 0...(cardArray.count - 1) {
-//            let card2 = cardArray[indexInt]
-//            if card2.isEqualColorAndNumber(card) {
-//                return indexInt
-//            }
-//        }
-//        return nil
-//    }
-    // Lowest of given cards.
+    // Highest of given cards. Returns array.
+    class func highest(cards: [Card]) -> [Card] {
+        var highestCards: [Card] = []
+        var max = 0
+        for card in cards {
+            let num = card.num
+            if num > max {
+                max = num
+                highestCards = [card]
+            } else if num == max {
+                highestCards.append(card)
+            }
+        }
+        return highestCards
+    }
+    // Lowest of given cards. Returns array.
     class func lowest(cards: [Card]) -> [Card] {
         var lowestCards: [Card] = []
         var min = 6

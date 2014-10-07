@@ -13,7 +13,7 @@ class PureInfoAI: AbstractAI {
         return "Pure Info"
     }
     override func bestAction(#game: Game) -> Action {
-        let action = Action()
+        let action = Action(.Clue)
         let turn = game.currentTurn
         // If player knows she has a playable card, play it.
         let currentPlayer = turn.currentPlayer

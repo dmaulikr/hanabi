@@ -19,7 +19,7 @@ class AbstractAI: NSObject {
     var type: AIType!
     // Best action for current turn.
     func bestAction(#game: Game) -> Action {
-        return Action()
+        return Action(.Clue)
     }
     // The turn's action has been done. The game will have updated only the basic game state. If there's something the AI needs to update, do that here. (E.g., how each player interprets the turn.)
     func updateAfterAction(#game: Game) {

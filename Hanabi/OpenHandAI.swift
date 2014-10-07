@@ -13,32 +13,42 @@ class OpenHandAI: AbstractAI {
     override var name: String {
         return "Open Hand"
     }
-    // Whether another player should play before player. E.g., having more plays and chains and deck is low.
-    func anotherShouldPlayFirst(#game: Game) -> Bool {
-        // On last round, each may play only one card. If a player has more plays and chains than that, should play them earlier.
-        let currentPlayer = game.currentPlayer
-        let scorePile = game.scorePile
-        let players = game.players
-        let numPlaysAndChains = currentPlayer.numPlaysAndChainsOn(scorePile, players: players)
-        if numPlaysAndChains == 1 {
-            // If others have extra plays and chains (> 1 play per player) and total >= # deck cards, then another should play first.
-            let players = game.players
-            let numAllExtraPlaysAndChains = Player.numExtraPlaysAndChainsOn(scorePile, players: players)
-            let deck = game.deck
-            if numAllExtraPlaysAndChains >= deck.numCardsLeft {
-                // Another should play first, if enough clues to reach.
-                // Note: numTurnsFromPlayerToOneWithExtraPlaysAndChains() assumes current player doesn't play first, which is intended here.
-                if let numCluesNeeded = Player.numTurnsFromPlayerToOneWithExtraPlaysAndChains(currentPlayer, players: players, scorePile: scorePile) {
-                    if game.numCluesLeft >= numCluesNeeded {
-                        return true
-                    }
-                }
-            }
-        }
-        return false
+    // Action to discard highest card also in deck. If tie, do first.
+    private func actionDiscardHighestDeckCard(#game: Game) -> Action {
+        let action = Action(.Discard)
+        let player = game.currentPlayer
+        let playerDeckCards = self.playerDeckCards(game: game)
+        let card = Card.highest(playerDeckCards).first!
+        action.targetCardIndex = card.indexIn(player.hand)!
+        return action
     }
+    // Whether another player should play before player. E.g., having more plays and chains and deck is low.
+//    func anotherShouldPlayFirst(#game: Game) -> Bool {
+//        // On last round, each may play only one card. If a player has more plays and chains than that, should play them earlier.
+//        let currentPlayer = game.currentPlayer
+//        let scorePile = game.scorePile
+//        let players = game.players
+//        let numPlaysAndChains = currentPlayer.numPlaysAndChainsOn(scorePile, players: players)
+//        if numPlaysAndChains == 1 {
+//            // If others have extra plays and chains (> 1 play per player) and total >= # deck cards, then another should play first.
+//            let players = game.players
+//            let numAllExtraPlaysAndChains = Player.numExtraPlaysAndChainsOn(scorePile, players: players)
+//            let deck = game.deck
+//            if numAllExtraPlaysAndChains >= deck.numCardsLeft {
+//                // Another should play first, if enough clues to reach.
+//                // Note: numTurnsFromPlayerToOneWithExtraPlaysAndChains() assumes current player doesn't play first, which is intended here.
+//                if let numCluesNeeded = Player.numTurnsFromPlayerToOneWithExtraPlaysAndChains(currentPlayer, players: players, scorePile: scorePile) {
+//                    if game.numCluesLeft >= numCluesNeeded {
+//                        return true
+//                    }
+//                }
+//            }
+//        }
+//        return false
+//    }
+    
 /* Best action depends how close the game is. E.g., if one can play, she normally should. But if that would trigger the last round and someone still has two cards to play, she may want to clue instead. A key metric is # of deck cards left vs # points needed.
-Algorithm order:
+Algorithm: keep trying until we can do one:
 • (Clue) Why: Can't play; can't discard (max clues). Must give clue.
 • Check if enough deck cards to discard safely. Yes:
   • (Play) Play lowest.
@@ -46,21 +56,19 @@ Algorithm order:
   • (Clue) Why: Another has play, or has discard that does not increase number of turns to win.
   • Check if player has shared non-1. (E.g., P1 and P3 both have W2.) Depending on which shared card is discarded, the number of turns to win may increase. (E.g., turns to play [P1: W2 W3] > [P1: W2, P3: W3].) However, in most cases this should be okay, and it's not clear that we *can't* win. (C.f., discarding W4 and the other W4 is the last deck card; can't win.)
     • (Discard) Type: Shared non-1. Her discard yields same or better setup.
-    • (Clue) Why: Shared non-1. Other player's discard yields better setup.
+    • (Clue) Why: Shared non-1. Other-player's discard yields better setup.
   • (Clue) Why: Others have shared non-1 to discard; safer than deck discard.
   • (Discard) Type: Deck. Discard highest.
   • (Discard) Type: Unique unscored card. (Can't win.)
 • No:
-// log round this first happens; it'll stay this way
 // • (Clue) Avoid play?: do another metric check here? make sure it's a subset of this situation
   • (Play) Play lowest.
-// while the above is a repeat and could be factored out, it'll probably be refined next
-  • (Clue) Avoid discard: If another has play.
-// log discards; means things are getting worse
-  • (Discard) Safe: Scored cards, or 2+ copies in hand.
-  • (Discard) Safe but maybe bad position: Shared non-1.
-  • (Discard) Deck card: highest.
-  • (Discard) Unique unscored card. (Can't win.) */
+  • (Clue) Why: Another has play.
+  • (Discard) Type: Doesn't increase number of turns to win. (Scored cards, or 2+ copies in hand.)
+    // Could mimic shared non-1 behavior above. But it may not matter at this point since any discard is bad.
+  • (Discard) Type: Shared non-1.
+  • (Discard) Type: Deck. Discard highest.
+  • (Discard) Type: Unique unscored card. (Can't win.) */
     override func bestAction(#game: Game) -> Action {
         var action: Action?
         let canClue = game.canClue
@@ -74,13 +82,14 @@ Algorithm order:
         let hasSharedNon1 = player.hasSharedNon1(players: players)
         let hasDiscardThatWillNotIncreaseTurnsToWin = player.hasDiscardThatWillNotIncreaseTurnsToWin(scorePile: scorePile)
         let hasPlay = player.hasPlayOn(scorePile)
+        let playerHasDeckCard = self.playerHasDeckCard(game: game)
         if !hasPlay && !canDiscard {
 //            println("\(subroundString): (Clue) Why: Can't play; can't discard (max clues). Must give clue.")
             action = Action(.Clue)
         } else if haveExtraDeckCards(game: game) {
             if hasPlay {
 //              println("\(subroundString): (Play) Play lowest.")
-                action = player.actionLowestPlay(scorePile: scorePile)
+                action = player.actionPlayLowest(scorePile: scorePile)
             } else if hasDiscardThatWillNotIncreaseTurnsToWin {
 //            println("\(subroundString): (Discard) Type: Doesn't increase number of turns to win. (Scored cards, or 2+ copies in hand.)")
                 action = player.actionDiscardThatWillNotIncreaseTurnsToWin(scorePile: scorePile)
@@ -92,7 +101,7 @@ Algorithm order:
                 if action != nil {
 //                    println("\(subroundString): (Discard) Type: Shared non-1. Her discard yields same or better setup.")
                 } else if canClue {
-                    println("\(subroundString): (Clue) Why: Shared non-1. Other player's discard yields better setup.")
+                    println("\(subroundString): (Clue) Why: Shared non-1. Other-player's discard yields better setup.")
                     action = Action(.Clue)
                 } else {
                     // For simplicity, discard first shared non-1.
@@ -101,40 +110,47 @@ Algorithm order:
                 }
             } else if canClue && Player.othersHaveSharedNon1(players: players, currentPlayer: player) {
 //                println("\(subroundString): (Clue) Why: Others have shared non-1 to discard; safer than deck discard.")
-                action.type = .Clue
-            } else if hasDeckCard {
-                println("\(subroundString): (Discard) Type: Deck. Discard highest.")
-                //
+                action = Action(.Clue)
+            } else if playerHasDeckCard {
+//                println("\(subroundString): (Discard) Type: Deck. Discard highest.")
+                action = actionDiscardHighestDeckCard(game: game)
             } else {
-                println("\(subroundString): (Discard) Type: Unique unscored card. (Can't win.)")
+//                println("\(subroundString): (Discard) Type: Unique unscored card. (Can't win.)")
                 log.addLine("\(subroundString): Discarding unique. Shouldn't happen with Omni AI. Seed: \(game.seedUInt32).")
-                action.type = .Discard
-                action.targetCardIndex = 0
+                action = Action(.Discard)
+                action?.targetCardIndex = 0
             }
         } else {
+            if !game.loggedNoExtraDeckCards {
+                log.addLine("\(subroundString): No extra deck cards. Seed: \(game.seedUInt32).")
+                game.loggedNoExtraDeckCards = true
+            }
             if hasPlay {
-//              println("\(subroundString): Play.")
-                action.type = .Play
-                //
+//              println("\(subroundString): (Play) Play lowest.")
+                action = player.actionPlayLowest(scorePile: scorePile)
             } else if canClue && anotherHasPlay {
-//             println("\(subroundString): Another has play: Clue.")
-                action.type = .Clue
-            } else if hasSafeDiscard {
-//            println("\(subroundString): Safe discard.")
-                action.type = .Discard
-                //
-            } else if sharesNon1 {
-                //
-            } else if hasDeckCard {
-                
+//             println("\(subroundString): (Clue) Why: Another has play.")
+                action = Action(.Clue)
+            } else if hasDiscardThatWillNotIncreaseTurnsToWin {
+//            println("\(subroundString): (Discard) Type: Doesn't increase number of turns to win. (Scored cards, or 2+ copies in hand.)")
+                log.addLine("\(subroundString): (Discard) Type: Doesn't increase number of turns to win. (Scored cards, or 2+ copies in hand.)")
+                action = player.actionDiscardThatWillNotIncreaseTurnsToWin(scorePile: scorePile)
+            } else if hasSharedNon1 {
+                // For simplicity, discard first shared non-1.
+                println("\(subroundString): Type: Shared non-1.")
+                action = player.actionDiscardFirstSharedNon1(players: players)
+            } else if playerHasDeckCard {
+//                println("\(subroundString): (Discard) Type: Deck. Discard highest.")
+                log.addLine("\(subroundString): (Discard) Type: Deck. Discard highest.")
+                action = actionDiscardHighestDeckCard(game: game)
             } else {
-                println("\(subroundString): Discard unique.")
-                log.addLine("\(subroundString): Discarding unique. Shouldn't happen with Omni AI. Seed: \(game.seedUInt32).")
-                action.type = .Discard
-                action.targetCardIndex = 0
+//                println("\(subroundString): (Discard) Type: Unique unscored card. (Can't win.)")
+                log.addLine("\(subroundString): (Discard) Type: Unique unscored card. (Can't win.)")
+                action = Action(.Discard)
+                action?.targetCardIndex = 0
             }
         }
-        return action
+        return action!
         
 /* old alg; keep until new one works as well
         // Playables. If any:
@@ -230,41 +246,52 @@ Algorithm order:
         super.init()
         type = AIType.Omniscient
     }
+    
     // Whether the deck may run out before winning.
-    private func mayDeck(#game: Game) -> Bool {
-        /* N.B.: A card is drawn after each play/discard, but not for clues. After the last card is drawn, each player gets a turn. If the deck is stacked against the players, they may not have enough time to win. Instead of playing/discarding normally, one may want to give a clue. This gives time for another player to play. It can also cause a different player to draw a playable card.
-        */
-        // On last turn, can play 1 to N points (N = num players). Guaranteed only 1. So if # points needed + N - 1 >= # max plays left, may deck.
-        // If # visible plays >= # deck cards, may deck.
-        let pointsNeeded = game.pointsNeeded
-        let maxPlaysLeft = game.maxPlaysLeft
-        if pointsNeeded + game.numPlayers - 1 >= maxPlaysLeft {
-            return true
-        }
-        let numCardsLeft = game.numCardsLeft
-        let players = game.players
-        let scorePile = game.scorePile
-        let numVisiblePlays = Player.numVisiblePlays(players: players, scorePile: scorePile)
-        let threshold = 0
-        if numCardsLeft > 0 && (numVisiblePlays + threshold >= numCardsLeft) {
-            return true
-        }
-        return false
-    }
-    // Of player's cards also in the deck, the card to discard. Assumes at least one such card.
-    private func playerDeckCardToDiscard(player: Player, deck: Deck) -> Card {
-        // Discard highest. Why? Discarding a deck card is an issue if the remaining card is near the end of the deck. Then there's less/no time to play the cards above it. We'll minimize the impact by discarding the highest card.
-        let cardsAlsoInDeck = player.cardsAlsoIn(deck)
-        var discardCard = cardsAlsoInDeck.first!
-        var maxNum = discardCard.num
-        for card in cardsAlsoInDeck {
-            let num = card.num
-            if num > maxNum {
-                maxNum = num
-                discardCard = card
+//    private func mayDeck(#game: Game) -> Bool {
+//        /* N.B.: A card is drawn after each play/discard, but not for clues. After the last card is drawn, each player gets a turn. If the deck is stacked against the players, they may not have enough time to win. Instead of playing/discarding normally, one may want to give a clue. This gives time for another player to play. It can also cause a different player to draw a playable card.
+//        */
+//        // On last turn, can play 1 to N points (N = num players). Guaranteed only 1. So if # points needed + N - 1 >= # max plays left, may deck.
+//        // If # visible plays >= # deck cards, may deck.
+//        let pointsNeeded = game.pointsNeeded
+//        let maxPlaysLeft = game.maxPlaysLeft
+//        if pointsNeeded + game.numPlayers - 1 >= maxPlaysLeft {
+//            return true
+//        }
+//        let numCardsLeft = game.numCardsLeft
+//        let players = game.players
+//        let scorePile = game.scorePile
+//        let numVisiblePlays = Player.numVisiblePlays(players: players, scorePile: scorePile)
+//        let threshold = 0
+//        if numCardsLeft > 0 && (numVisiblePlays + threshold >= numCardsLeft) {
+//            return true
+//        }
+//        return false
+//    }
+    
+    
+    // Current player's cards that are also in the deck. Note that this AI shouldn't have direct access to the deck, e.g. what card's on the bottom. However, she can know what cards are in the deck by process of elimination.
+    private func playerDeckCards(#game: Game) -> [Card] {
+        var playerDeckCards: [Card] = []
+        let player = game.currentPlayer
+        let deck = game.deck
+        for card in player.hand {
+            if card.isIn(deck.cards) {
+                playerDeckCards.append(card)
             }
         }
-        return discardCard
+        return playerDeckCards
+    }
+    // Whether current player has at least one card also in deck. Note that this AI shouldn't have direct access to the deck, e.g. what card's on the bottom. However, she can know what cards are in the deck by process of elimination.
+    private func playerHasDeckCard(#game: Game) -> Bool {
+        let player = game.currentPlayer
+        let deck = game.deck
+        for card in player.hand {
+            if card.isIn(deck.cards) {
+                return true
+            }
+        }
+        return false
     }
     // Whether card should be discarded by player (vs. another player).
 //    private func playerShouldDiscardNon1GroupDuplicate(player: Player, card: Card, players: [Player]) -> Bool {

@@ -36,6 +36,8 @@ class Game: NSObject {
         let lastTurn = turnArray.last!
         return lastTurn.gameIsDone
     }
+    // Whether it was logged that there are no extra deck cards.
+    var loggedNoExtraDeckCards = false
     // Number of bad plays by end of game.
     var numberOfBadPlaysInt: Int {
         let lastTurn = turnArray.last!
