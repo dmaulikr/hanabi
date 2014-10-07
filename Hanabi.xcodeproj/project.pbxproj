@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		931D9270199F59A1005B2186 /* LogModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 931D926F199F59A1005B2186 /* LogModel.swift */; };
 		932D2DF61997EC2F00CA1306 /* AlwaysDiscardElf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932D2DF51997EC2F00CA1306 /* AlwaysDiscardElf.swift */; };
-		932D2DFA1998C8A300CA1306 /* OmniscientAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932D2DF91998C8A300CA1306 /* OmniscientAI.swift */; };
+		932D2DFA1998C8A300CA1306 /* OpenHandAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932D2DF91998C8A300CA1306 /* OpenHandAI.swift */; };
 		9348E04D1992236700C19BB0 /* WalkThroughGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */; };
 		935932D919AD2A9E009AC4EF /* CardBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935932D819AD2A9E009AC4EF /* CardBack.swift */; };
 		935932DB19AD5EEA009AC4EF /* ScorePile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935932DA19AD5EEA009AC4EF /* ScorePile.swift */; };
@@ -59,7 +59,7 @@
 /* Begin PBXFileReference section */
 		931D926F199F59A1005B2186 /* LogModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogModel.swift; sourceTree = "<group>"; };
 		932D2DF51997EC2F00CA1306 /* AlwaysDiscardElf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlwaysDiscardElf.swift; sourceTree = "<group>"; };
-		932D2DF91998C8A300CA1306 /* OmniscientAI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OmniscientAI.swift; sourceTree = "<group>"; };
+		932D2DF91998C8A300CA1306 /* OpenHandAI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenHandAI.swift; sourceTree = "<group>"; };
 		9348E04C1992236700C19BB0 /* WalkThroughGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalkThroughGameViewController.swift; sourceTree = "<group>"; };
 		935932D819AD2A9E009AC4EF /* CardBack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardBack.swift; sourceTree = "<group>"; };
 		935932DA19AD5EEA009AC4EF /* ScorePile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScorePile.swift; sourceTree = "<group>"; };
@@ -168,7 +168,7 @@
 				931D926F199F59A1005B2186 /* LogModel.swift */,
 				93D42FDB198F7A59006A28D9 /* Main.storyboard */,
 				93F653BA1990272A00198AB6 /* MainMenuViewController.swift */,
-				932D2DF91998C8A300CA1306 /* OmniscientAI.swift */,
+				932D2DF91998C8A300CA1306 /* OpenHandAI.swift */,
 				9362C7A1199577110030E820 /* Player.swift */,
 				93C2EE3A199424F900A29B15 /* Playground.playground */,
 				939DDB9519A86B3D00403727 /* PureInfoAI.swift */,
@@ -345,7 +345,7 @@
 				93C748CF199C656B00247E08 /* Deck.swift in Sources */,
 				9362C79E19949FE60030E820 /* Clue.swift in Sources */,
 				93D91E55199ABFA800685BF1 /* EndingGameState.swift in Sources */,
-				932D2DFA1998C8A300CA1306 /* OmniscientAI.swift in Sources */,
+				932D2DFA1998C8A300CA1306 /* OpenHandAI.swift in Sources */,
 				939DDB9419A859AC00403727 /* AbstractAI.swift in Sources */,
 				939DDB9219A83EF400403727 /* AITableViewController.swift in Sources */,
 				93D42FF7198F8A6D006A28D9 /* SolveGamesViewController.swift in Sources */,

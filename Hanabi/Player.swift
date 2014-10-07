@@ -236,6 +236,26 @@ class Player: NSObject {
         }
         return noDupsHandCardArray
     }
+    // Action to discard first shared non-1. Assume one exists.
+    func actionDiscardFirstSharedNon1(#players: [Player]) -> Action {
+        let action = Action(.Discard)
+        let sharedNon1s = self.sharedNon1s(players: players)
+        let card = sharedNon1s.first!
+        action.targetCardIndex = card.indexIn(hand)!
+        return action
+    }
+    // Action to discard a shared non-1. Setup should be as good as if other player discarded it. If none, return nil.
+    func actionDiscardSharedNon1ThatYieldsAsGoodASetup(#players: [Player]) -> Action? {
+        let sharedNon1s = self.sharedNon1s(players: players)
+        for card in sharedNon1s {
+            if discardSharedNon1YieldsAsGoodASetup(card: card, players: players) {
+                let action = Action(.Discard)
+                action.targetCardIndex = card.indexIn(hand)!
+                return action
+            }
+        }
+        return nil
+    }
     // Action to discard a card that will not increase number of turns to win.
     func actionDiscardThatWillNotIncreaseTurnsToWin(#scorePile: ScorePile) -> Action {
         let action = Action(.Discard)
@@ -288,23 +308,57 @@ class Player: NSObject {
         player.nameString = nameString
         return player
     }
-    // Whether discarding this card (vs. another) *may* increase the number of turns needed to win. E.g., card is shared non-1.
-    private func discardMayIncreaseTurnsToWin(#card: Card, players: [Player]) -> Bool {
-        return cardIsSharedNon1(card, players: players)
+    // Whether discarding this shared non-1 yields as good a setup as the other player discarding it. By "as good as," we mean expected number of turns to play the shared non-1 and cards before/after.
+    private func discardSharedNon1YieldsAsGoodASetup(#card: Card, players: [Player]) -> Bool {
+        // If next card in any hand (may be in multiple):
+        // • Get # turns if self player discards: from other player to next card.
+        // • Get # turns if other player discards: from self player to next card.
+        // • If other-player discarding yields fewer turns, return false.
+        // If previous card in any hand (may be in multiple):
+        // • Get # turns if self player discards: from card to other player.
+        // • Get # turns if other player discards: from card to self player.
+        // • If other-player discarding yields fewer turns, return false.
+        // Default: return true.
+        let nextCard = card.next!
+        var nextCardFound = false
+        let previousCard = card.previous!
+        var previousCardFound = false
+        for player in players {
+            if nextCard.isIn(player.hand) {
+                nextCardFound = true
+            }
+            if previousCard.isIn(player.hand) {
+                previousCardFound = true
+            }
+        }
+        if nextCardFound || previousCardFound {
+            var otherPlayer: Player!
+            for player in players {
+                if player != self && card.isIn(player.hand) {
+                    otherPlayer = player
+                    break
+                }
+            }
+            if nextCardFound {
+                let numTurnsIfSelfDiscards = Player.numTurnsFromPlayerToCard(otherPlayer, card: nextCard, players: players)
+                let numTurnsIfOtherDiscards = Player.numTurnsFromPlayerToCard(self, card: nextCard, players: players)
+                if numTurnsIfOtherDiscards < numTurnsIfSelfDiscards {
+                    return false
+                }
+            }
+            if previousCardFound {
+                let numTurnsIfSelfDiscards = Player.numTurnsFromCardToPlayer(previousCard, player: otherPlayer, players: players)
+                let numTurnsIfOtherDiscards = Player.numTurnsFromCardToPlayer(previousCard, player: self, players: players)
+                if numTurnsIfOtherDiscards < numTurnsIfSelfDiscards {
+                    return false
+                }
+            }
+        }
+        return true
     }
     // Whether discarding this card (vs. another) will *not* increase the number of turns needed to win. E.g., card was already scored, card is in the same hand at least twice.
     private func discardWillNotIncreaseTurnsToWin(#card: Card, scorePile: ScorePile) -> Bool {
         return scorePile.has(card) || card.isTwiceIn(hand)
-    }
-    // Cards that, if discarded, may increase number of turns to win.
-    func discardsThatMayIncreaseTurnsToWin(#players: [Player]) -> [Card] {
-        var discards: [Card] = []
-        for card in hand {
-            if discardMayIncreaseTurnsToWin(card: card, players: players) {
-                discards.append(card)
-            }
-        }
-        return discards
     }
     // Cards that, if discarded, won't increase number of turns to win.
     private func discardsThatWillNotIncreaseTurnsToWin(#scorePile: ScorePile) -> [Card] {
@@ -325,15 +379,6 @@ class Player: NSObject {
         }
         return false
     }
-    // Whether she has a discard that may fundamentally increase the number of turns needed to win.
-    func hasDiscardThatMayIncreaseTurnsToWin(#players: [Player]) -> Bool {
-        for card in hand {
-            if discardMayIncreaseTurnsToWin(card: card, players: players) {
-                return true
-            }
-        }
-        return false
-    }
     // Whether she has a discard that won't fundamentally increase the number of turns needed to win.
     func hasDiscardThatWillNotIncreaseTurnsToWin(#scorePile: ScorePile) -> Bool {
         for card in hand {
@@ -343,15 +388,13 @@ class Player: NSObject {
         }
         return false
     }
-    // Cards also in other player's hands. Ignore 1s. (Context: Determine who should discard group 2/3/4s.)
-    func sharedNon1s(#players: [Player]) -> [Card] {
-        var groupDuplicates: [Card] = []
+    func hasSharedNon1(#players: [Player]) -> Bool {
         for card in hand {
             if cardIsSharedNon1(card, players: players) {
-                groupDuplicates.append(card)
+                return true
             }
         }
-        return groupDuplicates
+        return false
     }
     // Number of plays and chains cards in hand. Includes chains from self and other players. Counts duplicates once.
     func numPlaysAndChainsOn(scorePile: ScorePile, players: [Player]) -> Int {
@@ -386,5 +429,14 @@ class Player: NSObject {
         }
         return plays
     }
-    
+    // Shared non-1s in the player's hand.
+    private func sharedNon1s(#players: [Player]) -> [Card] {
+        var sharedNon1s: [Card] = []
+        for card in hand {
+            if cardIsSharedNon1(card, players: players) {
+                sharedNon1s.append(card)
+            }
+        }
+        return sharedNon1s
+    }
 }

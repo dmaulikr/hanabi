@@ -9,9 +9,9 @@
 import UIKit
 
 // Looks at own hand. (Cheats.)
-class OmniscientAI: AbstractAI {
+class OpenHandAI: AbstractAI {
     override var name: String {
-        return "Omniscient"
+        return "Open Hand"
     }
     // Whether another player should play before player. E.g., having more plays and chains and deck is low.
     func anotherShouldPlayFirst(#game: Game) -> Bool {
@@ -44,12 +44,12 @@ Algorithm order:
   • (Play) Play lowest.
   • (Discard) Type: Doesn't increase number of turns to win. (Scored cards, or 2+ copies in hand.)
   • (Clue) Why: Another has play, or has discard that does not increase number of turns to win.
-  • Check if player has discard that may increase number of turns to win. (Shared non-1s.)
-    • (Discard) Type: Her discard probably doesn't increase number of turns to win. (Shared non-1.)
-// depre    • (Clue) Why: Other player's discard gives better setup.
-  • (Clue) Avoid unsafe discard: If other players share non-1.
-  • (Discard) Deck card: highest.
-  • (Discard) Unique unscored card. (Can't win.)
+  • Check if player has shared non-1. (E.g., P1 and P3 both have W2.) Depending on which shared card is discarded, the number of turns to win may increase. (E.g., turns to play [P1: W2 W3] > [P1: W2, P3: W3].) However, in most cases this should be okay, and it's not clear that we *can't* win. (C.f., discarding W4 and the other W4 is the last deck card; can't win.)
+    • (Discard) Type: Shared non-1. Her discard yields same or better setup.
+    • (Clue) Why: Shared non-1. Other player's discard yields better setup.
+  • (Clue) Why: Others have shared non-1 to discard; safer than deck discard.
+  • (Discard) Type: Deck. Discard highest.
+  • (Discard) Type: Unique unscored card. (Can't win.)
 • No:
 // log round this first happens; it'll stay this way
 // • (Clue) Avoid play?: do another metric check here? make sure it's a subset of this situation
@@ -62,7 +62,7 @@ Algorithm order:
   • (Discard) Deck card: highest.
   • (Discard) Unique unscored card. (Can't win.) */
     override func bestAction(#game: Game) -> Action {
-        var action: Action
+        var action: Action?
         let canClue = game.canClue
         let canDiscard = game.canDiscard
         let player = game.currentPlayer
@@ -71,7 +71,7 @@ Algorithm order:
         let subroundString = "Round \(game.currentSubroundString)"
         let anotherHasPlay = Player.anotherHasPlayOn(scorePile, players: players, currentPlayer: player)
         let anotherHasDiscardThatWillNotIncreaseTurnsToWin = Player.anotherHasDiscardThatWillNotIncreaseTurnsToWin(scorePile: scorePile, players: players, currentPlayer: player)
-        let hasDiscardThatMayIncreaseTurnsToWin = player.hasDiscardThatMayIncreaseTurnsToWin(players: players)
+        let hasSharedNon1 = player.hasSharedNon1(players: players)
         let hasDiscardThatWillNotIncreaseTurnsToWin = player.hasDiscardThatWillNotIncreaseTurnsToWin(scorePile: scorePile)
         let hasPlay = player.hasPlayOn(scorePile)
         if !hasPlay && !canDiscard {
@@ -87,31 +87,26 @@ Algorithm order:
             } else if canClue && (anotherHasPlay || anotherHasDiscardThatWillNotIncreaseTurnsToWin) {
 //             println("\(subroundString): (Clue) Why: Another has play, or has discard that does not increase number of turns to win.")
                 action = Action(.Clue)
-            // WILO
-            // need better explanation in names for why this is here and separate. it is separate from above because we're not sure discarding won't increase number of turns to win; however, it's separate from below because we do know discarding won't affect our ability to win in terms of having the card available; because of that, the AI is choosing here to either discard now or clue, not to discard a more dangerous card
-            // so the name has to convey that discarding this card (either here or another player) is better than discarding another card; and that discarding here may increase # of turns to win
-            // if we weren't giving the clue option, it'd be a similar structure (this may incr # turns to win, but we're discarding anyway); actually to keep this simple, we can do that now and just comment that we can add the clue option if deemed worth it
-            } else if hasDiscardThatMayIncreaseTurnsToWin {
-//                println("\(subroundString): Has discard that may increase number of turns to win.")
-                let discardsThatMayIncreaseTurnsToWin = player.discardsThatMayIncreaseTurnsToWin(players: players)
-                for card in discardsThatMayIncreaseTurnsToWin {
-                    // implement this; can replace playerShouldDiscardNon1GroupDuplicate()
-                    if !player.discardProbablyIncreasesTurnsToWin(card: card, players: players) {
-//                        println("\(subroundString): (Discard) Type: Her discard probably doesn't increase number of turns to win. (Shared non-1.)")
-                        //                    action = player.actionDiscard(card)
-                        break
-                    }
+            } else if hasSharedNon1 {
+                action = player.actionDiscardSharedNon1ThatYieldsAsGoodASetup(players: players)
+                if action != nil {
+//                    println("\(subroundString): (Discard) Type: Shared non-1. Her discard yields same or better setup.")
+                } else if canClue {
+                    println("\(subroundString): (Clue) Why: Shared non-1. Other player's discard yields better setup.")
+                    action = Action(.Clue)
+                } else {
+                    // For simplicity, discard first shared non-1.
+                    println("\(subroundString): (Discard) Type: Shared non-1. Can't clue. Discard first shared.")
+                    action = player.actionDiscardFirstSharedNon1(players: players)
                 }
-                // remember canClue check: if there's
-//                println("\(subroundString): (Clue) Why: Her discard probably increases number of turns to win. Other player's doesn't. (Shared non-1.)")
-                action = Action(.Clue)
-            } else if canClue && Player.othersShareNon1(players: players, currentPlayer: player) {
-                println("\(subroundString): Others share non-1: Clue.")
+            } else if canClue && Player.othersHaveSharedNon1(players: players, currentPlayer: player) {
+//                println("\(subroundString): (Clue) Why: Others have shared non-1 to discard; safer than deck discard.")
                 action.type = .Clue
             } else if hasDeckCard {
+                println("\(subroundString): (Discard) Type: Deck. Discard highest.")
                 //
             } else {
-                println("\(subroundString): Discard unique.")
+                println("\(subroundString): (Discard) Type: Unique unscored card. (Can't win.)")
                 log.addLine("\(subroundString): Discarding unique. Shouldn't happen with Omni AI. Seed: \(game.seedUInt32).")
                 action.type = .Discard
                 action.targetCardIndex = 0
@@ -141,7 +136,7 @@ Algorithm order:
         }
         return action
         
-/* old alg; keep until new one works as good
+/* old alg; keep until new one works as well
         // Playables. If any:
           // Stall: If another should play first (uneven playables distribution), give clue.
           // Play: Else, play lowest card.
@@ -271,76 +266,52 @@ Algorithm order:
         }
         return discardCard
     }
-    // The group duplicate the player should discard. If can't clue, forced to discard. If none, return nil.
-    private func playerNon1GroupDuplicateToDiscard(player: Player, players: [Player], canClue: Bool) -> Card? {
-        let groupDuplicates = player.non1GroupDuplicates(players: players)
-        for card in groupDuplicates {
-            if playerShouldDiscardNon1GroupDuplicate(player, card: card, players: players) {
-                return card
-            }
-        }
-        // If no clues left, player should discard since she can't clue.
-        if !canClue {
-            return groupDuplicates.first
-        }
-        return nil
-    }
     // Whether card should be discarded by player (vs. another player).
-    private func playerShouldDiscardNon1GroupDuplicate(player: Player, card: Card, players: [Player]) -> Bool {
-        // Find player with duplicate.
-        var otherPlayer: Player!
-        for aPlayer in players {
-            if aPlayer != player && card.isIn(aPlayer.hand) {
-                otherPlayer = aPlayer
-                break
-            }
-        }
-        // Look for next card. If found, get # turns from both players to card. If given player needs fewer turns, don't discard.
-        // Note that multiple players may have next card.
-        let nextCard = card.next!
-        var nextCardFound = false
-        for aPlayer in players {
-            if nextCard.isIn(aPlayer.hand) {
-                nextCardFound = true
-                break
-            }
-        }
-        if nextCardFound {
-            let givenPlayerCount = Player.numTurnsFromPlayerToCard(player, card: nextCard, players: players)
-            let otherPlayerCount = Player.numTurnsFromPlayerToCard(otherPlayer, card: nextCard, players: players)
-            if givenPlayerCount < otherPlayerCount {
-                return false
-            }
-        } else {
-            // Look for previous card. If found, get # turns from card to both players. If given player needs fewer turns, don't discard.
-            // Note that multiple players may have previous card.
-            let previousCard = card.previous!
-            var previousCardFound = false
-            for aPlayer in players {
-                if previousCard.isIn(aPlayer.hand) {
-                    previousCardFound = true
-                    break
-                }
-            }
-            if previousCardFound {
-                let givenPlayerCount = Player.numTurnsFromCardToPlayer(previousCard, player: player, players: players)
-                let otherPlayerCount = Player.numTurnsFromCardToPlayer(previousCard, player: otherPlayer, players: players)
-                if givenPlayerCount < otherPlayerCount {
-                    return false
-                }
-            }
-        }
-        // Default: discard.
-        return true
-    }
-    // Whether given player should discard at least one group duplicate (vs. another player discarding it).
-    private func playerShouldDiscardNon1GroupDuplicate(player: Player, players: [Player]) -> Bool {
-        let groupDuplicates = player.non1GroupDuplicates(players: players)
-        for card in groupDuplicates {
-            if playerShouldDiscardNon1GroupDuplicate(player, card: card, players: players) {
-                return true
-            }
-        }
-        return false
-    }
+//    private func playerShouldDiscardNon1GroupDuplicate(player: Player, card: Card, players: [Player]) -> Bool {
+//        // Find player with duplicate.
+//        var otherPlayer: Player!
+//        for aPlayer in players {
+//            if aPlayer != player && card.isIn(aPlayer.hand) {
+//                otherPlayer = aPlayer
+//                break
+//            }
+//        }
+//        // Look for next card. If found, get # turns from both players to card. If given player needs fewer turns, don't discard.
+//        // Note that multiple players may have next card.
+//        let nextCard = card.next!
+//        var nextCardFound = false
+//        for aPlayer in players {
+//            if nextCard.isIn(aPlayer.hand) {
+//                nextCardFound = true
+//                break
+//            }
+//        }
+//        if nextCardFound {
+//            let givenPlayerCount = Player.numTurnsFromPlayerToCard(player, card: nextCard, players: players)
+//            let otherPlayerCount = Player.numTurnsFromPlayerToCard(otherPlayer, card: nextCard, players: players)
+//            if givenPlayerCount < otherPlayerCount {
+//                return false
+//            }
+//        } else {
+//            // Look for previous card. If found, get # turns from card to both players. If given player needs fewer turns, don't discard.
+//            // Note that multiple players may have previous card.
+//            let previousCard = card.previous!
+//            var previousCardFound = false
+//            for aPlayer in players {
+//                if previousCard.isIn(aPlayer.hand) {
+//                    previousCardFound = true
+//                    break
+//                }
+//            }
+//            if previousCardFound {
+//                let givenPlayerCount = Player.numTurnsFromCardToPlayer(previousCard, player: player, players: players)
+//                let otherPlayerCount = Player.numTurnsFromCardToPlayer(previousCard, player: otherPlayer, players: players)
+//                if givenPlayerCount < otherPlayerCount {
+//                    return false
+//                }
+//            }
+//        }
+//        // Default: discard.
+//        return true
+//    }
 }
